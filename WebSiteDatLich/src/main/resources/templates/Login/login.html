@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đăng nhập</title>
 
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <!-- Inline CSS -->
   <style>
     body {
@@ -12,11 +15,17 @@
       background-color: #f0f4f8;
       margin: 0;
       padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
     .navbar {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       background-color: #e6f9f6;
       padding: 10px 20px;
       border-bottom: 1px solid #d1e7e4;
@@ -24,7 +33,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 1000; /* Ensure it stays above other content */
+      z-index: 1000;
     }
 
     .menu-icon {
@@ -44,6 +53,13 @@
       color: #ffb400;
     }
 
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+      margin-left: 30px;
+    }
+
     .nav-links a {
       margin: 0 10px;
       text-decoration: none;
@@ -56,6 +72,12 @@
       color: white;
       padding: 5px 10px;
       border-radius: 5px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      margin-right: 30px;
     }
 
     .search-bar input {
@@ -72,6 +94,7 @@
       text-decoration: none;
     }
 
+    /* Login form */
     .login-container {
       background-color: white;
       padding: 30px;
@@ -79,7 +102,7 @@
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 400px;
-      margin-top: 150px; /* Adjust space between the header and the login form */
+      margin-top: 100px; /* Adjust space below header */
     }
 
     h2 {
@@ -97,7 +120,7 @@
       margin-bottom: 5px;
     }
 
-    input[type="text"], input[type="password"] {
+    input[type="email"], input[type="password"] {
       padding: 10px;
       margin-bottom: 20px;
       border: 1px solid #ccc;
@@ -107,7 +130,7 @@
       transition: border-color 0.3s;
     }
 
-    input[type="text"]:focus, input[type="password"]:focus {
+    input[type="email"]:focus, input[type="password"]:focus {
       border-color: #00bcd4;
     }
 
@@ -144,15 +167,15 @@
 </head>
 <body>
 
-<!-- Include the header fragment with the correct syntax -->
-<div th:replace="~{fragments/header :: header}"></div>
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
 
 <div class="login-container">
   <h2>Đăng nhập</h2>
 
   <form action="/api/auth/login" method="post">
-    <label for="userName">Tên đăng nhập:</label>
-    <input type="text" id="userName" name="userName" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
 
     <label for="password">Mật khẩu:</label>
     <input type="password" id="password" name="password" required>

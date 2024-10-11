@@ -32,8 +32,8 @@ public class UserService {
     }
 
     // Xử lý đăng nhập
-    public void login(String userName, String password, LoginCallback callback) {
-        databaseReference.orderByChild("user_name").equalTo(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void login(String email, String password, LoginCallback callback) {
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -42,7 +42,7 @@ public class UserService {
                         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
                             callback.onSuccess("Login successful!");
                         } else {
-                            callback.onFailure("Invalid username or password!");
+                            callback.onFailure("Invalid email or password!");
                         }
                     }
                 } else {
@@ -64,32 +64,21 @@ public class UserService {
         // Mã hóa mật khẩu trước khi lưu trữ
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Gán vai trò mặc định (ví dụ: role_id = 1 cho người dùng bình thường)
+        // Gán vai trò mặc định
         user.setRole_id(1);
 
-        // Xử lý upload ảnh lên Firebase Storage
+        // Xử lý upload ảnh lên Firebase Storage (nếu có)
         if (avatarFile != null && !avatarFile.isEmpty()) {
             try {
-                // Lấy bucket từ Firebase Storage
                 Bucket bucket = StorageClient.getInstance().bucket();
-
-                // Tạo tên file duy nhất
                 String fileName = UUID.randomUUID().toString() + "_" + avatarFile.getOriginalFilename();
-
-                // Upload file lên Firebase Storage
                 Blob blob = bucket.create(fileName, avatarFile.getInputStream(), avatarFile.getContentType());
-
-                // Lấy URL của file vừa upload
-                String avatarUrl = blob.getMediaLink();
-
-                // Lưu URL của ảnh đại diện vào Firebase
-                user.setAvatar(avatarUrl);
+                user.setAvatar(blob.getMediaLink());
             } catch (IOException e) {
                 callback.onFailure("Failed to upload avatar: " + e.getMessage());
                 return;
             }
         } else {
-            // Nếu không chọn ảnh, gán giá trị mặc định cho avatar
             user.setAvatar("default_avatar.png");
         }
 

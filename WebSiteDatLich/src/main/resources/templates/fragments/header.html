@@ -7,9 +7,16 @@
 
     <!-- Inline CSS for Header -->
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
         .navbar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             background-color: #e6f9f6;
             padding: 10px 20px;
             border-bottom: 1px solid #d1e7e4;
@@ -17,13 +24,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1000; /* Ensures the header is always on top */
+            z-index: 1000;
         }
 
         .menu-icon {
             font-size: 24px;
             color: #888;
             margin-right: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
         }
 
         .logo img {
@@ -35,6 +47,13 @@
             font-size: 24px;
             font-weight: bold;
             color: #ffb400;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin-left: 30px;
         }
 
         .nav-links a {
@@ -51,6 +70,12 @@
             border-radius: 5px;
         }
 
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+        }
+
         .search-bar input {
             padding: 5px 10px;
             border: 1px solid #ccc;
@@ -58,11 +83,31 @@
             outline: none;
         }
 
+        .search-bar i {
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+        }
+
         .icons a {
             margin: 0 10px;
             color: #00bcd4;
             font-size: 24px;
             text-decoration: none;
+            text-align: center;
+        }
+
+        .icons a i {
+            display: block;
+        }
+
+        .icons a span {
+            font-size: 12px;
+            color: #333;
         }
     </style>
 </head>
@@ -74,20 +119,27 @@
         </div>
         <div class="logo">
             <img src="https://storage.googleapis.com/a1aa/image/uQEJVDzFXiK2H9IktXpYt4XZNwZePpW8hqSzGCuPRfdN5klTA.jpg" alt="BookingCare logo" width="30" height="30">
-            <span>BookingCare</span>
+            <span>Viet Duc</span>
         </div>
         <div class="nav-links">
-            <a href="#" class="active">Tất cả</a>
-            <a href="#">Tại nhà</a>
-            <a href="#">Tại viện</a>
-            <a href="#">Sống khỏe</a>
+            <a href="#" class="active">Trang chủ</a>
+            <a href="#">Đặt lịch</a>
+            <a href="#">Tư vấn</a>
+            <a href="#">Đăng nhập</a>
         </div>
         <div class="search-bar">
+            <i class="fas fa-search"></i>
             <input type="text" placeholder="Tìm bệnh viện">
         </div>
         <div class="icons">
-            <a href="#"><i class="fas fa-handshake"></i><br>Hợp tác</a>
-            <a href="#"><i class="fas fa-history"></i><br>Lịch hẹn</a>
+            <a href="#">
+                <i class="fas fa-handshake"></i>
+                <span>Hợp tác</span>
+            </a>
+            <a href="#">
+                <i class="fas fa-history"></i>
+                <span>Lịch hẹn</span>
+            </a>
         </div>
     </div>
 </div>

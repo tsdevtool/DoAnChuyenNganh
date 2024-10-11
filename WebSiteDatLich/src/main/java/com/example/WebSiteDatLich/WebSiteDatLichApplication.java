@@ -26,6 +26,7 @@ public class WebSiteDatLichApplication {
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 					.setDatabaseUrl("https://ungdungdatlichkham-default-rtdb.firebaseio.com/") // Thay thế bằng URL Firebase của bạn
+					.setStorageBucket("ungdungdatlichkham.appspot.com") // Thay thế bằng tên bucket Firebase Storage của bạn
 					.build();
 
 			// Khởi tạo FirebaseApp

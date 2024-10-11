@@ -16,11 +16,12 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    // Login using email and password
     @PostMapping("/login")
-    public CompletableFuture<String> login(@RequestParam String userName, @RequestParam String password) {
+    public CompletableFuture<String> login(@RequestParam String email, @RequestParam String password) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        userService.login(userName, password, new UserService.LoginCallback() {
+        userService.login(email, password, new UserService.LoginCallback() {
             @Override
             public void onSuccess(String message) {
                 future.complete("Login successful!");
@@ -28,16 +29,16 @@ public class LoginController {
 
             @Override
             public void onFailure(String message) {
-                future.complete("Invalid username or password!");
+                future.complete("Invalid email or password!");
             }
         });
 
         return future;
     }
 
+    // Register new user
     @PostMapping("/register")
     public CompletableFuture<String> register(
-            @RequestParam("user_name") String userName,
             @RequestParam("password") String password,
             @RequestParam("name") String name,
             @RequestParam("sex") Boolean sex,
@@ -50,9 +51,8 @@ public class LoginController {
     ) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        // Tạo đối tượng User
+        // Create new User object
         User user = new User();
-        user.setUser_name(userName);
         user.setPassword(password);
         user.setName(name);
         user.setSex(sex);
@@ -61,7 +61,7 @@ public class LoginController {
         user.setAddress(address);
         user.setPhone(phone);
 
-        // Xử lý đăng ký với UserService
+        // Process registration with UserService
         userService.register(user, avatarFile, new UserService.RegisterCallback() {
             @Override
             public void onSuccess(String message) {
