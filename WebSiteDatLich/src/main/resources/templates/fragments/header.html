@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+
+    <!-- Inline CSS for Header -->
+    <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #e6f9f6;
+            padding: 10px 20px;
+            border-bottom: 1px solid #d1e7e4;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensures the header is always on top */
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #888;
+            margin-right: 20px;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffb400;
+        }
+
+        .nav-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-links .active {
+            background-color: #ffb400;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .search-bar input {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .icons a {
+            margin: 0 10px;
+            color: #00bcd4;
+            font-size: 24px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="header">
+    <div class="navbar">
+        <div class="menu-icon">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <img src="https://storage.googleapis.com/a1aa/image/uQEJVDzFXiK2H9IktXpYt4XZNwZePpW8hqSzGCuPRfdN5klTA.jpg" alt="BookingCare logo" width="30" height="30">
+            <span>BookingCare</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Tất cả</a>
+            <a href="#">Tại nhà</a>
+            <a href="#">Tại viện</a>
+            <a href="#">Sống khỏe</a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Tìm bệnh viện">
+        </div>
+        <div class="icons">
+            <a href="#"><i class="fas fa-handshake"></i><br>Hợp tác</a>
+            <a href="#"><i class="fas fa-history"></i><br>Lịch hẹn</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
