@@ -1,26 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Inline CSS -->
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f0f4f8;
             margin: 0;
             padding: 0;
+            height: 100vh; /* Ensure body takes full height of the viewport */
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Stack header and form vertically */
         }
 
-        .register-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #e6f9f6;
+            padding: 10px 20px;
+            border-bottom: 1px solid #d1e7e4;
             width: 100%;
-            max-width: 500px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #888;
+            margin-right: 20px;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffb400;
+        }
+
+        .nav-links {
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-links .active {
+            background-color: #ffb400;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Add margin between header and form */
+        .register-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* Increased for better two-column layout */
+            margin-top: 150px; /* Increased space below header */
+            box-sizing: border-box; /* Ensures padding does not affect overall width */
         }
 
         h2 {
@@ -28,17 +87,10 @@
             color: #333;
         }
 
-        .message, .error {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .error {
-            color: red;
-        }
-
-        .message {
-            color: green;
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 20px; /* Spacing between fields */
         }
 
         label {
@@ -48,32 +100,35 @@
             color: #333;
         }
 
-        input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="file"], select {
+        input[type="email"], input[type="password"], input[type="text"], input[type="date"], input[type="file"], select {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
             box-sizing: border-box;
         }
 
         button {
+            grid-column: span 2; /* Make the button span both columns */
             width: 100%;
             padding: 10px;
-            background-color: #28a745;
+            background-color: #00bcd4;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0097a7;
         }
 
         .form-footer {
             text-align: center;
+            grid-column: span 2; /* Make the footer span both columns */
             margin-top: 15px;
         }
 
@@ -85,9 +140,27 @@
         .form-footer a:hover {
             text-decoration: underline;
         }
+
+        .message, .error {
+            text-align: center;
+            margin-bottom: 15px;
+            grid-column: span 2; /* Span across both columns */
+        }
+
+        .error {
+            color: red;
+        }
+
+        .message {
+            color: green;
+        }
     </style>
 </head>
 <body>
+
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
+
 <div class="register-container">
     <h2>Register</h2>
 
@@ -96,35 +169,41 @@
     <div class="message" th:if="${message}" th:text="${message}"></div>
 
     <form action="/api/auth/register" method="post" enctype="multipart/form-data">
-        <label for="user_name">Username:</label>
-        <input type="text" id="user_name" name="user_name" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required>
-
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" required>
-
-        <label for="date_of_birth">Date of Birth:</label>
-        <input type="date" id="date_of_birth" name="date_of_birth" required>
-
-        <label for="sex">Sex:</label>
-        <select id="sex" name="sex">
-            <option value="true">Male</option>
-            <option value="false">Female</option>
-        </select>
-
-        <label for="avatar">Avatar:</label>
-        <input type="file" id="avatar" name="avatar" accept="image/*">
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required>
+        </div>
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+        <div>
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" required>
+        </div>
+        <div>
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex">
+                <option value="true">Male</option>
+                <option value="false">Female</option>
+            </select>
+        </div>
+        <div>
+            <label for="avatar">Avatar:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*">
+        </div>
 
         <button type="submit">Register</button>
 
@@ -133,5 +212,6 @@
         </div>
     </form>
 </div>
+
 </body>
 </html>
