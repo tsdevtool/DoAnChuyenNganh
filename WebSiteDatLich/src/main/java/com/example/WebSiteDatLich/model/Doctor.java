@@ -3,14 +3,6 @@ package com.example.WebSiteDatLich.model;
 public class Doctor {
     private Integer doctor_id;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getDoctor_id() {
         return doctor_id;
     }
@@ -59,10 +51,19 @@ public class Doctor {
         this.department_id = department_id;
     }
 
-    private String name;
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
+    }
+
     private Integer position_id;  // Foreign key to Position
     private String information;
     private String experience;
     private String education;
     private Integer department_id;
+    private Integer user_id;
+
 }
