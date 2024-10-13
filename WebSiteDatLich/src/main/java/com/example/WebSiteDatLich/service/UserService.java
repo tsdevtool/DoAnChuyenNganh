@@ -16,7 +16,9 @@ import com.google.cloud.storage.Bucket;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -73,7 +75,10 @@ public class UserService {
                 Bucket bucket = StorageClient.getInstance().bucket();
                 String fileName = UUID.randomUUID().toString() + "_" + avatarFile.getOriginalFilename();
                 Blob blob = bucket.create(fileName, avatarFile.getInputStream(), avatarFile.getContentType());
-                user.setAvatar(blob.getMediaLink());
+                // Tạo URL tải xuống công khai có thời hạn
+                URL url = blob.signUrl(14, TimeUnit.DAYS); // URL có hiệu lực trong 14 ngày
+                    user.setAvatar(url.toString());
+
             } catch (IOException e) {
                 callback.onFailure("Failed to upload avatar: " + e.getMessage());
                 return;

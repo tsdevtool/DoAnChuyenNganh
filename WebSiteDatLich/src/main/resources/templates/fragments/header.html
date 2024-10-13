@@ -4,134 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
-
-    <!-- Inline CSS for Header -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .navbar {
+        .custom-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #e6f9f6;
-            padding: 10px 20px;
-            border-bottom: 1px solid #d1e7e4;
+            background-color: #00a99d;
+            padding: 15px 30px;
             width: 100%;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .menu-icon {
-            font-size: 24px;
-            color: #888;
-            margin-right: 20px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 30px;
+        .custom-header .header-logo img {
+            height: 40px;
+            max-width: 100px;
             margin-right: 10px;
         }
 
-        .logo span {
-            font-size: 24px;
+        .custom-header .header-logo span {
+            font-size: 20px;
             font-weight: bold;
-            color: #ffb400;
+            color: white;
         }
 
-        .nav-links {
+        .custom-header .header-nav-links {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             flex-grow: 1;
-            margin-left: 30px;
+            margin-left: 50px;
         }
 
-        .nav-links a {
+        .custom-header .header-nav-links a {
             margin: 0 10px;
             text-decoration: none;
-            color: #333;
+            color: white;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-header .header-nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .custom-header .header-search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            position: relative;
+        }
+
+        .custom-header .header-search-bar i {
+            color: #888;
+            position: absolute;
+            left: 10px;
             font-size: 16px;
         }
 
-        .nav-links .active {
-            background-color: #ffb400;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            margin-right: 30px;
-        }
-
-        .search-bar input {
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
+        .custom-header .header-search-bar input {
+            border: none;
             outline: none;
+            margin-left: 25px;
+            width: 100%;
         }
 
-        .search-bar i {
-            margin-right: 10px;
-            color: #333;
-        }
-
-        .icons {
+        .custom-header .header-icons {
             display: flex;
             align-items: center;
         }
 
-        .icons a {
+        .custom-header .header-icons a {
             margin: 0 10px;
-            color: #00bcd4;
-            font-size: 24px;
+            color: white;
+            font-size: 16px;
             text-decoration: none;
-            text-align: center;
+            display: flex;
+            align-items: center;
         }
 
-        .icons a i {
-            display: block;
+        .custom-header .header-icons i {
+            margin-right: 5px;
+            font-size: 20px;
         }
 
-        .icons a span {
-            font-size: 12px;
-            color: #333;
+        .custom-header .header-icons a:hover {
+            color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 <body>
-<div th:fragment="header">
-    <div class="navbar">
-        <div class="menu-icon">
-            <i class="fas fa-bars"></i>
-        </div>
-        <div class="logo">
-            <img src="https://storage.googleapis.com/a1aa/image/uQEJVDzFXiK2H9IktXpYt4XZNwZePpW8hqSzGCuPRfdN5klTA.jpg" alt="BookingCare logo" width="30" height="30">
+<header th:fragment="header">
+    <div class="custom-header">
+        <div class="header-logo">
             <span>Viet Duc</span>
         </div>
-        <div class="nav-links">
+        <div class="header-nav-links">
             <a href="#" class="active">Trang chủ</a>
             <a href="#">Đặt lịch</a>
             <a href="#">Tư vấn</a>
             <a href="#">Đăng nhập</a>
         </div>
-        <div class="search-bar">
+        <div class="header-search-bar">
             <i class="fas fa-search"></i>
             <input type="text" placeholder="Tìm bệnh viện">
         </div>
-        <div class="icons">
+        <div class="header-icons">
             <a href="#">
                 <i class="fas fa-handshake"></i>
                 <span>Hợp tác</span>
@@ -142,6 +129,6 @@
             </a>
         </div>
     </div>
-</div>
+</header>
 </body>
 </html>

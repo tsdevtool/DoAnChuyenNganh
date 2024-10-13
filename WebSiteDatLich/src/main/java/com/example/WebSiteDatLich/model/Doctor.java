@@ -1,16 +1,53 @@
 package com.example.WebSiteDatLich.model;
 
+import java.util.List;
+
 public class Doctor {
     private Integer doctor_id;
+    private String user_id;
+    private Integer position_id;
+    private String information;
+    private String experience;
+    private String education;
+    private Integer department_id;
+    private String departmentName;
+    private String positionName;
 
-    public String getName() {
-        return name;
+    private String userName;
+    private String avatarUrl;
+
+    // Getters and setters for all fields
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+    // Các getter và setter
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
     public Integer getDoctor_id() {
         return doctor_id;
     }
@@ -19,6 +56,13 @@ public class Doctor {
         this.doctor_id = doctor_id;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
     public Integer getPosition_id() {
         return position_id;
     }
@@ -58,11 +102,5 @@ public class Doctor {
     public void setDepartment_id(Integer department_id) {
         this.department_id = department_id;
     }
-
-    private String name;
-    private Integer position_id;  // Foreign key to Position
-    private String information;
-    private String experience;
-    private String education;
-    private Integer department_id;
 }
+
