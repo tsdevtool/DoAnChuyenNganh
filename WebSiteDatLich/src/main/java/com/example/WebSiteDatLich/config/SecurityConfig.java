@@ -22,7 +22,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Vô hiệu hóa CSRF nếu không cần
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**",  "/images/**", "/uploads/**", "/js/**", "/dashboard","/doctors", "/api/auth/register", "/api/auth/login").permitAll()  // Cho phép truy cập công khai vào view đăng ký và đăng nhập
+                        .requestMatchers("/login", "/register", "/css/**",  "/images/**", "/uploads/**", "/js/**",
+                                "/dashboard","/doctors","/positions", "/api/auth/register", "/api/auth/login").permitAll()  // Cho phép truy cập công khai vào view đăng ký và đăng nhập
                         .anyRequest().authenticated()  // Các yêu cầu khác phải xác thực
                 )
                 .formLogin(form -> form

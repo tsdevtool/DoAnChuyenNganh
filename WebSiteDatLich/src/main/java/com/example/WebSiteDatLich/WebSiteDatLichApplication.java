@@ -15,8 +15,6 @@ public class WebSiteDatLichApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebSiteDatLichApplication.class, args);
-		WebSiteDatLichApplication app = new WebSiteDatLichApplication();
-		app.initFirebase();
 	}
 
 	@PostConstruct
