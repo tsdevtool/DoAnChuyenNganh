@@ -18,14 +18,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Vô hiệu hóa CSRF nếu không cần
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors","/import-data").permitAll()
+                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors","/import-data","/appointments","/api/appointments/confirm/**").permitAll()
                         .requestMatchers("/importDoctorWithScheduleAndDepartment").permitAll()  // Chỉ ADMIN có thể import bác sĩ// Cho phép truy cập công khai vào view đăng ký và đăng nhập
                         .anyRequest().authenticated()  // Các yêu cầu khác phải xác thực
                 )
                 .formLogin(form -> form
                         .loginPage("/login")  // URL đến trang đăng nhập tùy chỉnh
                         .loginProcessingUrl("/perform_login")  // URL xử lý đăng nhập
-                        .defaultSuccessUrl("/home", true)  // Chuyển hướng sau khi đăng nhập thành công
+                        .defaultSuccessUrl("/appointments", true)  // Chuyển hướng sau khi đăng nhập thành công
                         .failureUrl("/login?error=true")  // Chuyển hướng nếu đăng nhập thất bại
                         .permitAll()
                 )
@@ -34,8 +34,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")  // Xóa cookie khi đăng xuất
                         .logoutSuccessUrl("/login?logout=true")  // Chuyển hướng sau khi đăng xuất thành công
                         .permitAll()
-                )
-                .httpBasic(Customizer.withDefaults());  // Sử dụng Basic Authentication
+                );
+               // .httpBasic(Customizer.withDefaults());  // Sử dụng Basic Authentication
 
         return http.build();
     }

@@ -1,12 +1,11 @@
 package com.example.WebSiteDatLich.service;
+
 import com.example.WebSiteDatLich.model.User;
 import com.example.WebSiteDatLich.model.Doctor;
+import com.example.WebSiteDatLich.model.Appointment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class DataImportService {
@@ -19,8 +18,7 @@ public class DataImportService {
     public void importTestData() {
         DatabaseReference usersRef = firebaseDatabase.getReference("users");
         DatabaseReference doctorsRef = firebaseDatabase.getReference("doctors");
-        DatabaseReference departmentsRef = firebaseDatabase.getReference("departments");
-        DatabaseReference positionsRef = firebaseDatabase.getReference("positions");
+        DatabaseReference appointmentRef = firebaseDatabase.getReference("appointments");
 
         // Tạo dữ liệu mẫu cho bảng User
         User user1 = new User();
@@ -49,17 +47,17 @@ public class DataImportService {
         Doctor doctor1 = new Doctor();
         doctor1.setDoctor_id(1);
         doctor1.setUser_id(user1.getUser_id()); // Liên kết với User
-        doctor1.setDepartment_id(101); // Giả sử có một phòng ban với ID 101
-        doctor1.setPosition_id(201); // Giả sử có một chức vụ với ID 201
+        doctor1.setDepartment_id(101);
+        doctor1.setPosition_id(201);
         doctor1.setInformation("Chuyên khoa tim mạch với hơn 20 năm kinh nghiệm.");
         doctor1.setExperience("Trưởng khoa tim mạch tại bệnh viện XYZ.");
         doctor1.setEducation("Tốt nghiệp Đại học Y Hà Nội.");
 
         Doctor doctor2 = new Doctor();
         doctor2.setDoctor_id(2);
-        doctor2.setUser_id(user2.getUser_id()); // Liên kết với User
-        doctor2.setDepartment_id(102); // Giả sử có một phòng ban với ID 102
-        doctor2.setPosition_id(202); // Giả sử có một chức vụ với ID 202
+        doctor2.setUser_id(user2.getUser_id());
+        doctor2.setDepartment_id(102);
+        doctor2.setPosition_id(202);
         doctor2.setInformation("Chuyên khoa nội tiết với hơn 15 năm kinh nghiệm.");
         doctor2.setExperience("Bác sĩ nội tiết tại bệnh viện ABC.");
         doctor2.setEducation("Tốt nghiệp Đại học Y Dược TPHCM.");
@@ -68,6 +66,25 @@ public class DataImportService {
         doctorsRef.child(doctor1.getDoctor_id().toString()).setValueAsync(doctor1);
         doctorsRef.child(doctor2.getDoctor_id().toString()).setValueAsync(doctor2);
 
+        // Tạo dữ liệu mẫu cho bảng Appointment
+        Appointment appointment1 = new Appointment();
+        appointment1.setAppointment_id(1);
+        appointment1.setUser_id(user1.getUser_id()); // Liên kết với user1
+        appointment1.setWork_schedule_id(1);
+        appointment1.setMedical_condition("Đau tim");
+        appointment1.setImage_medical_records("https://example.com/image1.jpg");
+        appointment1.setStatus(false);
 
+        Appointment appointment2 = new Appointment();
+        appointment2.setAppointment_id(2);
+        appointment2.setUser_id(user2.getUser_id()); // Liên kết với user2
+        appointment2.setWork_schedule_id(2);
+        appointment2.setMedical_condition("Đau đầu mãn tính");
+        appointment2.setImage_medical_records("https://example.com/image2.jpg");
+        appointment2.setStatus(true);
+
+        // Thêm dữ liệu Appointment vào Firebase
+        appointmentRef.child(appointment1.getAppointment_id().toString()).setValueAsync(appointment1);
+        appointmentRef.child(appointment2.getAppointment_id().toString()).setValueAsync(appointment2);
     }
 }
