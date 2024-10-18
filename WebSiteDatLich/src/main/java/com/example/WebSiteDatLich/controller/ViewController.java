@@ -15,5 +15,8 @@ public class ViewController {
     public String showLoginForm() {
         return "Login/login";  // Trả về file login.html trong thư mục Login
     }
-
+    @GetMapping("/admin")
+    public String showDashboard(){
+        return"dashboard";
+    }
 }

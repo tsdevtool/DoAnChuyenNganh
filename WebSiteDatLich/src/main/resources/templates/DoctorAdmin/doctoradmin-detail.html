@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Thông tin chi tiết bác sĩ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+    }
+
+    .avatar {
+        width: 200px;
+        height: auto;
+        border-radius: 5px;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 1px solid #007bff;
+    }
+
+    .info-title {
+        font-weight: bold;
+        color: #333;
+        font-size: 18px;
+    }
+
+    .info-detail {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .btn-container {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 25px;
+        transition: background-color 0.3s ease;
+        margin-right: 10px;
+    }
+
+    .btn-update {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-update:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .avatar {
+            width: 150px;
+            height: 150px;
+        }
+
+        .info-title {
+            font-size: 16px;
+        }
+
+        .info-detail {
+            font-size: 16px;
+        }
+
+        .btn-custom {
+            font-size: 14px;
+        }
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+  <div class="container">
+<!--    <h1 class="text-center mb-5">Thông tin chi tiết bác sĩ</h1>-->
+
+    <div class="card">
+      <div class="row">
+        <!-- Cột bên trái: Avatar -->
+        <div class="col-md-4 text-center">
+          <img th:src="${doctor.avatarUrl}" alt="Avatar" class="avatar">
+        </div>
+        <!-- Cột bên phải: Thông tin chi tiết bác sĩ -->
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-6">
+              <p class="info-title">Tên:</p>
+              <p class="info-title">Khoa:</p>
+              <p class="info-title">Chức vụ:</p>
+              <p class="info-title">Kinh nghiệm:</p>
+              <p class="info-title">Học vấn:</p>
+              <p class="info-title">Thông tin thêm:</p>
+            </div>
+            <div class="col-6">
+              <p class="info-detail" th:text="${doctor.userName}"></p>
+              <p class="info-detail" th:text="${doctor.department_id}"></p>
+              <p class="info-detail" th:text="${doctor.position_id}"></p>
+              <p class="info-detail" th:text="${doctor.experience}"></p>
+              <p class="info-detail" th:text="${doctor.education}"></p>
+              <p class="info-detail" th:text="${doctor.information}"></p>
+            </div>
+          </div>
+
+          <!-- Nút Cập nhật, Xóa, và Quay lại -->
+          <div class="btn-container d-flex justify-content-center">
+            <!-- Nút Quay lại -->
+            <a th:href="@{/doctoradmin}" class="btn btn-custom btn-back">
+              <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+            <a th:href="@{/update/doctor/{id}(id=${doctor.doctor_id})}" class="btn btn-custom btn-update">
+              <i class="fas fa-edit"></i> Cập nhật
+            </a>
+            <a th:href="@{/delete/doctor/{id}(id=${doctor.doctor_id})}" class="btn btn-custom btn-delete"
+               onclick="return confirm('Bạn có chắc chắn muốn xóa bác sĩ này?')">
+              <i class="fas fa-trash-alt"></i> Xóa
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

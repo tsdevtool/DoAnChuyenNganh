@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Cập nhật thông tin bác sĩ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+    }
+
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 25px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .avatar {
+        width: 150px;
+        height: auto;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 1px solid #007bff;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+  <div class="container">
+    <h1 class="text-center mb-5">Cập nhật thông tin bác sĩ</h1>
+
+    <div class="card">
+      <form th:action="@{/doctoradmin/update/{id}(id=${doctor.doctor_id})}" method="post" enctype="multipart/form-data">
+        <div class="row">
+          <!-- Cột bên trái: Avatar -->
+          <div class="col-md-4 text-center">
+            <img th:src="${userAvatar}" alt="Avatar" class="avatar">
+            <div class="form-group">
+              <label for="avatar">Cập nhật ảnh đại diện</label>
+              <input type="file" class="form-control" id="avatar" name="avatar">
+            </div>
+          </div>
+
+          <!-- Cột bên phải: Form cập nhật -->
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="userName">Tên</label>
+              <input type="text" class="form-control" id="userName" th:field="*{userName}" required>
+            </div>
+            <div class="form-group">
+              <label for="department">Khoa</label>
+              <input type="text" class="form-control" id="department" th:field="*{department_id}" required>
+            </div>
+            <div class="form-group">
+              <label for="position">Chức vụ</label>
+              <input type="text" class="form-control" id="position" th:field="*{position_id}" required>
+            </div>
+            <div class="form-group">
+              <label for="experience">Kinh nghiệm</label>
+              <input type="text" class="form-control" id="experience" th:field="*{experience}">
+            </div>
+            <div class="form-group">
+              <label for="education">Học vấn</label>
+              <input type="text" class="form-control" id="education" th:field="*{education}">
+            </div>
+            <div class="form-group">
+              <label for="information">Thông tin thêm</label>
+              <textarea class="form-control" id="information" th:field="*{information}"></textarea>
+            </div>
+
+            <!-- Nút cập nhật -->
+            <div class="btn-container text-center">
+              <a th:href="@{/doctoradmin}" class="btn btn-custom btn-back">
+                <i class="fas fa-arrow-left"></i> Quay lại
+              </a>
+              <button type="submit" class="btn btn-custom btn-submit">
+                <i class="fas fa-save"></i> Lưu thay đổi
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>
