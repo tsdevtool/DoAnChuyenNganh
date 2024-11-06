@@ -50,6 +50,7 @@ public class UserService {
                 } else {
                     callback.onFailure("User not found!");
                 }
+
             }
 
             @Override

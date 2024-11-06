@@ -21,7 +21,6 @@ public class DataImportService {
         DatabaseReference doctorsRef = firebaseDatabase.getReference("doctors");
         DatabaseReference departmentsRef = firebaseDatabase.getReference("departments");
         DatabaseReference positionsRef = firebaseDatabase.getReference("positions");
-
         // Tạo dữ liệu mẫu cho bảng User
         User user1 = new User();
         user1.setUser_id("-O941D_Req5OyTUY5uIn");
@@ -40,11 +39,9 @@ public class DataImportService {
         user2.setAvatar("https://storage.googleapis.com/download/storage/v1/b/ungdungdatlichkham.appspot.com/o/e39735c1-9fb9-43dc-8021-a548bbb8409b_bacsi1.jpg?generation=1728808807873997&alt=media");
         user2.setAddress("456 Another St, City");
         user2.setDate_of_birth("1975-05-10");
-
         // Thêm dữ liệu User vào Firebase
         usersRef.child(user1.getUser_id()).setValueAsync(user1);
         usersRef.child(user2.getUser_id()).setValueAsync(user2);
-
         // Tạo dữ liệu mẫu cho bảng Doctor
         Doctor doctor1 = new Doctor();
         doctor1.setDoctor_id(1);
@@ -54,7 +51,6 @@ public class DataImportService {
         doctor1.setInformation("Chuyên khoa tim mạch với hơn 20 năm kinh nghiệm.");
         doctor1.setExperience("Trưởng khoa tim mạch tại bệnh viện XYZ.");
         doctor1.setEducation("Tốt nghiệp Đại học Y Hà Nội.");
-
         Doctor doctor2 = new Doctor();
         doctor2.setDoctor_id(2);
         doctor2.setUser_id(user2.getUser_id()); // Liên kết với User
@@ -63,7 +59,6 @@ public class DataImportService {
         doctor2.setInformation("Chuyên khoa nội tiết với hơn 15 năm kinh nghiệm.");
         doctor2.setExperience("Bác sĩ nội tiết tại bệnh viện ABC.");
         doctor2.setEducation("Tốt nghiệp Đại học Y Dược TPHCM.");
-
         // Thêm dữ liệu Doctor vào Firebase
         doctorsRef.child(doctor1.getDoctor_id().toString()).setValueAsync(doctor1);
         doctorsRef.child(doctor2.getDoctor_id().toString()).setValueAsync(doctor2);
