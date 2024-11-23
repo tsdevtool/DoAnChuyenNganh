@@ -8,7 +8,7 @@ class Message{
   List<String> imagesUrls;
   DateTime timeSent;
   //constructor
-  Message( {required this.chatId, required this.messageId, required this.role, required StringBuffer this.message, required List<String> this.imagesUrls, required DateTime this.timeSent});
+  Message( {required this.chatId, required this.messageId, required this.role, required this.message, required this.imagesUrls, required this.timeSent});
   //tomap
   Map<String, dynamic> toMap(){
     return{

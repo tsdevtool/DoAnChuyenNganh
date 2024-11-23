@@ -1,5 +1,8 @@
 package com.example.WebSiteDatLich;
 
+import com.example.WebSiteDatLich.service.DataTestImportService;
+import groovy.lang.Lazy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +15,7 @@ import com.google.firebase.FirebaseOptions;
 
 @SpringBootApplication
 public class WebSiteDatLichApplication {
+	@Autowired
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebSiteDatLichApplication.class, args);
@@ -33,6 +37,7 @@ public class WebSiteDatLichApplication {
 			if (FirebaseApp.getApps().isEmpty()) { // Chỉ khởi tạo nếu Firebase chưa được khởi tạo
 				FirebaseApp.initializeApp(options);
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

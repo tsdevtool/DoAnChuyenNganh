@@ -27,7 +27,7 @@ class _chatScreenState extends State<chatScreen> {
     super.dispose();
   }
   void _scrollToBottom(){
-    WidgetsBinding.instance!.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_){
       if(_scrollController.hasClients && _scrollController.position.maxScrollExtent > 0.0){
         _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
@@ -63,29 +63,40 @@ Widget build(BuildContext context) {
                 child: CircleAvatar(
                   child: IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () async {
-                        //show my animated dialog to satart new chat
-                        showMyAnimatedDialog(
-                          context: context,
-                          title: 'Bắt đầu đoạn chat mới',
-                          content: 'Bạn có chắc muốn bắt đầu đoạn chat mới',
-                          actionText: Text(
-                            'Yes',
-                            style: TextStyle(
-                              fontSize: 16, // Thay đổi kích thước chữ tùy ý
-                              color: Colors.blue, // Đặt màu chữ để đảm bảo dễ nhìn thấy
-                            ),
-                          ),
-                          onActionPressed: (value) async {
-                            if (value) {
-                              // Chuẩn bị phòng chat
-                              await chatProvider.prepareChatRoom(
-                                isNewChat: true,
-                                chatID: '',
-                              );
-                            }
-                          },
-                        );
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Bắt đầu đoạn chat mới'),
+                            content: const Text('Bạn có chắc muốn bắt đầu đoạn chat mới?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Đóng hộp thoại khi nhấn "Hủy"
+                                },
+                                child: const Text('Hủy'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop(); // Đóng hộp thoại khi nhấn "Đồng ý"
+                                  // Chuẩn bị phòng chat
+                                  await chatProvider.prepareChatRoom(
+                                    isNewChat: true,
+                                    chatID: '',
+                                  );
+                                },
+                                child: const Text(
+                                  'Đồng ý',
+                                  style: TextStyle(
+                                    color: Colors.blue, // Đặt màu chữ để dễ nhìn thấy
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                       },
                   ),
                 ),

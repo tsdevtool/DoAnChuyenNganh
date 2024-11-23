@@ -15,9 +15,15 @@ public class Doctor {
 
     private String userName;
     private String avatarUrl;
-
+    private List<Work_schedule> workSchedules; // Danh sách lịch làm việc
     // Getters and setters for all fields
+    public List<Work_schedule> getWorkSchedules() {
+        return workSchedules;
+    }
 
+    public void setWorkSchedules(List<Work_schedule> workSchedules) {
+        this.workSchedules = workSchedules;
+    }
     public String getUserName() {
         return userName;
     }

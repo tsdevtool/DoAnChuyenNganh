@@ -129,7 +129,11 @@
                     <p th:text="${doctor.departmentName}"></p>
                     <p th:text="${doctor.positionName}"></p>
                     <p th:text="${doctor.information}"></p>
-                    <a class="btn btn-primary" th:href="@{/book/doctor/{id}(id=${doctor.doctor_id})}">Đặt lịch khám</a>
+                    <a class="btn btn-primary"
+                       th:if="${doctor.doctor_id != null}"
+                       th:href="@{/doctor/details/{id}(id=${doctor.doctor_id})}">
+                        Đặt lịch khám
+                    </a>
                 </div>
             </div>
         </div>

@@ -1,116 +1,129 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đăng nhập</title>
 
+  <!-- Inline CSS for Login Page -->
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    /* Chỉ áp dụng cho trang login */
+    .login-page {
+        font-family: Arial, sans-serif;
+        background-color: #f0f4f8;
+        margin: 0;
+        padding: 0;
+        height: 100vh; /* Đảm bảo trang chiếm toàn bộ chiều cao của màn hình */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
-    /* Login form */
-    .login-container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      margin-top: 150px;
+    .login-page .login-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px; /* Điều chỉnh kích thước tối đa */
+        box-sizing: border-box;
     }
 
-    h2 {
-      text-align: center;
-      color: #333;
+    .login-page h2 {
+        text-align: center;
+        color: #333;
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
+    .login-page form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .login-page label {
+        font-weight: bold;
+        color: #333;
     }
 
-    input[type="email"], input[type="password"] {
-      padding: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.3s;
+    .login-page input[type="email"], .login-page input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
     }
 
-    input[type="email"]:focus, input[type="password"]:focus {
-      border-color: #00bcd4;
+    .login-page button {
+        width: 100%;
+        padding: 10px;
+        background-color: #00bcd4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
-    button {
-      padding: 10px;
-      background-color: #00bcd4;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+    .login-page button:hover {
+        background-color: #0097a7;
     }
 
-    button:hover {
-      background-color: #0097a7;
+    .login-page .form-footer {
+        text-align: center;
+        margin-top: 15px;
     }
 
-    .form-link {
-      text-align: center;
-      margin-top: 10px;
+    .login-page .form-footer a {
+        color: #007bff;
+        text-decoration: none;
     }
 
-    .form-link a {
-      text-decoration: none;
-      color: #00bcd4;
-      font-weight: bold;
+    .login-page .form-footer a:hover {
+        text-decoration: underline;
     }
 
-    .form-link a:hover {
-      color: #0097a7;
+    .login-page .error, .login-page .message {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .login-page .error {
+        color: red;
+    }
+
+    .login-page .message {
+        color: green;
     }
   </style>
 </head>
-<body>
-
-<!-- Include header fragment -->
-<header th:replace="fragments/header :: header"/>
-<main>
-<nav class="login-container">
+<body class="login-page">
+<div class="login-container">
   <h2>Đăng nhập</h2>
 
-  <form action="/api/auth/login" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+  <!-- Hiển thị thông báo lỗi hoặc thành công -->
+  <div class="error" th:if="${error}" th:text="${error}"></div>
+  <div class="message" th:if="${message}" th:text="${message}"></div>
 
-    <label for="password">Mật khẩu:</label>
-    <input type="password" id="password" name="password" required>
+  <form action="/api/auth/login" method="post">
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+      <label for="password">Mật khẩu:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
 
     <button type="submit">Đăng nhập</button>
 
-    <div class="form-link">
-      <a href="/register">Chưa có tài khoản? Đăng ký</a>
+    <div class="form-footer">
+      <p>Bạn chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
     </div>
   </form>
-</nav>
-</main>
+</div>
+</section>
 </body>
 </html>

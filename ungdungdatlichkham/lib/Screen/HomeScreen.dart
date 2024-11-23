@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart'; // Import màn hình đăng nhập
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,19 +15,19 @@ class HomeScreen extends StatelessWidget {
             // Top Status Bar
             Container(
               color: Colors.blue,
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
-                      FaIcon(FontAwesomeIcons.userCircle, size: 28, color: Colors.white),
-                      SizedBox(width: 10),
+                      const FaIcon(FontAwesomeIcons.userCircle, size: 28, color: Colors.white),
+                      const SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Buổi sáng hứng khởi!',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -34,10 +36,10 @@ class HomeScreen extends StatelessWidget {
                               // Điều hướng sang màn hình đăng nhập
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => LoginScreen()),
+                                MaterialPageRoute(builder: (context) => const LoginScreen()),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Đăng ký / Đăng nhập',
                               style: TextStyle(
                                 color: Colors.white,
@@ -50,14 +52,14 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Search Input
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: TextField(
+                    child: const TextField(
                       decoration: InputDecoration(
                         hintText: 'Tên bác sĩ, triệu chứng bệnh, chuyên khoa...',
                         prefixIcon: Icon(Icons.search, color: Colors.grey),
@@ -69,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Redesigned Promotion Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -77,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 10,
@@ -103,12 +105,12 @@ class HomeScreen extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.5),
-                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
                         ),
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               'Đặt lịch liền tay nhận ngay ưu đãi',
                               style: TextStyle(
                                 color: Colors.white,
@@ -117,17 +119,17 @@ class HomeScreen extends StatelessWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () {},
-                              child: Text('Đặt ngay'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                               ),
+                              child: const Text('Đặt ngay'),
                             ),
                           ],
                         ),
@@ -137,7 +139,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Icons Section
             Expanded(
               child: Padding(
@@ -189,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                 color: color,
                 shape: BoxShape.circle,
               ),
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: FaIcon(icon, color: Colors.white, size: 30),
             ),
             if (isNew)
@@ -197,12 +199,12 @@ class HomeScreen extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Mới',
                     style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
@@ -210,7 +212,7 @@ class HomeScreen extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(text, textAlign: TextAlign.center),
       ],
     );
@@ -221,7 +223,7 @@ class HomeScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FaIcon(icon, color: color),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           text,
           style: TextStyle(fontSize: 12, color: color),

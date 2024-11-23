@@ -269,9 +269,10 @@ class ChatProvider extends ChangeNotifier {
            element.messageId == assistantMessage.messageId &&
           element.role.name == Role.assitant.name)
           .message.write(event.text);
+      log('event:${event.text}');
       notifyListeners();
     }, onDone:() async{
-
+      log('stream done');
       // save message to hive database
       await saveMessagesToDB(
           chatID: chatId,

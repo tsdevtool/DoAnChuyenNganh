@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Home_Screen(), // Đặt HomeScreen làm màn hình chính
+      home: const Home_Screen(), // Đặt HomeScreen làm màn hình chính
     );
   }
 }
