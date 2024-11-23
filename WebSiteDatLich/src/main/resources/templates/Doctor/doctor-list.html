@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Danh sách bác sĩ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .doctor-list-container {
+            font-family: Arial, sans-serif;
+        }
+
+        .doctor-card-custom {
+            text-align: center;
+            margin: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            max-width: 250px;
+        }
+
+        .doctor-card-custom:hover {
+            transform: translateY(-10px);
+        }
+
+        .doctor-card-custom img {
+            border-radius: 10px;
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .doctor-card-custom h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .doctor-card-custom p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .doctor-card-custom .btn {
+            margin-top: 10px;
+            background-color: #007bff;
+            border: none;
+        }
+
+        .doctor-card-custom .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Carousel navigation button styles */
+        .doctor-carousel-nav button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+
+        .doctor-carousel-nav .owl-prev {
+            left: -35px;
+        }
+
+        .doctor-carousel-nav .owl-next {
+            right: -35px;
+        }
+
+        .doctor-carousel-nav .owl-prev::before {
+            content: '←'; /* Left arrow */
+        }
+
+        .doctor-carousel-nav .owl-next::before {
+            content: '→'; /* Right arrow */
+        }
+
+        .mtop{margin-top: 125px;}
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+    <div class="container doctor-list-container">
+
+        <h1 class="text-center mt-10">Danh sách bác sĩ</h1>
+
+        <!-- Banner Carousel -->
+        <div class="owl-carousel owl-theme">
+            <div class="item">
+                <div class="carousel-item-custom">
+                    <img src="https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp" alt="Banner 1">
+                    <div class="carousel-caption">
+                        <h2>Nền tảng y tế</h2>
+                        <p>Sức khỏe toàn diện</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="carousel-item-custom">
+                    <img src="https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp" alt="Banner 2">
+                    <div class="carousel-caption">
+                        <h2>Chăm sóc</h2>
+                        <p>Sức khỏe gia đình</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Carousel -->
+        <div class="owl-carousel owl-theme doctor-carousel-nav">
+            <div th:each="doctor : ${doctors}" class="item">
+                <div class="doctor-card-custom">
+                    <img th:src="${doctor.avatarUrl}" alt="Avatar" />
+                    <h3 th:text="${doctor.userName}"></h3>
+                    <p th:text="${doctor.departmentName}"></p>
+                    <p th:text="${doctor.positionName}"></p>
+                    <p th:text="${doctor.information}"></p>
+                    <a class="btn btn-primary"
+                       th:if="${doctor.doctor_id != null}"
+                       th:href="@{/doctor/details/{id}(id=${doctor.doctor_id})}">
+                        Đặt lịch khám
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+</body>
+</html>

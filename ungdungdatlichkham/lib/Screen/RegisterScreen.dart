@@ -2,31 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đăng ký'),
+        title: const Text('Đăng ký'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Tạo tài khoản mới',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: 16),
+            const TextField(
               decoration: InputDecoration(
                 labelText: 'Tên',
                 prefixIcon: FaIcon(FontAwesomeIcons.user),
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: 16),
+            const TextField(
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Số điện thoại',
@@ -34,8 +36,8 @@ class RegisterScreen extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: 16),
+            const TextField(
               decoration: InputDecoration(
                 labelText: 'Mật khẩu',
                 prefixIcon: FaIcon(FontAwesomeIcons.lock),
@@ -43,23 +45,23 @@ class RegisterScreen extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 // Xử lý đăng ký bằng số điện thoại ở đây
               },
-              child: Text('Đăng ký'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 16),
               ),
+              child: const Text('Đăng ký'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextButton(
               onPressed: () {
                 // Quay lại màn hình đăng nhập
                 Navigator.pop(context);
               },
-              child: Text('Đã có tài khoản? Đăng nhập ngay!'),
+              child: const Text('Đã có tài khoản? Đăng nhập ngay!'),
             ),
           ],
         ),

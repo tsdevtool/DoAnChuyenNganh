@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .custom-header {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           background-color: #00a99d;
+           padding: 15px 30px;
+           width: 100%;
+           position: fixed;
+           top: 0;
+           left: 0;
+           z-index: 1000;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       }
+
+       .custom-header .header-logo img {
+           height: 40px;
+           max-width: 100px;
+           margin-right: 10px;
+       }
+
+       .custom-header .header-logo span {
+           font-size: 20px;
+           font-weight: bold;
+           color: white;
+       }
+
+       .custom-header .header-nav-links {
+           display: flex;
+           justify-content: space-around;
+           flex-grow: 1;
+           margin-left: 50px;
+       }
+
+       .custom-header .header-nav-links a {
+           margin: 0 10px;
+           text-decoration: none;
+           color: white;
+           font-size: 16px;
+           padding: 5px 10px;
+           border-radius: 5px;
+           transition: background-color 0.3s ease;
+       }
+
+       .custom-header .header-nav-links a:hover {
+           background-color: rgba(255, 255, 255, 0.2);
+       }
+
+       .custom-header .header-search-bar {
+           display: flex;
+           align-items: center;
+           background-color: white;
+           padding: 5px 10px;
+           border-radius: 20px;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+           width: 250px;
+           position: relative;
+       }
+
+       .custom-header .header-search-bar i {
+           color: #888;
+           position: absolute;
+           left: 10px;
+           font-size: 16px;
+       }
+
+       .custom-header .header-search-bar input {
+           border: none;
+           outline: none;
+           margin-left: 25px;
+           width: 100%;
+       }
+
+       .custom-header .header-icons {
+           display: flex;
+           align-items: center;
+       }
+
+       .custom-header .header-icons a {
+           margin: 0 10px;
+           color: white;
+           font-size: 16px;
+           text-decoration: none;
+           display: flex;
+           align-items: center;
+       }
+
+       .custom-header .header-icons i {
+           margin-right: 5px;
+           font-size: 20px;
+       }
+
+       .custom-header .header-icons a:hover {
+           color: rgba(255, 255, 255, 0.8);
+       }
+    </style>
+</head>
+<body>
+<!-- Define the header fragment -->
+<header th:fragment="header">
+    <div class="custom-header">
+        <div class="header-logo">
+            <span>Viet Duc</span>
+        </div>
+        <div class="header-nav-links">
+            <a href="#" class="active">Trang chủ</a>
+            <a href="#">Đặt lịch</a>
+            <a href="#">Tư vấn</a>
+            <a href="#">Đăng nhập</a>
+        </div>
+        <div class="header-search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Tìm bác sĩ">
+        </div>
+        <div class="header-icons">
+            <a href="#">
+                <i class="fas fa-handshake"></i>
+                <span>Hợp tác</span>
+            </a>
+            <a href="#">
+                <i class="fas fa-history"></i>
+                <span>Lịch hẹn</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Define the main content fragment -->
+<div layout:fragment="content">
+    <!-- Content will be included here -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true, /* Enable navigation */
+            navText: ['<', '>'], /* Custom arrows for navigation */
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 2
+                },
+                1000: {
+                    items: 3
+                }
+            }
+        });
+    });
+$(document).ready(function(){
+        // Banner Carousel with autoplay
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            items: 1,
+            autoplay: true, // Enable autoplay
+            autoplayTimeout: 5000, // 5 seconds delay for each slide
+            autoplayHoverPause: true, // Pause on hover
+            navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"]
+        });
+    });
+</script>
+</body>
+</html>

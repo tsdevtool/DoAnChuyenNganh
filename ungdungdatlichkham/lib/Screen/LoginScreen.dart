@@ -3,23 +3,25 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ungdungdatlichkham/Screen/RegisterScreen.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đăng nhập'),
+        title: const Text('Đăng nhập'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Chào mừng bạn trở lại!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: 16),
+            const TextField(
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Số điện thoại',
@@ -27,8 +29,8 @@ class LoginScreen extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
-            TextField(
+            const SizedBox(height: 16),
+            const TextField(
               decoration: InputDecoration(
                 labelText: 'Mật khẩu',
                 prefixIcon: FaIcon(FontAwesomeIcons.lock),
@@ -36,26 +38,26 @@ class LoginScreen extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 // Xử lý đăng nhập bằng số điện thoại ở đây
               },
-              child: Text('Đăng nhập'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 16),
               ),
+              child: const Text('Đăng nhập'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextButton(
               onPressed: () {
                 // Điều hướng sang màn hình đăng ký
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
                 );
               },
-              child: Text('Chưa có tài khoản? Đăng ký ngay!'),
+              child: const Text('Chưa có tài khoản? Đăng ký ngay!'),
             ),
           ],
         ),

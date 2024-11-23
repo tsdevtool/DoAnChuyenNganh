@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <!-- Inline CSS cho trang đăng ký -->
+    <style>
+        /* Áp dụng chỉ cho trang đăng ký */
+        .register-page {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Đảm bảo trang chiếm toàn bộ chiều cao của màn hình */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .register-page .register-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* Kích thước tối đa */
+            margin-top: 150px;
+            box-sizing: border-box;
+        }
+
+        .register-page h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .register-page form {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Hai cột bằng nhau */
+            gap: 20px;
+        }
+
+        .register-page label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .register-page input[type="email"],
+        .register-page input[type="password"],
+        .register-page input[type="text"],
+        .register-page input[type="date"],
+        .register-page input[type="file"],
+        .register-page select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .register-page button {
+            grid-column: span 2; /* Nút chiếm cả 2 cột */
+            width: 100%;
+            padding: 10px;
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .register-page button:hover {
+            background-color: #0097a7;
+        }
+
+        .register-page .form-footer {
+            text-align: center;
+            grid-column: span 2; /* Chiếm cả 2 cột */
+            margin-top: 15px;
+        }
+
+        .register-page .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-page .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .register-page .message, .register-page .error {
+            text-align: center;
+            margin-bottom: 15px;
+            grid-column: span 2; /* Chiếm cả 2 cột */
+        }
+
+        .register-page .error {
+            color: red;
+        }
+
+        .register-page .message {
+            color: green;
+        }
+    </style>
+</head>
+<body class="register-page">
+
+<!-- Include the header fragment -->
+
+    <div class="register-container">
+        <h2>Đăng ký</h2>
+
+        <!-- Hiển thị thông báo lỗi hoặc thành công -->
+        <div class="error" th:if="${error}" th:text="${error}"></div>
+        <div class="message" th:if="${message}" th:text="${message}"></div>
+
+        <form action="/api/auth/register" method="post" enctype="multipart/form-data">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Mật khẩu:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="name">Họ và Tên:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="address">Địa chỉ:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div>
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div>
+                <label for="date_of_birth">Ngày sinh:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" required>
+            </div>
+            <div>
+                <label for="sex">Giới tính:</label>
+                <select id="sex" name="sex">
+                    <option value="true">Nam</option>
+                    <option value="false">Nữ</option>
+                </select>
+            </div>
+            <div>
+                <label for="avatar">Ảnh đại diện:</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+            </div>
+
+            <button type="submit">Đăng ký</button>
+
+            <div class="form-footer">
+                <p>Đã có tài khoản? <a href="/login">Đăng nhập tại đây</a></p>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
