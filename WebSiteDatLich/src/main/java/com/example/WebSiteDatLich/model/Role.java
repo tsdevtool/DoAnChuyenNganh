@@ -1,6 +1,11 @@
 package com.example.WebSiteDatLich.model;
 
-public class Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public class Role implements GrantedAuthority {
+    private Integer role_id;
+    private String name;
+
     public Integer getRole_id() {
         return role_id;
     }
@@ -17,6 +22,8 @@ public class Role {
         this.name = name;
     }
 
-    private Integer role_id;
-    private String name;
+    @Override
+    public String getAuthority() {
+        return name; // Trả về tên role, ví dụ: "ROLE_ADMIN" hoặc "ROLE_USER"
+    }
 }

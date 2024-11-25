@@ -1,8 +1,10 @@
 package com.example.WebSiteDatLich.config;
 
+import com.example.WebSiteDatLich.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,35 +15,49 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+    // Cấu hình AuthenticationManager
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder
+                .userDetailsService(customUserDetailsService)
+                .passwordEncoder(passwordEncoder);
+        return builder.build();
+    }
+
+    // Cấu hình SecurityFilterChain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Vô hiệu hóa CSRF nếu không cần
+                .csrf(csrf -> csrf.disable()) // Tắt bảo vệ CSRF (nên bật nếu cần thiết)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors","/import-data/","/doctor/details/**").permitAll()
-                        .requestMatchers("/importDoctorWithScheduleAndDepartment").permitAll()  // Chỉ ADMIN có thể import bác sĩ// Cho phép truy cập công khai vào view đăng ký và đăng nhập
-                        .anyRequest().authenticated()  // Các yêu cầu khác phải xác thực
+                        .requestMatchers("/login", "/register", "/api/auth/**", "/doctors", "/doctors/details/**","/import-roles").permitAll()
+                        .requestMatchers("/importDoctorWithScheduleAndDepartment").hasRole("ADMIN") // Chỉ ADMIN được phép
+                        .anyRequest().authenticated() // Các request khác yêu cầu xác thực
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")  // URL đến trang đăng nhập tùy chỉnh
-                        .loginProcessingUrl("/perform_login")  // URL xử lý đăng nhập
-                        .defaultSuccessUrl("/home", true)  // Chuyển hướng sau khi đăng nhập thành công
-                        .failureUrl("/login?error=true")  // Chuyển hướng nếu đăng nhập thất bại
+                        .loginPage("/login") // Trang đăng nhập tùy chỉnh
+                        .loginProcessingUrl("/perform_login") // URL xử lý đăng nhập
+                        .defaultSuccessUrl("/doctors", true) // Chuyển hướng sau khi đăng nhập thành công
+                        .failureUrl("/login?error=true") // Chuyển hướng khi đăng nhập thất bại
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/perform_logout")  // URL xử lý đăng xuất
-                        .deleteCookies("JSESSIONID")  // Xóa cookie khi đăng xuất
-                        .logoutSuccessUrl("/login?logout=true")  // Chuyển hướng sau khi đăng xuất thành công
+                        .logoutUrl("/logout") // URL xử lý đăng xuất
+                        .deleteCookies("JSESSIONID") // Xóa cookie phiên
+                        .logoutSuccessUrl("/login?logout=true") // Chuyển hướng sau khi đăng xuất
                         .permitAll()
-                )
-                .httpBasic(Customizer.withDefaults());  // Sử dụng Basic Authentication
+                );
 
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Sử dụng mã hóa BCrypt để bảo mật mật khẩu
-    }
+    // Bean PasswordEncoder để mã hóa mật khẩu
+
 }

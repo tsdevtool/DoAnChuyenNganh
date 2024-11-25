@@ -131,12 +131,18 @@
                     <p th:text="${doctor.information}"></p>
                     <a class="btn btn-primary"
                        th:if="${doctor.doctor_id != null}"
-                       th:href="@{/doctor/details/{id}(id=${doctor.doctor_id})}">
+                       th:href="@{/doctors/details/{id}(id=${doctor.doctor_id})}">
                         Đặt lịch khám
                     </a>
                 </div>
             </div>
         </div>
+    </div>
+    <div>
+        <h5>Thông tin người dùng</h5>
+        <p><strong>Tên:</strong> <span th:text="${loggedInUser != null ? loggedInUser.name : 'Chưa đăng nhập'}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${loggedInUser != null ? loggedInUser.username : 'Chưa đăng nhập'}"></span></p>
+        <p><strong>Số điện thoại:</strong> <span th:text="${loggedInUser != null ? loggedInUser.phone : 'Chưa đăng nhập'}"></span></p>
     </div>
 </section>
 

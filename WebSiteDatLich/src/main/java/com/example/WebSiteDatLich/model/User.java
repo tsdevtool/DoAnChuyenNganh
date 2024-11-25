@@ -1,6 +1,12 @@
 package com.example.WebSiteDatLich.model;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+public class User implements UserDetails {
     private String user_id;
     private String password;
     private String name;
@@ -12,6 +18,12 @@ public class User {
     private String avatar;  // URL của ảnh đại diện
     private Integer role_id;
 
+    // Thêm thông tin vai trò (role)
+    private Role role;
+
+    // Constructor mặc định
+    public User() {}
+
     // Getters and Setters
     public String getUser_id() {
         return user_id;
@@ -21,6 +33,7 @@ public class User {
         this.user_id = user_id;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -60,7 +73,10 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @Override
+    public String getUsername() {
+        return email; // Sử dụng email làm username
+    }
     public String getAddress() {
         return address;
     }
@@ -91,5 +107,52 @@ public class User {
 
     public void setRole_id(Integer role_id) {
         this.role_id = role_id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    // Implement methods from UserDetails interface
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(role);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return user_id != null && user_id.equals(user.user_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return user_id != null ? user_id.hashCode() : 0;
     }
 }

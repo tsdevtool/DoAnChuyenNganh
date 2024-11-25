@@ -168,6 +168,43 @@
          .text-center{
            text-align: center;z
         }
+         .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050;
+    }
+
+    .modal-dialog {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        width: 500px;
+        max-width: 100%;
+    }
+
+    .modal-header, .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-footer {
+        margin-top: 15px;
+    }
+
+    .close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
     </style>
 </head>
 <body>
@@ -212,31 +249,153 @@
         </div>
     </div>
         <div class="text-center mt-4">
-            <button class="btn btn-primary btn-lg" style="border-radius: 8px; font-weight: bold;">
+            <button class="btn btn-primary btn-lg" style="border-radius: 8px; font-weight: bold;"onclick="openModal()">
                 ĐẶT KHÁM NGAY
             </button>
         </div>
     </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const dayButtons = document.querySelectorAll(".day-button");
-      const slotContainers = document.querySelectorAll(".slot-container");
 
-      dayButtons.forEach((button, index) => {
-          button.addEventListener("click", () => {
-              // Reset trạng thái active
-              dayButtons.forEach(btn => btn.classList.remove("active"));
-              slotContainers.forEach(container => container.classList.remove("active"));
-              // Thêm trạng thái active
-              button.classList.add("active");
-              slotContainers[index].classList.add("active");
-              // Cuộn đến vị trí của nút được chọn
-              button.scrollIntoView({ behavior: "smooth", inline: "center" });
-          });
-      });
-  });
-</script>
+</div>
+    <!-- Modal nhập thông tin bệnh nhân -->
+    <div id="patientInfoModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nhập thông tin bệnh nhân</h5>
+                <button type="button" class="close" onclick="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="patientInfoForm">
+                    <!-- Họ và tên -->
+                    <div class="form-group">
+                        <label for="patientName">Họ và tên</label>
+                        <input type="text" class="form-control" id="patientName"
+                               th:value="${loggedInUser != null ? loggedInUser.name : ''}"
+                               placeholder="Nhập họ và tên" required>
+                    </div>
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                        <label for="patientPhone">Số điện thoại</label>
+                        <input type="text" class="form-control" id="patientPhone"
+                               th:value="${loggedInUser != null ? loggedInUser.phone : ''}"
+                               placeholder="Nhập số điện thoại" required>
+                    </div>
+                    <!-- Tình trạng bệnh -->
+                    <div class="form-group">
+                        <label for="medicalCondition">Tình trạng bệnh</label>
+                        <textarea class="form-control" id="medicalCondition"
+                                  rows="3" placeholder="Nhập tình trạng bệnh"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitAppointment()">Xác nhận</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dayButtons = document.querySelectorAll(".day-button");
+            const slotContainers = document.querySelectorAll(".slot-container");
+            const timeSlotButtons = document.querySelectorAll(".time-slot-button");
+
+            dayButtons.forEach((button, index) => {
+                button.addEventListener("click", () => {
+                    // Reset trạng thái active
+                    dayButtons.forEach(btn => btn.classList.remove("active"));
+                    slotContainers.forEach(container => container.classList.remove("active"));
+                    // Thêm trạng thái active
+                    button.classList.add("active");
+                    slotContainers[index].classList.add("active");
+                    // Cuộn đến vị trí của nút được chọn
+                    button.scrollIntoView({ behavior: "smooth", inline: "center" });
+                });
+            });
+
+            timeSlotButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    // Reset trạng thái active
+                    timeSlotButtons.forEach(btn => btn.classList.remove("active"));
+                    // Thêm trạng thái active
+                    button.classList.add("active");
+                });
+            });
+        });
+
+        function openModal() {
+     const patientName = document.getElementById("patientName").value;
+    const patientPhone = document.getElementById("patientPhone").value;
+
+    if (!patientName || !patientPhone) {
+        alert("Thông tin người dùng chưa được tải. Vui lòng đăng nhập lại.");
+        return;
+    }
+
+    document.getElementById("patientInfoModal").style.display = "flex";
+}
+        function closeModal() {
+            document.getElementById("patientInfoModal").style.display = "none";
+        }
+
+        function submitAppointment() {
+            const patientName = document.getElementById("patientName").value.trim();
+            const patientPhone = document.getElementById("patientPhone").value.trim();
+            const medicalCondition = document.getElementById("medicalCondition").value.trim();
+            const selectedDate = document.querySelector(".day-button.active")?.textContent.trim();
+            const selectedTimeSlot = document.querySelector(".time-slot-button.active")?.textContent.trim();
+
+            if (!selectedDate || !selectedTimeSlot) {
+                alert("Vui lòng chọn ngày và giờ làm việc!");
+                return;
+            }
+
+            if (!patientName || !patientPhone) {
+                alert("Vui lòng nhập đầy đủ thông tin bệnh nhân!");
+                return;
+            }
+
+            const appointmentData = {
+                user_id: "user123", // ID người dùng
+                work_schedule_id: "doctor123", // ID lịch làm việc
+                medical_condition: medicalCondition,
+                image_medical_records: null,
+                status: false,
+                timeSlot: selectedTimeSlot,
+                appointmentDate: selectedDate,
+                patientName: patientName,
+                phoneNumber: patientPhone
+            };
+
+            // Gửi dữ liệu lên server
+            fetch("/doctor/book-appointment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(appointmentData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Đặt lịch thất bại!");
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message);
+                    closeModal(); // Đóng modal sau khi gửi thành công
+                })
+                .catch(error => {
+                    alert("Đặt lịch thất bại. Vui lòng thử lại!");
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+
 </section>
 </body>
 </html>

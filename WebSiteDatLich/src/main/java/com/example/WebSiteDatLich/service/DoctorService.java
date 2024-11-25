@@ -1,4 +1,5 @@
 package com.example.WebSiteDatLich.service;
+import com.example.WebSiteDatLich.model.Appointment;
 import com.example.WebSiteDatLich.model.Doctor;
 import com.example.WebSiteDatLich.model.User;
 import com.example.WebSiteDatLich.model.Work_schedule;
@@ -227,5 +228,15 @@ public class DoctorService {
         });
 
         return future;
+    }
+    public void saveAppointment(Appointment appointment) {
+        DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments");
+
+        // Tạo một ID mới cho lịch hẹn
+        String appointmentId = appointmentsRef.push().getKey();
+        appointment.setAppointment_id(appointmentId.hashCode()); // Gán ID tự động
+
+        // Lưu lịch hẹn vào Firebase
+        appointmentsRef.child(appointmentId).setValueAsync(appointment);
     }
 }
