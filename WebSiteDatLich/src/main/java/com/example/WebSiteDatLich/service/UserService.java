@@ -1,6 +1,9 @@
 package com.example.WebSiteDatLich.service;
 
 import com.example.WebSiteDatLich.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -42,15 +46,14 @@ public class UserService {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
                         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                            callback.onSuccess("Login successful!");
-                        } else {
-                            callback.onFailure("Invalid email or password!");
+                            callback.onSuccess(user.getUser_id());
+                            return;
                         }
                     }
+                    callback.onFailure("Invalid email or password!");
                 } else {
                     callback.onFailure("User not found!");
                 }
-
             }
 
             @Override
@@ -58,6 +61,45 @@ public class UserService {
                 callback.onFailure("Error: " + databaseError.getMessage());
             }
         });
+    }
+    public void getUserDetails(String userId, UserDetailsCallback callback) {
+        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Parse dữ liệu từ Firebase thành đối tượng User
+                    User user = dataSnapshot.getValue(User.class);
+                    callback.onSuccess(user);
+                } else {
+                    callback.onFailure("User not found with ID: " + userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onFailure("Error fetching user details: " + databaseError.getMessage());
+            }
+        });
+    }
+    public CompletableFuture<User> getUserDetails(String userId) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    future.complete(user);
+                } else {
+                    future.completeExceptionally(new RuntimeException("User not found with ID: " + userId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                future.completeExceptionally(new RuntimeException("Error: " + databaseError.getMessage()));
+            }
+        });
+        return future;
     }
     public void register(User user, MultipartFile avatarFile, RegisterCallback callback) {
         // Tạo ID mới cho người dùng
@@ -105,6 +147,10 @@ public class UserService {
 
     public interface RegisterCallback {
         void onSuccess(String message);
+        void onFailure(String message);
+    }
+    public interface UserDetailsCallback {
+        void onSuccess(User user);
         void onFailure(String message);
     }
 }
