@@ -2,10 +2,15 @@ package com.example.WebSiteDatLich.controller;
 
 import com.example.WebSiteDatLich.model.User;
 import com.example.WebSiteDatLich.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -17,25 +22,30 @@ public class LoginController {
     private UserService userService;
 
     // Login using email and password
-    @PostMapping("/login")
-    public CompletableFuture<String> login(@RequestParam String email, @RequestParam String password) {
-        CompletableFuture<String> future = new CompletableFuture<>();
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CompletableFuture<ResponseEntity<?>> login(@RequestBody User loginRequest) {
+        CompletableFuture<ResponseEntity<?>> future = new CompletableFuture<>();
 
-        userService.login(email, password, new UserService.LoginCallback() {
+        userService.login(loginRequest.getEmail(), loginRequest.getPassword(), new UserService.LoginCallback() {
             @Override
-            public void onSuccess(String message) {
-                future.complete("Login successful!");
+            public void onSuccess(String userId) {
+                CompletableFuture<User> userFuture = userService.getUserDetails(userId);
+                userFuture.thenAccept(user -> {
+                    future.complete(ResponseEntity.ok().body(user));
+                }).exceptionally(ex -> {
+                    future.complete(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching user details: " + ex.getMessage()));
+                    return null;
+                });
             }
 
             @Override
             public void onFailure(String message) {
-                future.complete("Invalid email or password!");
+                future.complete(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: " + message));
             }
         });
 
         return future;
     }
-
     // Register new user
     @PostMapping("/register")
     public CompletableFuture<String> register(

@@ -1,22 +1,30 @@
 package com.example.WebSiteDatLich.service;
+import com.example.WebSiteDatLich.model.Appointment;
 import com.example.WebSiteDatLich.model.Doctor;
 import com.example.WebSiteDatLich.model.User;
 import com.example.WebSiteDatLich.model.Work_schedule;
+import com.google.cloud.storage.*;
+import com.google.firebase.cloud.StorageClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
-import com.google.cloud.storage.Storage;
 import com.google.gson.reflect.TypeToken;
-import com.google.cloud.storage.StorageOptions;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 @Service
 public class DoctorService {
 
@@ -225,6 +233,44 @@ public class DoctorService {
                 future.completeExceptionally(new RuntimeException("Không thể tải thông tin bác sĩ: " + databaseError.getMessage()));
             }
         });
+
+        return future;
+    }
+    public CompletableFuture<String> confirmBooking(Appointment appointment, MultipartFile medicalImage) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+
+        // Xử lý lưu ảnh lên Firebase Storage nếu có
+        if (medicalImage != null && !medicalImage.isEmpty()) {
+            try {
+                Bucket bucket = StorageClient.getInstance().bucket();
+                String fileName = UUID.randomUUID().toString() + "_" + medicalImage.getOriginalFilename();
+                Blob blob = bucket.create(fileName, medicalImage.getInputStream(), medicalImage.getContentType());
+
+                // Tạo URL tải xuống công khai có thời hạn
+                URL imageUrl = blob.signUrl(14, TimeUnit.DAYS); // URL có hiệu lực trong 14 ngày
+                appointment.setImage_medical_records(imageUrl.toString());
+
+            } catch (IOException e) {
+                logger.error("Lỗi khi lưu ảnh vào Firebase Storage: {}", e.getMessage());
+                future.completeExceptionally(new RuntimeException("Không thể lưu ảnh lên Firebase Storage: " + e.getMessage()));
+                return future;
+            }
+        }
+
+        // Tạo mới lịch hẹn trong Firebase Realtime Database
+        DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments");
+        String newAppointmentKey = appointmentsRef.push().getKey();
+        if (newAppointmentKey == null) {
+            future.completeExceptionally(new RuntimeException("Không thể tạo khóa mới cho appointment"));
+        } else {
+            appointmentsRef.child(newAppointmentKey).setValue(appointment, (databaseError, databaseReference) -> {
+                if (databaseError != null) {
+                    future.completeExceptionally(new RuntimeException("Lỗi khi lưu appointment: " + databaseError.getMessage()));
+                } else {
+                    future.complete("Đặt lịch thành công");
+                }
+            });
+        }
 
         return future;
     }
