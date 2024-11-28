@@ -9,7 +9,7 @@
            display: flex;
            align-items: center;
            justify-content: space-between;
-           background-color: #00a99d;
+           background-color: #4a8dd4;
            padding: 15px 30px;
            width: 100%;
            position: fixed;
@@ -32,10 +32,10 @@
        }
 
        .custom-header .header-nav-links {
-           display: flex;
+
            justify-content: space-around;
            flex-grow: 1;
-           margin-left: 50px;
+           margin-left: 550px;
        }
 
        .custom-header .header-nav-links a {
@@ -109,10 +109,9 @@
             <span>Viet Duc</span>
         </div>
         <div class="header-nav-links">
-            <a href="#" class="active">Trang chủ</a>
-            <a href="#">Đặt lịch</a>
+            <a href="/doctors" class="active">Trang chủ</a>
             <a href="#">Tư vấn</a>
-            <a href="#">Đăng nhập</a>
+            <a href="/login">Đăng nhập</a>
         </div>
         <div class="header-search-bar">
             <i class="fas fa-search"></i>
@@ -162,19 +161,16 @@
             }
         });
     });
-$(document).ready(function(){
-        // Banner Carousel with autoplay
-        $(".owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            nav: true,
-            items: 1,
-            autoplay: true, // Enable autoplay
-            autoplayTimeout: 5000, // 5 seconds delay for each slide
-            autoplayHoverPause: true, // Pause on hover
-            navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"]
-        });
-    });
+$('.banner-carousel').owlCarousel({
+    loop: true,
+    margin: 10,
+    nav: true,
+    dots: true,
+    autoplay: true,
+    autoplayTimeout: 5000,
+    autoplayHoverPause: true,
+    items: 1
+});
 </script>
 </body>
 </html>
