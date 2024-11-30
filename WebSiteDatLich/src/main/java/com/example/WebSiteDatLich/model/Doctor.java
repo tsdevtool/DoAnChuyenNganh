@@ -3,13 +3,13 @@ package com.example.WebSiteDatLich.model;
 import java.util.List;
 
 public class Doctor {
-    private Integer doctor_id;
+    private String doctor_id;
     private String user_id;
     private Integer position_id;
     private String information;
     private String experience;
     private String education;
-    private Integer department_id;
+    private String department_id;
     private String departmentName;
     private String positionName;
 
@@ -48,11 +48,11 @@ public class Doctor {
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
     }
-    public Integer getDoctor_id() {
+    public String getDoctor_id() {
         return doctor_id;
     }
 
-    public void setDoctor_id(Integer doctor_id) {
+    public void setDoctor_id(String doctor_id) {
         this.doctor_id = doctor_id;
     }
 
@@ -95,11 +95,11 @@ public class Doctor {
         this.education = education;
     }
 
-    public Integer getDepartment_id() {
+    public String getDepartment_id() {
         return department_id;
     }
 
-    public void setDepartment_id(Integer department_id) {
+    public void setDepartment_id(String department_id) {
         this.department_id = department_id;
     }
 }

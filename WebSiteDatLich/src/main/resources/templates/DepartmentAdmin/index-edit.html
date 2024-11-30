@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <title>Chỉnh sửa chuyên khoa</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-custom {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .preview-img {
+            width: auto;
+            height: 100px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+    <div class="container">
+        <div class="form-container">
+            <h1 class="form-title">Chỉnh sửa chuyên khoa</h1>
+            <form id="editDepartmentForm" enctype="multipart/form-data" method="post" action="/departmentadmin/edit">
+                <!-- Hidden field for department ID -->
+                <input type="hidden" name="department_id" th:value="${department.department_id}">
+
+                <div class="row">
+                    <!-- Hàng 1 -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="name">Tên chuyên khoa</label>
+                            <input type="text" class="form-control" id="name" name="name" th:value="${department.name}" placeholder="Nhập tên chuyên khoa" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Hàng 2 -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="image">Hình ảnh</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <img th:src="${department.image}" alt="Hình ảnh chuyên khoa" class="preview-img">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-custom btn-save"><i class="fas fa-save"></i> Cập nhật</button>
+                    <a href="/departmentadmin" class="btn btn-custom btn-cancel"><i class="fas fa-times"></i> Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $('#editDepartmentForm').submit(function (event) {
+            event.preventDefault(); // Ngăn chặn reload trang mặc định
+
+            // Thu thập dữ liệu từ form
+            const formData = new FormData(this);
+
+            // Gửi yêu cầu AJAX
+            $.ajax({
+                url: '/departmentadmin/edit',
+                method: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (response) {
+                    // Hiển thị SweetAlert2 khi thành công
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: response,
+                        showConfirmButton: true
+                    }).then(() => {
+                        window.location.href = '/departmentadmin'; // Chuyển hướng về danh sách chuyên khoa
+                    });
+                },
+                error: function (xhr) {
+                    // Hiển thị SweetAlert2 khi thất bại
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất bại!',
+                        text: xhr.responseText || 'Không thể cập nhật chuyên khoa. Vui lòng thử lại!',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

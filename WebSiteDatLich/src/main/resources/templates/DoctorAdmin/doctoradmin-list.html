@@ -6,9 +6,17 @@
   <title>Danh sách bác sĩ</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     body {
         font-family: Arial, sans-serif;
+    }
+
+    .rounded-button {
+        border-radius: 50px; /* Độ bo tròn 2 bên trái và phải */
+        padding: 10px 15px; /* Điều chỉnh kích thước nút */
+        margin-bottom: 10px; /* Khoảng cách giữa nút và bảng */
     }
 
     .doctor-list-container {
@@ -25,24 +33,39 @@
         background-color: #f5f5f5;
     }
 
-    .btn-update, .btn-delete {
-        background: none;
+    .btn-action {
+        transition: all 0.3s ease; /* Thêm hiệu ứng chuyển động */
+
+        padding: 5px 15px;
+        border-radius: 20px; /* Bo tròn các nút */
+
+        margin: 0 5px;
+    }
+
+    .btn-update {
+        background-color: #007bff;
+        padding: 10px 15px; /* Điều chỉnh kích thước nút */
         border: none;
-        cursor: pointer;
+        color: white;
     }
 
-    .btn-update i {
-        color: #007bff;
-        font-size: 20px;
+    .btn-update:hover {
+        background-color: #0056b3; /* Hiệu ứng khi di chuột */
+        color: white;
+        box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.6); /* Hiệu ứng ánh sáng */
     }
 
-    .btn-delete i {
-        color: #dc3545;
-        font-size: 20px;
+    .btn-delete {
+        background-color: #dc3545;
+        padding: 10px 15px; /* Điều chỉnh kích thước nút */
+        border: none;
+        color: white;
     }
 
-    .btn-update:hover i, .btn-delete:hover i {
-        opacity: 0.7;
+    .btn-delete:hover {
+        background-color: #a71d2a; /* Hiệu ứng khi di chuột */
+        color: white;
+        box-shadow: 0px 0px 10px rgba(220, 53, 69, 0.6); /* Hiệu ứng ánh sáng */
     }
 
     .mtop {
@@ -53,8 +76,8 @@
 <body>
 <section layout:fragment="content" class="container mtop">
   <div class="container doctor-list-container">
-    <h1 class="text-center">Danh sách bác sĩ</h1>
-
+    <h1 class="text-center">Danh sách thông tin bác sĩ</h1>
+    <a th:href="@{'/doctoradmin/add'}" class="btn btn-success rounded-button"><i class="fas fa-plus"></i> Thêm Bác Sĩ</a>
     <table class="table table-bordered table-hover">
       <thead class="thead-light">
       <tr>
@@ -65,23 +88,25 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="doctor, iterStat : ${doctors}" th:onclick="|window.location='@{/doctoradmin/{id}(id=${doctor.doctor_id})}'|">
+      <tr th:each="doctor, iterStat : ${doctors}"  th:onclick="|window.location='@{/doctoradmin/detail/{id}(id=${doctor.doctor_id})}'|">
         <td th:text="${iterStat.count}"></td>
-        <td><img th:src="${doctor.avatarUrl}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;"></td>
+        <td><img th:src="${doctor.avatarUrl}" alt="Avatar" style="width: 70px; height: 90px; border-radius: 5px; object-fit: cover;"></td>
         <td th:text="${doctor.userName}"></td>
         <td>
-          <a class="btn btn-update" th:href="@{/doctoradmin/update/{id}(id=${doctor.doctor_id})}" title="Cập nhật" onclick="event.stopPropagation();">
-            <i class="fas fa-edit"></i>
+          <a class="btn btn-primary btn-action btn-update rounded-button"
+             th:href="@{/doctoradmin/edit/{id}(id=${doctor.doctor_id})}"
+             onclick="event.stopPropagation();"><i class="fas fa-edit"></i> Chỉnh sửa
           </a>
-          <a class="btn btn-delete" th:href="@{/delete/doctor/{id}(id=${doctor.doctor_id})}" title="Xóa" onclick="event.stopPropagation(); return confirm('Bạn có chắc muốn xóa bác sĩ này?')">
-            <i class="fas fa-trash-alt"></i>
-          </a>
+          <!--<a class="btn btn-danger btn-action btn-delete rounded-button"
+             href="#"
+             onclick="confirmDeleteDoctor([[${doctor.doctor_id}]]); event.stopPropagation();"><i class="fas fa-times"></i> Xóa
+          </a>-->
         </td>
       </tr>
       </tbody>
     </table>
   </div>
+
 </section>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </body>
 </html>

@@ -3,20 +3,24 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <title>Template Layout</title>
-  <link rel="stylesheet" th:href="@{/css/style1.css}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="icon" th:href="@{/uploads/logobenvien.png}" type="image/png">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
   <style>
     /* Tổng thể */
     body {
         font-family: Arial, sans-serif;
-        background-color: #f9f9f9; /* Nền màu trắng sáng */
+        background-color: #eef5f9; /* Nền xanh nhạt */
+        color: #2c3e50; /* Chữ xanh đậm */
         margin: 0;
         padding: 0;
-        color: #333;
     }
 
     .dashboard-header {
         background-color: #ffffff;
+        border-bottom: 2px solid #00aaff;
         padding: 5px 30px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -37,7 +41,7 @@
     .dashboard-title {
         font-size: 24px;
         font-weight: bold;
-        color: #007bff; /* Màu xanh nước */
+        color: #00aaff;
     }
 
     .menu {
@@ -52,15 +56,14 @@
     .menu-title {
         font-size: 18px;
         font-weight: bold;
-        color: #007bff;
+        color: #2c3e50;
         cursor: pointer;
         padding: 10px 15px;
         transition: border-bottom 0.3s ease;
     }
 
-    /* Hiển thị viền xanh nước khi di chuột tới mục menu */
     .menu-title:hover {
-        border-bottom: 3px solid #007bff;
+        border-bottom: 3px solid #00aaff;
     }
 
     .menu-section ul {
@@ -68,35 +71,35 @@
         padding: 0;
         margin: 0;
         position: absolute;
-        top: 100%; /* Đặt danh sách con bên dưới tiêu đề */
+        top: 100%;
         left: 0;
-        display: none; /* Ẩn menu item mặc định */
+        display: none;
         background-color: white;
         border: 1px solid #ddd;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         z-index: 10;
-        min-width: 200px; /* Đặt độ rộng tối thiểu */
+        min-width: 200px;
     }
 
-    /* Hiển thị menu con khi di chuột tới */
     .menu-section:hover ul {
         display: block;
     }
 
     .menu-section ul li {
         padding: 10px 15px;
-        white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
     }
 
     .menu-section ul li a {
         text-decoration: none;
-        color: #333;
-        display: block; /* Chiếm toàn bộ không gian */
+        color: #2c3e50;
+        display: block;
     }
 
     .menu-section ul li a:hover {
-        background-color: #007bff; /* Màu nền khi hover */
-        color: white; /* Màu chữ khi hover */
+        background-color: #00aaff;
+        color: white;
+        transform: scale(1.05);
+        transition: transform 0.2s ease, background-color 0.3s ease;
     }
 
     /* Nội dung chính */
@@ -104,12 +107,18 @@
         padding: 40px;
         max-width: 1200px;
         margin: 0 auto;
+        animation: fadeIn 1s ease-in-out;
     }
 
-    .dashboard-content h1 {
-        font-size: 32px;
-        margin-bottom: 20px;
-        color: #333;
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .management-sections {
@@ -130,13 +139,14 @@
     }
 
     .section-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
     .section-box h3 {
         font-size: 20px;
         margin-bottom: 10px;
+        color: #2c3e50;
     }
 
     .section-box p {
@@ -147,7 +157,7 @@
 
     .button {
         display: inline-block;
-        background-color: #007bff;
+        background-color: #00aaff;
         color: white;
         padding: 10px 20px;
         text-decoration: none;
@@ -156,7 +166,7 @@
     }
 
     .button:hover {
-        background-color: #0056b3;
+        background-color: #007acc;
     }
 
     /* Footer */
@@ -166,9 +176,6 @@
         text-align: center;
         color: #777;
         font-size: 14px;
-        position: relative;
-        width: 100%;
-        bottom: 0;
     }
   </style>
 </head>
@@ -182,20 +189,19 @@
   <nav class="menu">
     <!-- Quản lý người dùng -->
     <div class="menu-section">
-      <span class="menu-title">Quản lý người dùng</span>
+      <span class="menu-title">Quản lý tài khoản</span>
       <ul>
-        <li><a th:href="@{/dashboard/patient}" class="menu-link">Quản lý bệnh nhân</a></li>
+        <li><a th:href="@{/useradmin}" class="menu-link">Quản lý người dùng</a></li>
         <li><a th:href="@{/doctoradmin}" class="menu-link">Quản lý bác sĩ</a></li>
-        <li><a th:href="@{/dashboard/staff}" class="menu-link">Quản lý nhân viên</a></li>
       </ul>
     </div>
     <!-- Quản lý chuyên mục -->
     <div class="menu-section">
       <span class="menu-title">Quản lý chuyên mục</span>
       <ul>
-        <li><a th:href="@{/position}" class="menu-link">Quản lý chức vụ</a></li>
-        <li><a th:href="@{/dashboard/specialty}" class="menu-link">Quản lý chuyên khoa</a></li>
-        <li><a th:href="@{/dashboard/diagnose}" class="menu-link">Quản lý chẩn đoán</a></li>
+        <li><a th:href="@{/positionadmin}" class="menu-link">Quản lý chức vụ</a></li>
+        <li><a th:href="@{/departmentadmin}" class="menu-link">Quản lý chuyên khoa</a></li>
+        <li><a th:href="@{/diagnoseadmin}" class="menu-link">Quản lý chẩn đoán</a></li>
       </ul>
     </div>
     <!-- Quản lý đặt lịch -->
@@ -217,46 +223,5 @@
 <footer>
   <p>Hệ thống quản lý bệnh viện &copy; 2024</p>
 </footer>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script>
-  $(document).ready(function(){
-      $(".owl-carousel").owlCarousel({
-          loop: true,
-          margin: 10,
-          nav: true, /* Enable navigation */
-          navText: ['<', '>'], /* Custom arrows for navigation */
-          responsive: {
-              0: {
-                  items: 1
-              },
-              600: {
-                  items: 2
-              },
-              1000: {
-                  items: 3
-              }
-          }
-      });
-  });
-$(document).ready(function(){
-      // Banner Carousel with autoplay
-      $(".owl-carousel").owlCarousel({
-          loop: true,
-          margin: 10,
-          nav: true,
-          items: 1,
-          autoplay: true, // Enable autoplay
-          autoplayTimeout: 5000, // 5 seconds delay for each slide
-          autoplayHoverPause: true, // Pause on hover
-          navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"]
-      });
-  });
-
-</script>
 </body>
 </html>
