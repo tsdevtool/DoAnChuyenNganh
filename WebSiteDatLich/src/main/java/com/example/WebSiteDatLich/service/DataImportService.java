@@ -44,17 +44,17 @@ public class DataImportService {
         usersRef.child(user2.getUser_id()).setValueAsync(user2);
         // Tạo dữ liệu mẫu cho bảng Doctor
         Doctor doctor1 = new Doctor();
-        doctor1.setDoctor_id(1);
+        doctor1.setDoctor_id("1");
         doctor1.setUser_id(user1.getUser_id()); // Liên kết với User
-        doctor1.setDepartment_id(101); // Giả sử có một phòng ban với ID 101
+        doctor1.setDepartment_id("101"); // Giả sử có một phòng ban với ID 101
         doctor1.setPosition_id(201); // Giả sử có một chức vụ với ID 201
         doctor1.setInformation("Chuyên khoa tim mạch với hơn 20 năm kinh nghiệm.");
         doctor1.setExperience("Trưởng khoa tim mạch tại bệnh viện XYZ.");
         doctor1.setEducation("Tốt nghiệp Đại học Y Hà Nội.");
         Doctor doctor2 = new Doctor();
-        doctor2.setDoctor_id(2);
+        doctor2.setDoctor_id("2");
         doctor2.setUser_id(user2.getUser_id()); // Liên kết với User
-        doctor2.setDepartment_id(102); // Giả sử có một phòng ban với ID 102
+        doctor2.setDepartment_id("102"); // Giả sử có một phòng ban với ID 102
         doctor2.setPosition_id(202); // Giả sử có một chức vụ với ID 202
         doctor2.setInformation("Chuyên khoa nội tiết với hơn 15 năm kinh nghiệm.");
         doctor2.setExperience("Bác sĩ nội tiết tại bệnh viện ABC.");

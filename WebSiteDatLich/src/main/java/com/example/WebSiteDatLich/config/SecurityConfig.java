@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Vô hiệu hóa CSRF nếu không cần
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors","/import-data/","/doctors/details/**","/user/{userId}","/doctors/confirm").permitAll()
+                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors","/import-data/", "/uploads/**","/doctors/details/**","/user/{userId}","/doctors/confirm", "/admin/**","/doctoradmin/**","/departmentadmin/**", "/departmentadmin/delete", "/import-data", "/useradmin/**","/positionadmin/**","/saffadmin/**", "/diagnoseadmin/**").permitAll()
                         .requestMatchers("/importDoctorWithScheduleAndDepartment").permitAll()  // Chỉ ADMIN có thể import bác sĩ// Cho phép truy cập công khai vào view đăng ký và đăng nhập
                         .anyRequest().authenticated()  // Các yêu cầu khác phải xác thực
                 )

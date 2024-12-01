@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Danh sách chuyên khoa</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .rounded-button {
+        border-radius: 50px; /* Độ bo tròn 2 bên trái và phải */
+        padding: 10px 15px; /* Điều chỉnh kích thước nút */
+        margin-bottom: 10px; /* Khoảng cách giữa nút và bảng */
+    }
+    .btn-action {
+        transition: all 0.3s ease; /* Thêm hiệu ứng chuyển động */
+
+        padding: 5px 15px;
+        border-radius: 20px; /* Bo tròn các nút */
+
+        margin: 0 5px;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+<div class="container mt-5">
+  <h1 class="text-center">Danh sách chuyên khoa</h1>
+
+
+
+  <a href="/departmentadmin/add" class="btn btn-success mb-3 rounded-button"><i class="fas fa-plus"></i> Thêm chuyên khoa</a>
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>STT</th>
+      <th>Tên</th>
+      <th>Hình Ảnh</th>
+      <th>Hành Động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="department, iterStat : ${departments}">
+      <td th:text="${iterStat.count}"></td>
+      <td th:text="${department.name}"></td>
+      <td>
+        <!-- Hiển thị hình ảnh từ URL -->
+        <img th:src="${department.image}" alt="Hình ảnh chuyên khoa" style="width: auto; height: 60px;">
+      </td>
+      <td>
+        <!-- Nút chỉnh sửa -->
+        <a th:href="@{/departmentadmin/edit/{id}(id=${department.department_id})}" class="btn btn-primary rounded-button"><i class="fas fa-edit"></i> Cập nhập</a>
+        <!-- Nút xóa -->
+        <form th:action="@{/departmentadmin/delete}" method="post" style="display: inline;">
+          <input type="hidden" name="departmentId" th:value="${department.department_id}">
+          <button type="submit" class="btn btn-danger rounded-button" onclick="return confirm('Bạn có chắc muốn xóa chuyên khoa này?')"><i class="fas fa-times"></i> Xóa</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- Script to auto-hide messages -->
+
+</body>
+</html>

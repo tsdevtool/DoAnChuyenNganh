@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/style1.css}" />
+</head>
+<style>
+  /* Tổng thể */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Nền màu trắng sáng */
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.dashboard-header {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+}
+
+.logo-title .logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff; /* Màu xanh nước */
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+.menu-section {
+    position: relative;
+}
+
+.menu-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: border-bottom 0.3s ease;
+}
+
+/* Hiển thị viền xanh nước khi di chuột tới mục menu */
+.menu-title:hover {
+    border-bottom: 3px solid #007bff;
+}
+
+.menu-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none; /* Ẩn menu item mặc định */
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Hiển thị menu con khi di chuột tới */
+.menu-section:hover ul {
+    display: block;
+}
+
+.menu-section ul li {
+    padding: 10px 15px;
+    white-space: nowrap;
+}
+
+.menu-section ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.menu-section ul li a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Nội dung chính */
+.dashboard-content {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-content h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.management-sections {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.section-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 300px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.section-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.section-box h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.section-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.button {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Footer */
+footer {
+    background-color: #f1f1f1;
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+</style>
+<body>
+
+<main layout:fragment="content">
+  <div class="dashboard-content">
+    <h1>Chào mừng bạn đến với trang quản lý</h1>
+    <p>Vui lòng chọn một phần từ thanh điều hướng để bắt đầu quản lý.</p>
+
+    <!-- Ví dụ về các mục quản lý -->
+    <div class="management-sections">
+      <div class="section-box">
+        <h3>Quản lý Bác sĩ</h3>
+        <p>Thêm, sửa, xóa thông tin về bác sĩ trong hệ thống.</p>
+        <a th:href="@{/dashboard/doctor}" class="button">Quản lý Bác sĩ</a>
+      </div>
+      <div class="section-box">
+        <h3>Quản lý tài khoản </h3>
+        <p>Quản lý hồ sơ người dùng, thêm mới và cập nhập quyền người dùng.</p>
+        <a th:href="@{/useradmin}" class="button">Quản lý người dùng</a>
+      </div>
+      <!-- Các phần khác tương tự -->
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
