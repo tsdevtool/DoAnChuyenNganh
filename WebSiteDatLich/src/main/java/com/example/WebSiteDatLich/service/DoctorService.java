@@ -1,3 +1,4 @@
+
 package com.example.WebSiteDatLich.service;
 import com.example.WebSiteDatLich.model.Appointment;
 import com.example.WebSiteDatLich.model.Doctor;
@@ -51,7 +52,7 @@ public class DoctorService {
 
                         // Fetch name and avatar from the User table using user_id
                         if (doctor.getUser_id() != null) {
-                            DatabaseReference userRef = firebaseDatabase.getReference("users/" + doctor.getUser_id());
+                            DatabaseReference userRef = firebaseDatabase.getReference("user/" + doctor.getUser_id());
                             CompletableFuture<Void> userFuture = new CompletableFuture<>();
                             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -109,7 +110,7 @@ public class DoctorService {
                     CompletableFuture<Void> positionFuture = new CompletableFuture<>();
                     // Lấy thông tin user
                     if (doctor.getUser_id() != null) {
-                        DatabaseReference userRef = firebaseDatabase.getReference("users/" + doctor.getUser_id());
+                        DatabaseReference userRef = firebaseDatabase.getReference("user/" + doctor.getUser_id());
                         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot userSnapshot) {

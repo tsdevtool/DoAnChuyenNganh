@@ -1,11 +1,11 @@
 package com.example.WebSiteDatLich.model;
 
 public class Diagnose {
-    public Integer getDiagnose_id() {
+    public String getDiagnose_id() {
         return diagnose_id;
     }
 
-    public void setDiagnose_id(Integer diagnose_id) {
+    public void setDiagnose_id(String diagnose_id) {
         this.diagnose_id = diagnose_id;
     }
 
@@ -17,15 +17,15 @@ public class Diagnose {
         this.name = name;
     }
 
-    public Integer getTreatment_id() {
-        return treatment_id;
+    public String getDepartment_id() {
+        return department_id;
     }
 
-    public void setTreatment_id(Integer treatment_id) {
-        this.treatment_id = treatment_id;
+    public void setDepartment_id(String department_id) {
+        this.department_id = department_id;
     }
 
-    private Integer diagnose_id;
+    private String diagnose_id;
     private String name;
-    private Integer treatment_id;
+    private String department_id;
 }

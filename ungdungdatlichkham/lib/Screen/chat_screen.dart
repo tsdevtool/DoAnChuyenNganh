@@ -55,7 +55,7 @@ Widget build(BuildContext context) {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: const Text('Chat with Viet Duc AI'),
+          title: const Text('Hỏi đáp cùng Viet Duc AI'),
           actions: [
             if(chatProvider.inChatMessages.isNotEmpty)
               Padding(

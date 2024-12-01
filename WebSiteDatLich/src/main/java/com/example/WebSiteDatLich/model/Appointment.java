@@ -6,7 +6,7 @@ public class Appointment {
     private String work_schedule_id;  // Foreign key to Work_schedule
     private String medical_condition;
     private String image_medical_records;
-    private Boolean status;
+    private Integer status;
     /////////////////////////////////////////////////////////////////////////
     private String timeSlot; // Lưu mã timeSlot khách hàng chọn
 
@@ -59,11 +59,11 @@ public class Appointment {
         this.image_medical_records = image_medical_records;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

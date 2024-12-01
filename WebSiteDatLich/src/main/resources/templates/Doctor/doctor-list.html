@@ -112,11 +112,22 @@
         <div class="owl-carousel owl-theme doctor-carousel-nav">
             <div th:each="doctor : ${doctors}" class="item">
                 <div class="doctor-card-custom">
+                    <!-- Avatar bác sĩ -->
                     <img th:src="${doctor.avatarUrl}" alt="Avatar" />
-                    <h3 th:text="${doctor.userName}"></h3>
-                    <p th:text="${doctor.departmentName}"></p>
-                    <p th:text="${doctor.positionName}"></p>
-                    <p th:text="${doctor.information}"></p>
+
+                    <!-- Tên bác sĩ -->
+                    <h3 th:text="${doctor.userName}">Tên bác sĩ</h3>
+
+                    <!-- Khoa -->
+                    <p th:text="${doctor.departmentName}">Khoa</p>
+
+                    <!-- Chức vụ -->
+                    <p th:text="${doctor.positionName}">Chức vụ</p>
+
+                    <!-- Thông tin thêm -->
+                    <p th:text="${doctor.information}">Thông tin</p>
+
+                    <!-- Nút Đặt lịch -->
                     <a class="btn btn-primary"
                        th:if="${doctor.doctor_id != null}"
                        th:href="@{/doctors/details/{id}(id=${doctor.doctor_id})}">

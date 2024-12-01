@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "735766256951",
+    "firebase_url": "https://ungdungdatlichkham-default-rtdb.firebaseio.com",
+    "project_id": "ungdungdatlichkham",
+    "storage_bucket": "ungdungdatlichkham.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735766256951:android:c0a7871d0a3012accb4eb2",
+        "android_client_info": {
+          "package_name": "com.example.ungdungdatlichkham"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi5z9jkHrjTrdeXiPy21rjRNka9ThZMPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
