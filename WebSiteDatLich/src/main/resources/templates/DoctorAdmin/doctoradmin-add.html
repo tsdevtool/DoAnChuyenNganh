@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm Bác Sĩ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    .container {
+        max-width: 700px;
+        margin-top: 50px;
+    }
+     .rounded-button {
+        border-radius: 50px; /* Độ bo tròn 2 bên trái và phải */
+        padding: 10px 20px; /* Điều chỉnh kích thước nút */
+        margin-bottom: 20px; /* Khoảng cách giữa nút và bảng */
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .btn-group-center {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        border-color: #007bff;
+    }
+    h3 {
+        margin-bottom: 20px;
+    }
+    .tooltip-custom {
+        font-size: 0.9em;
+        color: gray;
+    }
+    .user-selection {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-selection {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-selection img {
+      width: 100px;
+      height: 120px;
+      border-radius:5px;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      display: none; /* Ẩn ảnh mặc định */
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h3 class="text-center">Thêm Thông Tin Bác Sĩ</h3>
+  <form th:action="@{'/doctoradmin/add'}" method="post">
+    <!-- Chọn Người Dùng -->
+    <!-- Chọn Người Dùng -->
+    <div class="form-group">
+      <label for="user_id">Chọn Người Dùng</label>
+      <div class="user-selection">
+        <!-- Hình ảnh mặc định nếu chưa chọn -->
+        <img id="userAvatar" class="default-avatar" src="default-square-avatar.png" alt="Avatar">
+        <select class="form-control" id="user_id" name="user_id" required>
+          <option value="" disabled selected>Chọn một người dùng...</option>
+          <option th:each="user : ${users}" th:value="${user.user_id}" th:text="${user.name}"
+                  th:data-avatar="${user.avatar != null ? user.avatar : 'default-square-avatar.png'}"></option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Chuyên Khoa -->
+    <div class="form-group">
+      <label for="department_id">Chuyên Khoa</label>
+      <select class="form-control" id="department_id" name="department_id" required>
+        <option value="" disabled selected>Chọn một chuyên khoa...</option>
+        <option th:each="entry : ${departments.entrySet()}"
+                th:value="${entry.key}"
+                th:text="${entry.value['name']}"></option>
+      </select>
+    </div>
+
+    <!-- Vị Trí -->
+    <div class="form-group">
+      <label for="position_id">Vị Trí</label>
+      <select class="form-control" id="position_id" name="position_id" required>
+        <option value="" disabled selected>Chọn một vị trí...</option>
+        <option th:each="entry : ${positions.entrySet()}" th:value="${entry.key}" th:text="${entry.value}"></option>
+      </select>
+    </div>
+
+    <!-- Học Vấn -->
+    <div class="form-group">
+      <label for="education">Học Vấn</label>
+      <input type="text" class="form-control" id="education" name="education" placeholder="Nhập Học Vấn" required>
+    </div>
+
+    <!-- Kinh Nghiệm -->
+    <div class="form-group">
+      <label for="experience">Kinh Nghiệm</label>
+      <textarea class="form-control" id="experience" name="experience" placeholder="Nhập Kinh Nghiệm" required></textarea>
+    </div>
+
+    <!-- Thông Tin -->
+    <div class="form-group">
+      <label for="information">Thông Tin</label>
+      <textarea class="form-control" id="information" name="information" placeholder="Nhập Thông Tin" required></textarea>
+    </div>
+
+    <!-- Nút Lưu -->
+    <div class="btn-group-center">
+      <button type="submit" class="btn btn-success rounded-button"><i class="fas fa-save"></i> Lưu</button>
+      <a th:href="@{'/doctoradmin'}" class="btn btn-danger rounded-button"><i class="fas fa-times"></i> Hủy</a>
+    </div>
+  </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Hiển thị thông báo thành công/thất bại khi gửi form
+  $(document).ready(function () {
+      $('form').submit(function (e) {
+          e.preventDefault();
+          Swal.fire({
+              icon: 'success',
+              title: 'Thành công',
+              text: 'Đã lưu thông tin bác sĩ!',
+              timer: 2000,
+              showConfirmButton: false
+          }).then(() => {
+              this.submit();
+          });
+      });
+     // Cập nhật ảnh khi chọn người dùng
+    $('#user_id').on('change', function () {
+      const selectedOption = $(this).find('option:selected');
+      const avatarUrl = selectedOption.data('avatar');
+      $('#userAvatar').attr('src', avatarUrl).show(); // Cập nhật và hiển thị ảnh
+    });
+  });
+</script>
+</body>
+</html>

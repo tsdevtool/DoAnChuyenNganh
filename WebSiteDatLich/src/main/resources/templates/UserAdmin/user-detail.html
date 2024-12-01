@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <title>Thông tin chi tiết người dùng</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        .avatar {
+            width: 200px;
+            height: 280px;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 1px solid #007bff;
+        }
+
+        .info-detail {
+            font-size: 18px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .info-detail:hover {
+            overflow: visible;
+            white-space: normal;
+            background-color: #f8f9fa;
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .row .col-6 {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-custom {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-update {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-update:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .avatar {
+                width: 150px;
+                height: 150px;
+            }
+
+            .info-title {
+                font-size: 16px;
+            }
+
+            .info-detail {
+                font-size: 16px;
+            }
+
+            .btn-custom {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+    <div class="container">
+        <div class="card">
+            <div class="row">
+                <!-- Cột bên trái: Avatar -->
+                <div class="col-md-4 text-center">
+                    <img th:src="${user.avatar}" alt="Avatar" class="avatar">
+                </div>
+                <!-- Cột bên phải: Thông tin chi tiết người dùng -->
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="info-title">Tên người dùng:</p>
+                            <p class="info-title">Email:</p>
+                            <p class="info-title">Số điện thoại:</p>
+                            <p class="info-title">Địa chỉ:</p>
+                            <p class="info-title">Ngày sinh:</p>
+                            <p class="info-title">Giới tính:</p>
+                            <p class="info-title">Quyền:</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="info-detail" th:text="${user.name}"></p>
+                            <p class="info-detail" th:text="${user.email}"></p>
+                            <p class="info-detail" th:text="${user.phone}"></p>
+                            <p class="info-detail" th:text="${user.address}"></p>
+                            <p class="info-detail" th:text="${user.date_of_birth}"></p>
+                            <p class="info-detail" th:text="${user.sex ? 'Nam' : 'Nữ'}"></p>
+                            <p class="info-detail">
+                                <span th:if="${user.role_id == 1}" th:text="'Người Dùng'"></span>
+                                <span th:if="${user.role_id == 2}" th:text="'Bác Sĩ'"></span>
+                                <span th:if="${user.role_id == 3}" th:text="'Admin'"></span>
+                                <span th:if="${user.role_id == 4}" th:text="'Nhân Viên Y Tế'"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Nút Chỉnh sửa, Xóa, và Quay lại -->
+                    <div class="btn-container d-flex justify-content-center">
+                        <!-- Nút Quay lại -->
+                        <a th:href="@{/useradmin}" class="btn btn-custom btn-back">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
