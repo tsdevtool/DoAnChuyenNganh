@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Thêm Chức Vụ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .btn-container {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 25px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-save:hover {
+        background-color: #218838;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+  <div class="container">
+    <div class="form-container">
+      <h1 class="form-title">Thêm Chức Vụ</h1>
+      <form action="/positionadmin/add" method="post">
+        <div class="form-group">
+          <label for="name">Tên Chức Vụ</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Nhập tên chức vụ" required>
+        </div>
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-custom btn-save"><i class="fas fa-save"></i> Lưu</button>
+          <a href="/positionadmin" class="btn btn-custom btn-cancel"><i class="fas fa-times"></i> Hủy</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</body>
+</html>

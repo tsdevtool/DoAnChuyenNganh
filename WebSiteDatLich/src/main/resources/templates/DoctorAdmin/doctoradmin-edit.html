@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+  <title>Chỉnh sửa thông tin bác sĩ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+
+    .avatar {
+      width: 200px;
+      height: 280px;
+      border-radius: 5px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 1px solid #007bff;
+    }
+
+    .align-items-center {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px; /* Khoảng cách giữa các dòng */
+    }
+
+    .align-items-center label {
+       width: 150px; /* Tăng chiều rộng của label để phù hợp nội dung */
+  margin-right: 10px;
+  font-weight: bold;
+  white-space: nowrap; /* Ngăn label bị xuống dòng */
+    }
+
+
+    .form-control {
+      font-size: 16px;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .btn-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .btn-custom {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 25px;
+      transition: background-color 0.3s ease;
+      margin-right: 10px;
+    }
+
+    .btn-save {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-save:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-cancel:hover {
+      background-color: #5a6268;
+    }
+
+    @media (max-width: 768px) {
+      .avatar {
+        width: 150px;
+        height: 150px;
+      }
+
+      .form-control {
+        font-size: 14px;
+      }
+
+      .btn-custom {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mtop">
+<div class="container">
+  <div class="card">
+    <form th:action="@{/doctoradmin/update}" th:object="${doctor}" method="post">
+      <input type="hidden" th:field="*{doctor_id}">
+
+      <!-- Cột bên trái: Avatar -->
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <img th:src="${doctor.avatarUrl}" alt="Avatar" class="avatar">
+        </div>
+
+        <!-- Cột bên phải: Form chỉnh sửa -->
+        <div class="col-md-8">
+          <div class="align-items-center">
+            <label>Bác sĩ:</label>
+            <p class="info-title" th:text="${doctor.userName}"></p>
+          </div>
+
+          <div class="align-items-center">
+            <label for="department_id">Khoa:</label>
+            <select class="form-control" id="department_id" th:field="*{department_id}">
+              <option th:each="entry : ${departments}" th:value="${entry.key}"
+                      th:selected="${entry.key == doctor.department_id}"
+                      th:text="${entry.value['name']}"></option>
+            </select>
+          </div>
+
+          <div class="align-items-center">
+            <label for="position_id">Chức vụ:</label>
+            <select class="form-control" id="position_id" th:field="*{position_id}">
+              <option th:each="entry : ${positions}" th:value="${entry.key}"
+                      th:selected="${entry.key == doctor.position_id}"
+                      th:text="${entry.value}"></option>
+            </select>
+          </div>
+
+          <div class="align-items-center">
+            <label for="experience">Kinh nghiệm:</label>
+            <textarea class="form-control" id="experience" th:field="*{experience}" rows="2"></textarea>
+          </div>
+
+          <div class="align-items-center">
+            <label for="education">Học vấn:</label>
+            <textarea class="form-control" id="education" th:field="*{education}" rows="2"></textarea>
+          </div>
+
+          <div class="align-items-center">
+            <label for="information">Thông tin thêm:</label>
+            <textarea class="form-control" id="information" th:field="*{information}" rows="2"></textarea>
+          </div>
+
+          <!-- Nút Lưu và Hủy -->
+          <div class="btn-container d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-custom btn-save">
+              <i class="fas fa-save"></i> Lưu thông tin
+            </button>
+            <a th:href="@{/doctoradmin}" class="btn btn-custom btn-cancel">
+              <i class="fas fa-arrow-left"></i> Hủy
+            </a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</section>
+</body>
+</html>
