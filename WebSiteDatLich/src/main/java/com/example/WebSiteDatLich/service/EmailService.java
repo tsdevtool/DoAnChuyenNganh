@@ -1,42 +1,46 @@
 package com.example.WebSiteDatLich.service;
-
-import org.springframework.mail.SimpleMailMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class EmailService {
 
-    private final JavaMailSender emailSender;
+    private final JavaMailSender mailSender;
 
-    public EmailService(JavaMailSender emailSender) {
-        this.emailSender = emailSender;
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
     }
+//public void sendConfirmationEmail(String toEmail, String subject, String body) {
+//    SimpleMailMessage message = new SimpleMailMessage();
+//    message.setTo(toEmail);
+//    message.setSubject(subject);
+//    message.setText(body);
+//    try {
+//        mailSender.send(message);
+//        System.out.println("Confirmation email sent to: " + toEmail);
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//        System.out.println("Failed to send email.");
+//    }
+//}
+public void sendConfirmationEmail(String toEmail, String subject, String body) {
+    MimeMessage message = mailSender.createMimeMessage();
 
-    // Gửi email xác nhận cuộc hẹn
-    public CompletableFuture<Void> sendConfirmationEmail(String appointmentId) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
+    try {
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(toEmail);
+        helper.setSubject(subject);
+        helper.setText(body, true); // `true` để gửi email HTML
+        mailSender.send(message);
 
-        // Lấy email của người dùng từ Firebase dựa trên appointmentId
-        String userEmail = getUserEmailByAppointmentId(appointmentId);
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(userEmail);
-        message.setSubject("Xác nhận cuộc hẹn");
-        message.setText("Cuộc hẹn của bạn đã được xác nhận!");
-
-        // Gửi email
-        emailSender.send(message);
-
-        future.complete(null); // Gửi email thành công
-        return future;
+        System.out.println("Confirmation email sent to: " + toEmail);
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        System.out.println("Failed to send email.");
     }
+}
 
-    // Giả sử hàm này lấy email của người dùng từ Firebase dựa trên appointmentId
-    private String getUserEmailByAppointmentId(String appointmentId) {
-        // Thực hiện logic để lấy email của user từ Firebase
-        return "user@example.com"; // Thay bằng email thực tế từ dữ liệu
-    }
 }

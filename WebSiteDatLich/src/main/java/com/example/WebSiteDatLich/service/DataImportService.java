@@ -24,7 +24,7 @@ public class DataImportService {
         User user1 = new User();
         user1.setUser_id("-O941D_Req5OyTUY5uIn");
         user1.setName("Dr. John Doe");
-        user1.setEmail("johndoe@example.com");
+        user1.setEmail("duyh70459@gmail.com");
         user1.setPhone("0123456789");
         user1.setAvatar("https://storage.googleapis.com/download/storage/v1/b/ungdungdatlichkham.appspot.com/o/efb3a7c9-3dac-47c1-8480-a47ede602287_bai3.jpg?generation=1728627971762516&alt=media");
         user1.setAddress("123 Main Street, City");
@@ -33,7 +33,7 @@ public class DataImportService {
         User user2 = new User();
         user2.setUser_id("-O8uFNsL0nSOhsXB1c_X");
         user2.setName("Dr. Jane Smith");
-        user2.setEmail("janesmith@example.com");
+        user2.setEmail("duybuaff@gmail.com");
         user2.setPhone("0987654321");
         user2.setAvatar("https://storage.googleapis.com/download/storage/v1/b/ungdungdatlichkham.appspot.com/o/e39735c1-9fb9-43dc-8021-a548bbb8409b_bacsi1.jpg?generation=1728808807873997&alt=media");
         user2.setAddress("456 Another St, City");
@@ -67,24 +67,37 @@ public class DataImportService {
         doctorsRef.child(doctor2.getDoctor_id().toString()).setValueAsync(doctor2);
 
         // Tạo dữ liệu mẫu cho bảng Appointment
-        Appointment appointment1 = new Appointment();
-        appointment1.setAppointment_id(1);
-        appointment1.setUser_id(user1.getUser_id()); // Liên kết với user1
-        appointment1.setWork_schedule_id(1);
-        appointment1.setMedical_condition("Đau tim");
-        appointment1.setImage_medical_records("https://example.com/image1.jpg");
-        appointment1.setStatus(false);
+//        Appointment appointment1 = new Appointment();
+//        appointment1.setAppointment_id(1);
+//        appointment1.setUser_id(user1.getUser_id()); // Liên kết với user1
+//        appointment1.setWork_schedule_id(1);
+//        appointment1.setTimeSlot(0); // Chọn khung giờ đầu tiên
+//        appointment1.setMedical_condition("Đau tim");
+//        appointment1.setImage_medical_records("https://example.com/image1.jpg");
+//        appointment1.setStatus(false);
+//
+//        Appointment appointment2 = new Appointment();
+//        appointment2.setAppointment_id(2);
+//        appointment2.setUser_id(user2.getUser_id()); // Liên kết với user2
+//        appointment2.setWork_schedule_id(2);
+//        appointment2.setTimeSlot(1); // Chọn khung giờ thứ hai
+//        appointment2.setMedical_condition("Đau đầu mãn tính");
+//        appointment2.setImage_medical_records("https://example.com/image2.jpg");
+//        appointment2.setStatus(true);
+//
+//        Appointment appointment3 = new Appointment();
+//        appointment3.setAppointment_id(3);
+//        appointment3.setUser_id(user2.getUser_id()); // Liên kết với user2
+//        appointment3.setWork_schedule_id(2);
+//        appointment3.setTimeSlot(2); // Chọn khung giờ thứ ba
+//        appointment3.setMedical_condition("Đau thận");
+//        appointment3.setImage_medical_records("https://example.com/image2.jpg");
+//        appointment3.setStatus(false);
+//
+//// Thêm dữ liệu Appointment vào Firebase
+//        appointmentRef.child(appointment1.getAppointment_id().toString()).setValueAsync(appointment1);
+//        appointmentRef.child(appointment2.getAppointment_id().toString()).setValueAsync(appointment2);
+//        appointmentRef.child(appointment3.getAppointment_id().toString()).setValueAsync(appointment3);
 
-        Appointment appointment2 = new Appointment();
-        appointment2.setAppointment_id(2);
-        appointment2.setUser_id(user2.getUser_id()); // Liên kết với user2
-        appointment2.setWork_schedule_id(2);
-        appointment2.setMedical_condition("Đau đầu mãn tính");
-        appointment2.setImage_medical_records("https://example.com/image2.jpg");
-        appointment2.setStatus(true);
-
-        // Thêm dữ liệu Appointment vào Firebase
-        appointmentRef.child(appointment1.getAppointment_id().toString()).setValueAsync(appointment1);
-        appointmentRef.child(appointment2.getAppointment_id().toString()).setValueAsync(appointment2);
     }
 }

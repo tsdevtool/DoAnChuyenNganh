@@ -1,12 +1,15 @@
 package com.example.WebSiteDatLich.model;
 
 public class Appointment {
-    private Integer appointment_id;
+
+    private String appointment_id;
     private String user_id;  // Foreign key to User
-    private Integer work_schedule_id;  // Foreign key to Work_schedule
+    private String work_schedule_id;  // Foreign key to Work_schedule
     private String medical_condition;
     private String image_medical_records;
-    private Boolean status;
+    private Integer status;
+
+    private String timeSlot; // Lưu mã timeSlot khách hàng chọn
 
     // Additional fields for displaying details
     private String patientName;  // Name of the patient from the User table
@@ -14,13 +17,15 @@ public class Appointment {
     private String appointmentDate;  // Appointment date from Work_schedule table
     private String appointmentTime;  // Appointment time from Work_schedule table
 
+    // Constructor không đối số
+    public Appointment() {
+    }
 
-
-    public Integer getAppointment_id() {
+    public String getAppointment_id() {
         return appointment_id;
     }
 
-    public void setAppointment_id(Integer appointment_id) {
+    public void setAppointment_id(String appointment_id) {
         this.appointment_id = appointment_id;
     }
 
@@ -32,11 +37,11 @@ public class Appointment {
         this.user_id = user_id;
     }
 
-    public Integer getWork_schedule_id() {
+    public String getWork_schedule_id() {
         return work_schedule_id;
     }
 
-    public void setWork_schedule_id(Integer work_schedule_id) {
+    public void setWork_schedule_id(String work_schedule_id) {
         this.work_schedule_id = work_schedule_id;
     }
 
@@ -56,16 +61,15 @@ public class Appointment {
         this.image_medical_records = image_medical_records;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
     // Getters and setters for the additional fields
-
     public String getPatientName() {
         return patientName;
     }
@@ -98,4 +102,11 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
     }
 
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
 }

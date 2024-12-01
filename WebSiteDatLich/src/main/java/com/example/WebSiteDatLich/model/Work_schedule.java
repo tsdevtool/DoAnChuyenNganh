@@ -1,10 +1,14 @@
 package com.example.WebSiteDatLich.model;
 
+import java.util.List;
+
 public class Work_schedule {
     private Integer work_schedule_id;
-    private String  schedule;
-    private String  time;
+    private String schedule;
+    private List<String> timeSlots; // Danh sách các khung giờ
     private Integer doctor_id;
+
+    // Getter và Setter
     public Integer getWork_schedule_id() {
         return work_schedule_id;
     }
@@ -21,12 +25,12 @@ public class Work_schedule {
         this.schedule = schedule;
     }
 
-    public String getTime() {
-        return time;
+    public List<String> getTimeSlots() {
+        return timeSlots;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeSlots(List<String> timeSlots) {
+        this.timeSlots = timeSlots;
     }
 
     public Integer getDoctor_id() {
@@ -36,6 +40,4 @@ public class Work_schedule {
     public void setDoctor_id(Integer doctor_id) {
         this.doctor_id = doctor_id;
     }
-
-
 }
