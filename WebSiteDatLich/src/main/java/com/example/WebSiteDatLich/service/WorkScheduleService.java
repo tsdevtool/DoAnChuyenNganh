@@ -25,7 +25,7 @@ public class WorkScheduleService {
             DatabaseReference workSchedulesRef = firebaseDatabase.getReference("work_schedules");
             String key = workSchedulesRef.push().getKey(); // Tạo một ID duy nhất cho work_schedule
             if (key != null) {
-                workSchedule.setWork_schedule_id(Integer.parseInt(key.hashCode() + ""));
+                workSchedule.setWork_schedule_id(String.valueOf(key.hashCode()));
                 workSchedulesRef.child(key).setValue(workSchedule, (error, ref) -> {
                     if (error != null) {
                         logger.error("Không thể lưu Work_schedule: {}", error.getMessage());
