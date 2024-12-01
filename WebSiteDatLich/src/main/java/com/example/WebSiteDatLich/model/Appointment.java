@@ -1,7 +1,7 @@
 package com.example.WebSiteDatLich.model;
 
 public class Appointment {
-    private Integer appointment_id;
+    private String appointment_id;
     private String user_id;  // Foreign key to User
     private String work_schedule_id;  // Foreign key to Work_schedule
     private String medical_condition;
@@ -19,11 +19,11 @@ public class Appointment {
 
 
 
-    public Integer getAppointment_id() {
+    public String getAppointment_id() {
         return appointment_id;
     }
 
-    public void setAppointment_id(Integer appointment_id) {
+    public void setAppointment_id(String appointment_id) {
         this.appointment_id = appointment_id;
     }
 
