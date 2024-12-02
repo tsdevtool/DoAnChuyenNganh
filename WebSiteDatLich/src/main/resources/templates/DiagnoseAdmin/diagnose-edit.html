@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sửa Chẩn Đoán</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center">Sửa Chẩn Đoán</h1>
+  <form th:action="@{/diagnoseadmin/edit}" method="post">
+    <!-- Dropdown chọn chuyên khoa mới -->
+    <div class="form-group">
+      <label for="department_id">Chọn Chuyên Khoa Mới</label>
+      <select class="form-control" id="department_id" name="department_id" required>
+        <option th:each="department : ${departments}"
+                th:value="${department.department_id}"
+                th:selected="${department.department_id == diagnose.department_id}"
+                th:text="${department.name}">
+        </option>
+      </select>
+    </div>
+    <input type="hidden" th:value="${diagnose.diagnose_id}" name="diagnose_id">
+    <div class="form-group">
+      <label for="name">Tên Chẩn Đoán</label>
+      <input type="text" class="form-control" id="name" name="name" th:value="${diagnose.name}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    <a href="/diagnoseadmin" class="btn btn-secondary">Hủy</a>
+  </form>
+</div>
+</body>
+</html>

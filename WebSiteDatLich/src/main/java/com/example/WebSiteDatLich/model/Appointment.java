@@ -2,8 +2,22 @@ package com.example.WebSiteDatLich.model;
 
 public class Appointment {
     private Integer appointment_id;
-    private Integer user_id;  // Foreign key to User
-    private Integer work_schedule_id;  // Foreign key to Work_schedule
+    private String user_id;  // Foreign key to User
+    private String work_schedule_id;  // Foreign key to Work_schedule
+    private String medical_condition;
+    private String image_medical_records;
+    private Integer status;
+    /////////////////////////////////////////////////////////////////////////
+    private String timeSlot; // Lưu mã timeSlot khách hàng chọn
+
+    // Additional fields for displaying details
+    private String patientName;  // Name of the patient from the User table
+    private String phoneNumber;  // Phone number of the patient from the User table
+    private String appointmentDate;  // Appointment date from Work_schedule table
+    private String appointmentTime;  // Appointment time from Work_schedule table
+
+
+
 
     public Integer getAppointment_id() {
         return appointment_id;
@@ -13,19 +27,19 @@ public class Appointment {
         this.appointment_id = appointment_id;
     }
 
-    public Integer getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
-    public Integer getWork_schedule_id() {
+    public String getWork_schedule_id() {
         return work_schedule_id;
     }
 
-    public void setWork_schedule_id(Integer work_schedule_id) {
+    public void setWork_schedule_id(String work_schedule_id) {
         this.work_schedule_id = work_schedule_id;
     }
 
@@ -45,16 +59,55 @@ public class Appointment {
         this.image_medical_records = image_medical_records;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    private String medical_condition;
-    private String image_medical_records;
-    private Boolean status;
+    // Getters and setters for the additional fields
+
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public String getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(String appointmentTime) {
+        this.appointmentTime = appointmentTime;
+    }
+    ////////////////////////////////////////
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
 
 }

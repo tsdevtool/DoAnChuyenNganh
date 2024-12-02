@@ -55,7 +55,7 @@ Widget build(BuildContext context) {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: const Text('Chat with Viet Duc AI'),
+          title: const Text('Hỏi đáp cùng Viet Duc AI'),
           actions: [
             if(chatProvider.inChatMessages.isNotEmpty)
               Padding(
@@ -112,7 +112,7 @@ Widget build(BuildContext context) {
                   child:
                   chatProvider.inChatMessages.isEmpty
                       ? const Center(
-                    child: Text('No messages yet'),
+                    child: Text('Không có tin nhắn nào '),
                   )
                       :ChatMessages(
                     scrollController: _scrollController,

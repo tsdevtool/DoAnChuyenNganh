@@ -6,237 +6,420 @@
     <meta charset="UTF-8">
     <title>Chi tiết bác sĩ</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
+           font-family: Arial, sans-serif;
+           background-color: #f9f9f9;
+       }
 
-        .doctor-schedule-container {
-            margin: 50px auto;
-            max-width: 900px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
+       .doctor-schedule-container {
+           margin: 50px auto;
+           max-width: 900px;
+           background: #fff;
+           border-radius: 10px;
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+           padding: 20px;
+       }
 
-        .doctor-details {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+       .doctor-details {
+           display: flex;
+           align-items: center;
+           gap: 20px;
+           margin-bottom: 30px;
+       }
 
-        .doctor-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #007bff;
-        }
+       .doctor-avatar {
+           width: 150px;
+           height: 150px;
+           border-radius: 50%;
+           object-fit: cover;
+           border: 3px solid #007bff;
+       }
 
-        .doctor-info {
-            flex: 1;
-        }
+       .doctor-info {
+           flex: 1;
+       }
 
-        .doctor-info h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 10px;
-        }
+       .doctor-info h2 {
+           font-size: 24px;
+           color: #333;
+           margin-bottom: 10px;
+       }
 
-        .doctor-info p {
-            margin: 5px 0;
-            color: #555;
-        }
+       .doctor-info p {
+           margin: 5px 0;
+           color: #555;
+       }
 
-        .doctor-info .experience {
-            font-weight: bold;
-            color: #28a745;
-        }
+       .doctor-info .experience {
+           font-weight: bold;
+           color: #28a745;
+       }
 
-        .day-tabs {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            overflow-x: auto;
-            white-space: nowrap;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            scrollbar-width: thin; /* Hiển thị thanh cuộn cho Firefox */
-            scrollbar-color: #007bff #f1f1f1;
-        }
+       .day-tabs {
+           display: flex;
+           justify-content: flex-start;
+           align-items: center;
+           overflow-x: auto;
+           white-space: nowrap;
+           margin-bottom: 15px;
+           padding: 10px 0;
+           scrollbar-width: thin; /* Hiển thị thanh cuộn cho Firefox */
+           scrollbar-color: #007bff #f1f1f1;
+       }
 
-        .day-tabs::-webkit-scrollbar {
-            height: 6px; /* Độ dày của thanh cuộn */
-        }
+       .day-tabs::-webkit-scrollbar {
+           height: 6px; /* Độ dày của thanh cuộn */
+       }
 
-        .day-tabs::-webkit-scrollbar-thumb {
-            background-color: #007bff; /* Màu của thanh kéo */
-            border-radius: 10px; /* Bo tròn thanh kéo */
-        }
+       .day-tabs::-webkit-scrollbar-thumb {
+           background-color: #007bff; /* Màu của thanh kéo */
+           border-radius: 10px; /* Bo tròn thanh kéo */
+       }
 
-        .day-tabs::-webkit-scrollbar-track {
-            background-color: #f1f1f1; /* Màu nền của thanh cuộn */
-        }
+       .day-tabs::-webkit-scrollbar-track {
+           background-color: #f1f1f1; /* Màu nền của thanh cuộn */
+       }
 
-        .day-button {
-            padding: 10px 15px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            flex: 0 0 auto; /* Để nút không chiếm hết chiều ngang */
-            margin-right: 10px;
-            font-size: 14px;
-            transition: background-color 0.3s, color 0.3s;
-        }
+       .day-button {
+           padding: 10px 15px;
+           background-color: #f8f9fa;
+           border: 1px solid #ddd;
+           border-radius: 8px;
+           cursor: pointer;
+           text-align: center;
+           flex: 0 0 auto; /* Để nút không chiếm hết chiều ngang */
+           margin-right: 10px;
+           font-size: 14px;
+           transition: background-color 0.3s, color 0.3s;
+       }
 
-        .day-button.active {
-            background-color: #007bff;
-            color: #fff;
-            font-weight: bold;
-        }
+       .day-button.active {
+           background-color: #007bff;
+           color: #fff;
+           font-weight: bold;
+       }
 
-        .day-button:hover {
-            background-color: #007bff;
-            color: #fff;
-        }
+       .day-button:hover {
+           background-color: #007bff;
+           color: #fff;
+       }
 
-        .slot-container {
-            display: none;
-        }
+       .slot-container {
+           display: none;
+       }
 
-        .slot-container.active {
-            display: block;
-        }
+       .slot-container.active {
+           display: block;
+       }
 
-        .slot-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    max-height: 250px; /* Giới hạn chiều cao */
-    overflow-y: auto; /* Bật thanh cuộn dọc */
-    padding-right: 5px; /* Khoảng cách để thấy thanh cuộn rõ hơn */
-        }
+       .slot-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+           gap: 10px;
+           max-height: 250px; /* Giới hạn chiều cao */
+           overflow-y: auto; /* Bật thanh cuộn dọc */
+           padding-right: 5px; /* Khoảng cách để thấy thanh cuộn rõ hơn */
+       }
 
-        .slot-grid::-webkit-scrollbar {
-            width: 6px; /* Độ rộng của thanh cuộn */
-        }
+       .slot-grid::-webkit-scrollbar {
+           width: 6px; /* Độ rộng của thanh cuộn */
+       }
 
-        .slot-grid::-webkit-scrollbar-thumb {
-            background-color: #007bff; /* Màu thanh kéo */
-            border-radius: 10px; /* Bo tròn */
-        }
+       .slot-grid::-webkit-scrollbar-thumb {
+           background-color: #007bff; /* Màu thanh kéo */
+           border-radius: 10px; /* Bo tròn */
+       }
 
-        .slot-grid::-webkit-scrollbar-track {
-            background-color: #f1f1f1; /* Màu nền */
-        }
+       .slot-grid::-webkit-scrollbar-track {
+           background-color: #f1f1f1; /* Màu nền */
+       }
 
-        .time-slot-button {
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 14px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
+       .time-slot-button {
+           padding: 10px;
+           background-color: #f8f9fa;
+           border: 1px solid #ddd;
+           border-radius: 8px;
+           cursor: pointer;
+           text-align: center;
+           font-size: 14px;
+           transition: background-color 0.3s, transform 0.2s;
+       }
 
-        .time-slot-button:hover {
-            background-color: #007bff;
-            color: #fff;
-            transform: translateY(-3px);
-        }
-        .d-flex {
-          gap: 20px; /* Khoảng cách giữa phần text và nút */
-         }
+       .time-slot-button:hover {
+           background-color: #007bff;
+           color: #fff;
+           transform: translateY(-3px);
+       }
 
-         .btn-primary {
-             background-color: #007bff;
-             border: none;
-             transition: all 0.3s ease;
-         }
+       .d-flex {
+           gap: 20px; /* Khoảng cách giữa phần text và nút */
+       }
 
-         .btn-primary:hover {
-             background-color: #0056b3;
-             transform: translateY(-2px);
-         }
-         .text-center{
-           text-align: center;z
-        }
+       .btn-primary {
+           background-color: #007bff;
+           border: none;
+           transition: all 0.3s ease;
+       }
+
+       .btn-primary:hover {
+           background-color: #0056b3;
+           transform: translateY(-2px);
+       }
+
+       .text-center {
+           text-align: center;
+       }
+
+       .modal-body {
+           display: flex;
+           flex-direction: row;
+           gap: 30px;
+       }
+
+       .modal-col {
+           flex: 1;
+       }
+
+       .modal-col h5 {
+           font-weight: bold;
+           margin-top: 15px;
+       }
+
+       .icon {
+           margin-right: 8px;
+       }
+
+       .modal-dialog {
+           max-width: 900px; /* Tăng kích thước modal */
+       }
+
+       .modal-header {
+           background-color: #007bff;
+           color: white;
+           padding: 20px;
+           border-top-left-radius: 15px;
+           border-top-right-radius: 15px;
+       }
+
+       .modal-content {
+           border-radius: 15px;
+           overflow: hidden;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+       }
+
+       .modal-footer {
+           padding: 20px;
+           justify-content: center;
+       }
     </style>
 </head>
 <body>
 <section layout:fragment="content" class="container mtop">
-<div class="container">
-    <!-- Khung gộp thông tin bác sĩ và lịch làm việc -->
-    <div class="doctor-schedule-container">
-        <!-- Thông tin bác sĩ -->
-        <div class="doctor-details">
-            <img th:src="${doctor.avatarUrl}" class="doctor-avatar" alt="Avatar bác sĩ">
-            <div class="doctor-info">
-                <h2 th:text="${doctor.userName}">Tên bác sĩ</h2>
-                <p><strong>Chuyên khoa:</strong> <span th:text="${doctor.departmentName}">Khoa</span></p>
-                <p><strong>Chức vụ:</strong> <span th:text="${doctor.positionName}">Chức vụ</span></p>
-                <p><strong>Thông tin:</strong> <span th:text="${doctor.information}">Thông tin</span></p>
-                <p><strong>Kinh nghiệm:</strong> <span th:text="${doctor.experience + ' năm'}">Kinh nghiệm</span></p>
+    <div class="container">
+        <!-- Khung gộp thông tin bác sĩ và lịch làm việc -->
+        <div class="doctor-schedule-container">
+            <!-- Thông tin bác sĩ -->
+            <div class="doctor-details">
+                <img th:src="${doctor.avatarUrl}" class="doctor-avatar" alt="Avatar bác sĩ">
+                <div class="doctor-info">
+                    <h2 th:text="${doctor.userName}">Tên bác sĩ</h2>
+                    <p><strong>Chuyên khoa:</strong> <span th:text="${doctor.departmentName}">Khoa</span></p>
+                    <p><strong>Chức vụ:</strong> <span th:text="${doctor.positionName}">Chức vụ</span></p>
+                    <p><strong>Thông tin:</strong> <span th:text="${doctor.information}">Thông tin</span></p>
+                    <p><strong>Kinh nghiệm:</strong> <span th:text="${doctor.experience + ' năm'}">Kinh nghiệm</span></p>
+                </div>
             </div>
-        </div>
 
-        <!-- Lịch làm việc --><div class="schedule-container">
-        <h4>Đặt khám nhanh</h4>
-        <!-- Tabs cho các ngày làm việc -->
-        <div class="day-tabs mt-3">
-            <button th:each="schedule, iter : ${doctor.workSchedules}"
-                    th:text="${schedule.schedule}"
-                    th:data-index="${iter.index}"
-                    class="day-button"
-                    th:classappend="${iter.index == 0} ? 'active'">
-            </button>
-        </div>
-        <!-- Danh sách khung giờ theo từng ngày -->
-        <div th:each="schedule, iter : ${doctor.workSchedules}"
-             th:data-index="${iter.index}"
-             class="slot-container"
-             th:classappend="${iter.index == 0} ? 'active'">
-            <div class="slot-grid">
-                <button th:each="timeSlot : ${schedule.timeSlots}"
-                        th:text="${timeSlot}"
-                        class="time-slot-button">
+            <!-- Lịch làm việc -->
+            <div class="schedule-container">
+                <h4>Đặt khám nhanh</h4>
+                <!-- Tabs cho các ngày làm việc -->
+                <div class="day-tabs mt-3">
+                    <button th:each="schedule, iter : ${doctor.workSchedules}"
+                            th:text="${schedule.schedule}"
+                            th:data-work-schedule-id="${schedule.work_schedule_id}"
+                            th:data-index="${iter.index}"
+                            class="day-button">
+                    </button>
+                </div>
+                <!-- Danh sách khung giờ theo từng ngày -->
+                <div th:each="schedule, iter : ${doctor.workSchedules}"
+                     th:data-index="${iter.index}"
+                     class="slot-container"
+                     th:classappend="${iter.index == 0} ? 'active'">
+                    <div class="slot-grid">
+                        <button th:each="timeSlot : ${schedule.timeSlots}"
+                                th:text="${timeSlot}"
+                                class="time-slot-button">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary btn-lg" style="border-radius: 8px; font-weight: bold;">
+                    ĐẶT KHÁM NGAY
                 </button>
             </div>
         </div>
     </div>
-        <div class="text-center mt-4">
-            <button class="btn btn-primary btn-lg" style="border-radius: 8px; font-weight: bold;">
-                ĐẶT KHÁM NGAY
-            </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalLabel">Xác nhận đặt khám</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Cột thông tin bác sĩ -->
+                    <div class="modal-col">
+                        <img id="doctorAvatarModal" src="" alt="Avatar bác sĩ" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid #007bff; margin-bottom: 10px;">
+                        <h5 id="doctorNameModal"></h5>
+                    </div>
+                    <!-- Cột thông tin bệnh nhân và lịch hẹn -->
+                    <div class="modal-col">
+                        <p><i class="icon fas fa-user"></i><strong>Họ tên:</strong> <span id="userName"></span></p>
+                        <p><i class="icon fas fa-phone"></i><strong>Số điện thoại:</strong> <span id="userPhone"></span></p>
+                        <p><i class="icon fas fa-calendar-alt"></i><strong>Ngày chọn:</strong> <span id="selectedDate"></span></p>
+                        <p><i class="icon fas fa-clock"></i><strong>Giờ chọn:</strong> <span id="selectedTime"></span></p>
+                        <!-- Trường nhập triệu chứng -->
+                        <div class="form-group mt-3">
+                            <label for="medicalConditionInput"><strong>Triệu chứng:</strong></label>
+                            <textarea class="form-control" id="medicalConditionInput" rows="3" placeholder="Nhập triệu chứng của bạn"></textarea>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="medicalImageInput"><strong>Chọn ảnh bệnh án:</strong></label>
+                            <input type="file" class="form-control-file" id="medicalImageInput">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="confirmBookingButton">Xác nhận đặt</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const dayButtons = document.querySelectorAll(".day-button");
-      const slotContainers = document.querySelectorAll(".slot-container");
+    </div>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dayButtons = document.querySelectorAll(".day-button");
+            const slotContainers = document.querySelectorAll(".slot-container");
+            const bookingButton = document.querySelector(".btn-primary");
+            const confirmBookingButton = document.getElementById("confirmBookingButton");
 
-      dayButtons.forEach((button, index) => {
-          button.addEventListener("click", () => {
-              // Reset trạng thái active
-              dayButtons.forEach(btn => btn.classList.remove("active"));
-              slotContainers.forEach(container => container.classList.remove("active"));
-              // Thêm trạng thái active
-              button.classList.add("active");
-              slotContainers[index].classList.add("active");
-              // Cuộn đến vị trí của nút được chọn
-              button.scrollIntoView({ behavior: "smooth", inline: "center" });
-          });
-      });
-  });
-</script>
+            let selectedDate = "";
+            let selectedTime = "";
+
+            // Lấy thông tin tài khoản đăng nhập từ localStorage
+            const userName = localStorage.getItem("userName") || "Không xác định";
+            const userPhone = localStorage.getItem("userPhone") || "Không xác định";
+            const user_id = localStorage.getItem("userId") || "Không xác định";
+
+            // Lấy thông tin bác sĩ
+            const doctorAvatar = document.querySelector(".doctor-avatar").src;
+            const doctorName = document.querySelector(".doctor-info h2").textContent.trim();
+            let selectedWorkScheduleId = ""; // Biến lưu work_schedule_id được chọn
+
+            // Xử lý chọn ngày
+            dayButtons.forEach((button, index) => {
+                button.addEventListener("click", () => {
+                    dayButtons.forEach(btn => btn.classList.remove("active"));
+                    slotContainers.forEach(container => container.classList.remove("active"));
+
+                    button.classList.add("active");
+                    slotContainers[index].classList.add("active");
+
+                    selectedDate = button.textContent.trim();
+                    selectedWorkScheduleId = button.getAttribute("data-index"); // Lấy work_schedule_id từ thuộc tính
+                });
+            });
+
+            // Xử lý chọn giờ
+            slotContainers.forEach((container) => {
+                container.addEventListener("click", (event) => {
+                    if (event.target.classList.contains("time-slot-button")) {
+                        container.querySelectorAll(".time-slot-button").forEach(btn => btn.classList.remove("active"));
+                        event.target.classList.add("active");
+                        selectedTime = event.target.textContent.trim();
+                    }
+                });
+            });
+
+            // Xử lý khi nhấn nút "ĐẶT KHÁM NGAY"
+            bookingButton.addEventListener("click", () => {
+                if (!selectedDate || !selectedTime) {
+                    alert("Vui lòng chọn ngày và giờ!");
+                    return;
+                }
+                // Hiển thị thông tin bác sĩ trong modal
+                document.getElementById("doctorAvatarModal").src = doctorAvatar;
+                document.getElementById("doctorNameModal").textContent = doctorName;
+
+                // Hiển thị thông tin bệnh nhân trong modal
+                document.getElementById("userName").textContent = userName;
+                document.getElementById("userPhone").textContent = userPhone;
+                document.getElementById("selectedDate").textContent = selectedDate;
+                document.getElementById("selectedTime").textContent = selectedTime;
+
+                // Hiển thị modal
+                $('#bookingModal').modal('show');
+            });
+
+            // Xử lý khi nhấn nút "Xác nhận đặt" trong modal
+            confirmBookingButton.addEventListener("click", async () => {
+                const medicalCondition = document.getElementById("medicalConditionInput").value.trim();
+                const medicalImageInput = document.getElementById("medicalImageInput").files[0];
+
+                if (!medicalCondition) {
+                    alert("Vui lòng nhập triệu chứng của bạn!");
+                    return;
+                }
+
+                const appointmentData = new FormData();
+                appointmentData.append("user_id", user_id);
+                appointmentData.append("work_schedule_id", selectedWorkScheduleId);
+                appointmentData.append("medical_condition", medicalCondition);
+                appointmentData.append("status", 2);
+                appointmentData.append("timeSlot", selectedTime);
+                appointmentData.append("patientName", userName);
+                appointmentData.append("phoneNumber", userPhone);
+                appointmentData.append("appointmentDate", selectedDate);
+                appointmentData.append("appointmentTime", selectedTime);
+
+                if (medicalImageInput) {
+                    appointmentData.append("medicalImage", medicalImageInput);
+                }
+
+                try {
+                    const response = await fetch('/doctors/confirm', {
+                        method: 'POST',
+                        body: appointmentData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Đặt lịch thất bại");
+                    }
+
+                    const message = await response.text();
+                    alert("Đặt lịch thành công!");
+                    window.location.href = "/doctors"; // Điều hướng về danh sách bác sĩ
+                } catch (error) {
+                    console.error("Lỗi khi đặt lịch:", error);
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                }
+            });
+        });
+    </script>
 </section>
 </body>
 </html>
