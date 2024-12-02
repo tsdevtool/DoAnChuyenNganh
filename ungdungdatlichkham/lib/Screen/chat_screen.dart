@@ -112,7 +112,7 @@ Widget build(BuildContext context) {
                   child:
                   chatProvider.inChatMessages.isEmpty
                       ? const Center(
-                    child: Text('No messages yet'),
+                    child: Text('Không có tin nhắn nào '),
                   )
                       :ChatMessages(
                     scrollController: _scrollController,
