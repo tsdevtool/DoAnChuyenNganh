@@ -286,8 +286,12 @@
                     </div>
                     <!-- Cột thông tin bệnh nhân và lịch hẹn -->
                     <div class="modal-col">
-                        <p><i class="icon fas fa-user"></i><strong>Họ tên:</strong> <span id="userName"></span></p>
-                        <p><i class="icon fas fa-phone"></i><strong>Số điện thoại:</strong> <span id="userPhone"></span></p>
+                        <p><i class="icon fas fa-user"></i><strong>Họ tên:</strong>
+                            <input type="text" id="userNameInput" class="form-control" value="">
+                        </p>
+                        <p><i class="icon fas fa-phone"></i><strong>Số điện thoại:</strong>
+                            <input type="text" id="userPhoneInput" class="form-control" value="">
+                        </p>
                         <p><i class="icon fas fa-calendar-alt"></i><strong>Ngày chọn:</strong> <span id="selectedDate"></span></p>
                         <p><i class="icon fas fa-clock"></i><strong>Giờ chọn:</strong> <span id="selectedTime"></span></p>
                         <!-- Trường nhập triệu chứng -->
@@ -300,7 +304,6 @@
                             <input type="file" class="form-control-file" id="medicalImageInput">
                         </div>
                     </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                     <button type="button" class="btn btn-primary" id="confirmBookingButton">Xác nhận đặt</button>
@@ -312,113 +315,122 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const dayButtons = document.querySelectorAll(".day-button");
-            const slotContainers = document.querySelectorAll(".slot-container");
-            const bookingButton = document.querySelector(".btn-primary");
-            const confirmBookingButton = document.getElementById("confirmBookingButton");
+    const dayButtons = document.querySelectorAll(".day-button");
+    const slotContainers = document.querySelectorAll(".slot-container");
+    const bookingButton = document.querySelector(".btn-primary");
+    const confirmBookingButton = document.getElementById("confirmBookingButton");
 
-            let selectedDate = "";
-            let selectedTime = "";
+    let selectedDate = "";
+    let selectedTime = "";
 
-            // Lấy thông tin tài khoản đăng nhập từ localStorage
-            const userName = localStorage.getItem("userName") || "Không xác định";
-            const userPhone = localStorage.getItem("userPhone") || "Không xác định";
-            const user_id = localStorage.getItem("userId") || "Không xác định";
+    // Lấy thông tin tài khoản đăng nhập từ localStorage
+    const defaultUserName = localStorage.getItem("userName") || "Không xác định";
+    const defaultUserPhone = localStorage.getItem("userPhone") || "Không xác định";
 
-            // Lấy thông tin bác sĩ
-            const doctorAvatar = document.querySelector(".doctor-avatar").src;
-            const doctorName = document.querySelector(".doctor-info h2").textContent.trim();
-            let selectedWorkScheduleId = ""; // Biến lưu work_schedule_id được chọn
+    // Lấy thông tin bác sĩ
+    const doctorAvatar = document.querySelector(".doctor-avatar").src;
+    const doctorName = document.querySelector(".doctor-info h2").textContent.trim();
+    let selectedWorkScheduleId = ""; // Biến lưu work_schedule_id được chọn
 
-            // Xử lý chọn ngày
-            dayButtons.forEach((button, index) => {
-                button.addEventListener("click", () => {
-                    dayButtons.forEach(btn => btn.classList.remove("active"));
-                    slotContainers.forEach(container => container.classList.remove("active"));
+    // Xử lý chọn ngày
+    dayButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            dayButtons.forEach(btn => btn.classList.remove("active"));
+            slotContainers.forEach(container => container.classList.remove("active"));
 
-                    button.classList.add("active");
-                    slotContainers[index].classList.add("active");
+            button.classList.add("active");
+            slotContainers[index].classList.add("active");
 
-                    selectedDate = button.textContent.trim();
-                    selectedWorkScheduleId = button.getAttribute("data-index"); // Lấy work_schedule_id từ thuộc tính
-                });
-            });
-
-            // Xử lý chọn giờ
-            slotContainers.forEach((container) => {
-                container.addEventListener("click", (event) => {
-                    if (event.target.classList.contains("time-slot-button")) {
-                        container.querySelectorAll(".time-slot-button").forEach(btn => btn.classList.remove("active"));
-                        event.target.classList.add("active");
-                        selectedTime = event.target.textContent.trim();
-                    }
-                });
-            });
-
-            // Xử lý khi nhấn nút "ĐẶT KHÁM NGAY"
-            bookingButton.addEventListener("click", () => {
-                if (!selectedDate || !selectedTime) {
-                    alert("Vui lòng chọn ngày và giờ!");
-                    return;
-                }
-                // Hiển thị thông tin bác sĩ trong modal
-                document.getElementById("doctorAvatarModal").src = doctorAvatar;
-                document.getElementById("doctorNameModal").textContent = doctorName;
-
-                // Hiển thị thông tin bệnh nhân trong modal
-                document.getElementById("userName").textContent = userName;
-                document.getElementById("userPhone").textContent = userPhone;
-                document.getElementById("selectedDate").textContent = selectedDate;
-                document.getElementById("selectedTime").textContent = selectedTime;
-
-                // Hiển thị modal
-                $('#bookingModal').modal('show');
-            });
-
-            // Xử lý khi nhấn nút "Xác nhận đặt" trong modal
-            confirmBookingButton.addEventListener("click", async () => {
-                const medicalCondition = document.getElementById("medicalConditionInput").value.trim();
-                const medicalImageInput = document.getElementById("medicalImageInput").files[0];
-
-                if (!medicalCondition) {
-                    alert("Vui lòng nhập triệu chứng của bạn!");
-                    return;
-                }
-
-                const appointmentData = new FormData();
-                appointmentData.append("user_id", user_id);
-                appointmentData.append("work_schedule_id", selectedWorkScheduleId);
-                appointmentData.append("medical_condition", medicalCondition);
-                appointmentData.append("status", 2);
-                appointmentData.append("timeSlot", selectedTime);
-                appointmentData.append("patientName", userName);
-                appointmentData.append("phoneNumber", userPhone);
-                appointmentData.append("appointmentDate", selectedDate);
-                appointmentData.append("appointmentTime", selectedTime);
-
-                if (medicalImageInput) {
-                    appointmentData.append("medicalImage", medicalImageInput);
-                }
-
-                try {
-                    const response = await fetch('/doctors/confirm', {
-                        method: 'POST',
-                        body: appointmentData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error("Đặt lịch thất bại");
-                    }
-
-                    const message = await response.text();
-                    alert("Đặt lịch thành công!");
-                    window.location.href = "/doctors"; // Điều hướng về danh sách bác sĩ
-                } catch (error) {
-                    console.error("Lỗi khi đặt lịch:", error);
-                    alert("Có lỗi xảy ra, vui lòng thử lại!");
-                }
-            });
+            selectedDate = button.textContent.trim();
+            selectedWorkScheduleId = button.getAttribute("data-index"); // Lấy work_schedule_id từ thuộc tính
         });
+    });
+
+    // Xử lý chọn giờ
+    slotContainers.forEach((container) => {
+        container.addEventListener("click", (event) => {
+            if (event.target.classList.contains("time-slot-button")) {
+                container.querySelectorAll(".time-slot-button").forEach(btn => btn.classList.remove("active"));
+                event.target.classList.add("active");
+                selectedTime = event.target.textContent.trim();
+            }
+        });
+    });
+
+    // Xử lý khi nhấn nút "ĐẶT KHÁM NGAY"
+    bookingButton.addEventListener("click", () => {
+        if (!selectedDate || !selectedTime) {
+            alert("Vui lòng chọn ngày và giờ!");
+            return;
+        }
+
+        // Hiển thị thông tin bác sĩ trong modal
+        document.getElementById("doctorAvatarModal").src = doctorAvatar;
+        document.getElementById("doctorNameModal").textContent = doctorName;
+
+        // Hiển thị thông tin bệnh nhân mặc định
+        document.getElementById("userNameInput").value = defaultUserName;
+        document.getElementById("userPhoneInput").value = defaultUserPhone;
+
+        // Hiển thị ngày và giờ đã chọn
+        document.getElementById("selectedDate").textContent = selectedDate;
+        document.getElementById("selectedTime").textContent = selectedTime;
+
+        // Hiển thị modal
+        $('#bookingModal').modal('show');
+    });
+
+    // Xử lý khi nhấn nút "Xác nhận đặt" trong modal
+    confirmBookingButton.addEventListener("click", async () => {
+        const userName = document.getElementById("userNameInput").value.trim();
+        const userPhone = document.getElementById("userPhoneInput").value.trim();
+        const medicalCondition = document.getElementById("medicalConditionInput").value.trim();
+        const medicalImageInput = document.getElementById("medicalImageInput").files[0];
+
+        if (!userName || !userPhone) {
+            alert("Vui lòng nhập đầy đủ họ tên và số điện thoại!");
+            return;
+        }
+
+        if (!medicalCondition) {
+            alert("Vui lòng nhập triệu chứng của bạn!");
+            return;
+        }
+
+        const appointmentData = new FormData();
+        appointmentData.append("user_id", localStorage.getItem("userId") || "Không xác định");
+        appointmentData.append("work_schedule_id", selectedWorkScheduleId);
+        appointmentData.append("medical_condition", medicalCondition);
+        appointmentData.append("status", 2);
+        appointmentData.append("timeSlot", selectedTime);
+        appointmentData.append("patientName", userName);
+        appointmentData.append("phoneNumber", userPhone);
+        appointmentData.append("appointmentDate", selectedDate);
+        appointmentData.append("appointmentTime", selectedTime);
+
+        if (medicalImageInput) {
+            appointmentData.append("medicalImage", medicalImageInput);
+        }
+
+        try {
+            const response = await fetch('/doctors/confirm', {
+                method: 'POST',
+                body: appointmentData
+            });
+
+            if (!response.ok) {
+                throw new Error("Đặt lịch thất bại");
+            }
+
+            const message = await response.text();
+            alert("Đặt lịch thành công!");
+            window.location.href = "/doctors"; // Điều hướng về danh sách bác sĩ
+        } catch (error) {
+            console.error("Lỗi khi đặt lịch:", error);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+        }
+    });
+});
     </script>
 </section>
 </body>

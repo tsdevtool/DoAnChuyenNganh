@@ -1,22 +1,28 @@
 package com.example.WebSiteDatLich.model;
 
-public class Role {
-    public Integer getRole_id() {
-        return role_id;
+
+
+public enum Role {
+    ADMIN(1),
+    DOCTOR(2),
+    USER(3);
+
+    private final int id;
+
+    Role(int id) {
+        this.id = id;
     }
 
-    public void setRole_id(Integer role_id) {
-        this.role_id = role_id;
+    public int getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public static Role fromId(int id) {
+        for (Role role : Role.values()) {
+            if (role.getId() == id) {
+                return role;
+            }
+        }
+        return USER; // Giá trị mặc định nếu không tìm thấy
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    private Integer role_id;
-    private String name;
 }
