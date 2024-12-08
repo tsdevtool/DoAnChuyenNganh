@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:ungdungdatlichkham/Screen/HistoriesScreen.dart';
 import 'package:ungdungdatlichkham/Screen/HomeScreen.dart';
 import 'package:ungdungdatlichkham/Screen/chat_historyscreen.dart';
 import 'package:ungdungdatlichkham/Screen/chat_screen.dart';
@@ -20,7 +22,6 @@ class _Home_ScreenState extends State<Home_Screen> {
     const ChatHistoryscreen(),
     const chatScreen(),
     const profilescreen(),
-
   ];
 
   @override
@@ -37,54 +38,46 @@ class _Home_ScreenState extends State<Home_Screen> {
           ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-              color: Colors.white, // Background color
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  blurRadius: 10,
-                  offset: Offset(0, -3), // Effect for shadow
-                ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              currentIndex: chatProvider.currentIndex,
-              elevation: 0,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              unselectedItemColor: Colors.grey,
-              showSelectedLabels: true,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              iconSize: 28, // Larger icon size
-              selectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 12,
-              ),
-              onTap: (index) {
-                chatProvider.setCurrentIndex(newIndex: index);
-                chatProvider.pageController.jumpToPage(index);
-              },
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Trang chủ',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.history),
-                  label: 'Lịch sử',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Tin nhắn',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Hồ sơ',
-                ),
+              color: Color.fromARGB(255, 47, 100, 253), // Background color
 
-              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: GNav(
+                gap: 8,
+                backgroundColor: Color.fromARGB(255, 47, 100, 253),
+                activeColor: Colors.white,
+                color: Colors.white,
+                tabBackgroundColor: const Color.fromARGB(60, 255, 255, 255),
+                padding: const EdgeInsets.all(10),
+                tabs: const [
+                  GButton(
+                    icon: Icons.home_outlined,
+                    text: 'Trang Chủ',
+                    textSize: 20,
+                  ),
+                  GButton(
+                    icon: Icons.history,
+                    text: 'Lịch sử đặt lịch',
+                    textSize: 20,
+                  ),
+                  GButton(
+                    icon: Icons.chat,
+                    text: 'Tin nhắn',
+                    textSize: 20,
+                  ),
+                  GButton(
+                    icon: Icons.person,
+                    text: 'Tài khoản',
+                    textSize: 20,
+                  ),
+                ],
+                selectedIndex: chatProvider.currentIndex,
+                onTabChange: (index) {
+                  chatProvider.setCurrentIndex(newIndex: index);
+                  chatProvider.pageController.jumpToPage(index);
+                },
+              ),
             ),
           ),
         );

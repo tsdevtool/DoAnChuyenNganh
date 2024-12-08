@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final UserService _userService = UserService();
+  bool _agreeToTerms = false;
 
   void _login() async {
     String email = _emailController.text.trim();
@@ -93,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: 'Email',
                     hintText: 'Nhập email của bạn',
-                    prefixIcon: const Icon(Icons.email_outlined),
+                    prefixIcon: const Icon(Icons.email_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -106,9 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     labelText: 'Mật khẩu',
                     hintText: '********',
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(Icons.lock_outline, color: Color.fromARGB(255, 47, 100, 253),),
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.visibility_outlined),
+                      icon: const Icon(Icons.visibility_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                       onPressed: () {},
                     ),
                     border: OutlineInputBorder(
@@ -121,17 +122,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Checkbox(
-                      value: true,
-                      onChanged: (value) {},
+                      value: _agreeToTerms,
+                      onChanged: (value) {
+                        setState(() {
+                          _agreeToTerms = value!;
+
+                        }
+                        );
+                      },
                     ),
-                    const Text("Ghi nhớ tài khoản", style: TextStyle(fontSize: 17),),
+                    const Text("Ghi nhớ tài khoản", style: TextStyle(fontSize: 18),),
                   ],
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
+                    backgroundColor:Color.fromARGB(255, 47, 100, 253),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50.0),
                     ),
@@ -149,11 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     TextButton(
                       onPressed: () {},
-                      child: const Text('Quên mật khẩu?', style: TextStyle(fontSize: 17, color: Colors.blueAccent),),
+                      child: const Text('Quên mật khẩu?', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 47, 100, 253),),),
                     ),
-                    SizedBox(
-                      width: 1,
-                    ),
+
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
@@ -162,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       },
-                      child: const Text('Đăng ký tài khoản',style: TextStyle(fontSize: 17, )),
+                      child: const Text('Đăng ký tài khoản',style: TextStyle(fontSize: 18,color: Colors.deepPurpleAccent )),
                     ),
                   ],
                 ),

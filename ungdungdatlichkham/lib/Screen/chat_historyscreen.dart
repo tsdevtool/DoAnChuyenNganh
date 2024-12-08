@@ -5,6 +5,8 @@ import 'package:ungdungdatlichkham/hive/chat_history.dart';
 import 'package:ungdungdatlichkham/widgets/chat_history_widget.dart';
 import 'package:ungdungdatlichkham/widgets/empty_history_widget.dart';
 
+import 'chat_screen.dart';
+
 class ChatHistoryscreen extends StatefulWidget {
 const ChatHistoryscreen({super.key});
 
@@ -17,6 +19,14 @@ class _ChatHistoryscreenState extends State<ChatHistoryscreen> {
 Widget build(BuildContext context){
 return Scaffold(
   appBar: AppBar(
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+      onPressed: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) =>  chatScreen(),
+        ),
+      )
+    ),
     backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
     centerTitle: true,
     title: const Text('Lịch sử nhắn tin'),

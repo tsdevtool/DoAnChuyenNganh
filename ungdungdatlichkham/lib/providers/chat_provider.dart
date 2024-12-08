@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -319,6 +320,8 @@ class ChatProvider extends ChangeNotifier {
 
 
   Future<Content> getContent({required String message, required bool isTextOnly,}) async{
+    // Xử lý chuỗi để đảm bảo nhận tiếng Việt
+    final formattedMessage = utf8.decode(utf8.encode(message));
     if(isTextOnly){
       return Content.text(message);
     }else{

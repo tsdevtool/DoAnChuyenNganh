@@ -96,7 +96,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                         }
                       },
 
-                      icon:  Icon(HasImages? Icons.delete_forever : Icons.image)),
+                      icon: HasImages?  Icon(Icons.delete_forever_outlined, color: Colors.red,size: 30,) : Icon(Icons.image_outlined, color: Color.fromARGB(255, 47, 100, 253), size: 30,)),
                       const SizedBox(width: 5,),
                   Expanded(
                       child: TextField(
@@ -114,7 +114,11 @@ class _BottomChatFieldState extends State<BottomChatField> {
                                }
                         },
                         decoration: InputDecoration.collapsed(
-                          hintText: 'Enter a promt...',
+                          hintText: 'Nhập câu hỏi mà bạn muốn hỏi...',
+                          hintStyle:TextStyle(
+                              color: Colors.grey,
+                              fontSize: 17
+                          ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                             borderRadius: BorderRadius.circular(30),
@@ -135,13 +139,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
                      },
                      child: Container(
                          decoration: BoxDecoration(
-                           color: Colors.deepPurple,
+                           color: Color.fromARGB(255, 47, 100, 253),
                            borderRadius: BorderRadius.circular(20),
                          ),
                          margin: const EdgeInsets.all(5.0),
                          child: const Padding(
                            padding: EdgeInsets.all(8.0),
-                           child: Icon(Icons.arrow_upward,color: Colors.white),
+                           child: Icon(Icons.send,color: Colors.white),
                          )),
                    )
                 ],

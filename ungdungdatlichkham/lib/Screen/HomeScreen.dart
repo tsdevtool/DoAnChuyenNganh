@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Icons Section
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 7.0),
                 child: Wrap(
                   spacing: 16.0,
                   runSpacing: 16.0,
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
 
               // Danh sách bác sĩ
               Padding(
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text(
                               'Xem thêm',
                               style: TextStyle(
-                                color: Colors.lightBlue,
+                                color: Color.fromARGB(255, 47, 100, 253),
                                 fontSize: 20
                               ),
                             ))
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Bệnh viện',
+                      'BỆNH VIỆN',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Phòng khám',
+                      'PHÒNG KHÁM',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildTopBar() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.purple.shade100,
+        color: Color.fromARGB(255, 47, 100, 253),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -231,14 +231,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  const FaIcon(FontAwesomeIcons.userCircle, size: 28, color: Colors.blue),
+                  const FaIcon(FontAwesomeIcons.userCircle, size: 28, color: Colors.white),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         _userName != null ? 'Chào, $_userName!' : 'Buổi tối an lành!',
-                        style: const TextStyle(color: Colors.indigoAccent, fontSize: 20),
+                        style: const TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       if (_userName == null)
                         GestureDetector(
@@ -251,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: const Text(
                             'Đăng ký / Đăng nhập',
                             style: TextStyle(
-                              color: Colors.blueGrey,
+                              color: Colors.white,
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const Icon(Icons.notifications_outlined, color: Colors.blue),
+              const Icon(Icons.notifications_outlined, color: Colors.white),
             ],
           ),
           const SizedBox(height: 40),
@@ -285,11 +285,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 hintStyle: TextStyle(color: Colors.grey.shade400),
                 prefixIcon: const Icon(
                   Icons.search,
-                  color: Colors.purple,
+                  color: Color.fromARGB(255, 47, 100, 253),
                 ),
                 suffixIcon: Icon(
                   Icons.mic_none,
-                  color: Colors.purple.shade200,
+                  color: Color.fromARGB(255, 47, 100, 253),
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -381,12 +381,17 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () async {
             List<WorkSchedule> schedules =
             await WorkScheduleService().getSchedulesByDoctorId(doctor.doctorId!);
+            final departmentsMap = {
+              for (var dep in _departments)
+                dep.departmentId!: {'name': dep.name} // Tạo map departments
+            };
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => DoctorDetailsScreen(
                   doctor: doctor,
                   schedules: schedules,
+                  departments: departmentsMap, // Truyền departments vào màn hình
                 ),
               ),
             );
@@ -456,18 +461,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () async {
                     List<WorkSchedule> schedules =
                     await WorkScheduleService().getSchedulesByDoctorId(doctor.doctorId!);
+                    final departmentsMap = {
+                      for (var dep in _departments)
+                        dep.departmentId!: {'name': dep.name} // Tạo map departments
+                    };
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DoctorDetailsScreen(
                           doctor: doctor,
                           schedules: schedules,
+                          departments: departmentsMap, // Truyền departments
                         ),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color.fromARGB(255, 47, 100, 253),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -508,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.white70, // Nền màu trắng
         borderRadius: BorderRadius.circular(10), // Bo góc
         border: Border.all(
-          color: Colors.blueAccent.withOpacity(0.3), // Viền mỏng màu xám nhạt
+          color: Color.fromARGB(255, 47, 100, 253).withOpacity(0.3), // Viền mỏng màu xám nhạt
           width: 2, // Độ rộng viền
         ),
         boxShadow: [

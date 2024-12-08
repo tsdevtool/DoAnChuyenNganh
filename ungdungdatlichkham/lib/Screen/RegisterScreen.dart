@@ -193,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Họ tên',
-                  prefixIcon: Icon(Icons.person_outline),
+                  prefixIcon: Icon(Icons.person_outline, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập họ tên' : null,
               ),
@@ -233,7 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
                   labelText: 'Số điện thoại',
-                  prefixIcon: Icon(Icons.phone_outlined),
+                  prefixIcon: Icon(Icons.phone_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập số điện thoại' : null,
               ),
@@ -243,7 +243,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: Icon(Icons.email_outlined),
+                  prefixIcon: Icon(Icons.email_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
                 validator: (value) =>
                 value!.isEmpty || !value.contains('@') ? 'Email không hợp lệ' : null,
@@ -254,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Mật khẩu',
-                  prefixIcon: Icon(Icons.lock_outline),
+                  prefixIcon: Icon(Icons.lock_outline, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
                 validator: (value) => value!.length < 6
                     ? 'Mật khẩu phải ít nhất 6 ký tự'
@@ -272,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     decoration: const InputDecoration(
                       labelText: 'Ngày sinh',
-                      prefixIcon: Icon(Icons.calendar_today),
+                      prefixIcon: Icon(Icons.calendar_today, color: Color.fromARGB(255, 47, 100, 253),),
                     ),
                     validator: (value) =>
                     value!.isEmpty ? 'Vui lòng chọn ngày sinh' : null,
@@ -293,7 +293,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
                 decoration: const InputDecoration(
                   labelText: 'Giới tính',
-                  prefixIcon: Icon(Icons.transgender_outlined),
+                  prefixIcon: Icon(Icons.transgender_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
               ),
               const SizedBox(height: 16),
@@ -301,7 +301,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _addressController,
                 decoration: const InputDecoration(
                   labelText: 'Địa chỉ',
-                  prefixIcon: Icon(Icons.location_on_outlined),
+                  prefixIcon: Icon(Icons.location_on_outlined, color: Color.fromARGB(255, 47, 100, 253),),
                 ),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập địa chỉ' : null,
               ),
@@ -340,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ElevatedButton(
                 onPressed: _register,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
+                  backgroundColor: Color.fromARGB(255, 47, 100, 253),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
                   ),
