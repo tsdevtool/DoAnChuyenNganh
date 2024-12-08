@@ -1,5 +1,6 @@
 package com.example.WebSiteDatLich.service;
 
+
 import com.example.WebSiteDatLich.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -9,6 +10,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder; // Để mã hóa mật khẩu
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -31,12 +39,13 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;  // Inject PasswordEncoder để mã hóa mật khẩu
-
+    public boolean passwordMatches(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
     public UserService() {
         // Tham chiếu đến bảng "user" trong Firebase Realtime Database
         this.databaseReference = FirebaseDatabase.getInstance().getReference("user");
     }
-
     // Xử lý đăng nhập
     public void login(String email, String password, LoginCallback callback) {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -110,6 +119,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Gán vai trò mặc định
+
         user.setRole_id(1);
 
         // Xử lý upload ảnh lên Firebase Storage (nếu có)
@@ -120,7 +130,7 @@ public class UserService {
                 Blob blob = bucket.create(fileName, avatarFile.getInputStream(), avatarFile.getContentType());
                 // Tạo URL tải xuống công khai có thời hạn
                 URL url = blob.signUrl(14, TimeUnit.DAYS); // URL có hiệu lực trong 14 ngày
-                    user.setAvatar(url.toString());
+                user.setAvatar(url.toString());
 
             } catch (IOException e) {
                 callback.onFailure("Failed to upload avatar: " + e.getMessage());
@@ -137,6 +147,34 @@ public class UserService {
             callback.onSuccess("User registered successfully!");
         } catch (Exception e) {
             callback.onFailure("Failed to register user: " + e.getMessage());
+        }
+    }
+    public User findByEmail(String email) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        User user = childSnapshot.getValue(User.class);
+                        future.complete(user); // Trả về người dùng
+                        return;
+                    }
+                }
+                future.complete(null); // Không tìm thấy người dùng
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                future.completeExceptionally(new RuntimeException("Firebase query failed: " + databaseError.getMessage()));
+            }
+        });
+
+        try {
+            return future.get(); // Chờ dữ liệu Firebase trả về
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Error retrieving user from Firebase", e);
         }
     }
 

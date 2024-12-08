@@ -1,5 +1,7 @@
 package com.example.WebSiteDatLich.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
     private String user_id;
     private String password;
@@ -9,10 +11,14 @@ public class User {
     private String email;
     private String address;
     private String phone;
-    private String avatar;  // URL của ảnh đại diện
+    private String avatar;
     private Integer role_id;
 
-    // Getters and Setters
+    // Enum để ánh xạ từ role_id
+    @JsonIgnore // Không serialize trường này nếu trả về JSON
+    private Role role;
+
+    // Getters và Setters
     public String getUser_id() {
         return user_id;
     }
@@ -91,5 +97,19 @@ public class User {
 
     public void setRole_id(Integer role_id) {
         this.role_id = role_id;
+
+        // Cập nhật giá trị của Role Enum dựa trên role_id
+        this.role = Role.fromId(role_id);
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+
+        // Nếu Role Enum được set, tự động cập nhật role_id
+        this.role_id = role.getId();
     }
 }

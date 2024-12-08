@@ -9,7 +9,7 @@
            display: flex;
            align-items: center;
            justify-content: space-between;
-           background-color: #4a8dd4;
+           background-color: #63acfa;
            padding: 15px 30px;
            width: 100%;
            position: fixed;
@@ -111,7 +111,12 @@
         <div class="header-nav-links">
             <a href="/doctors" class="active">Trang chủ</a>
             <a href="#">Tư vấn</a>
-            <a href="/login">Đăng nhập</a>
+            <span th:if="${#authentication == null}">
+        <a href="/login">Đăng nhập</a>
+    </span>
+            <span th:if="${#authentication != null}">
+         <a href="/logout" onclick="return confirmLogout(event);">Đăng xuất</a>
+    </span>
         </div>
         <div class="header-search-bar">
             <i class="fas fa-search"></i>
@@ -171,6 +176,27 @@ $('.banner-carousel').owlCarousel({
     autoplayHoverPause: true,
     items: 1
 });
+ function confirmLogout(event) {
+        // Hiển thị hộp thoại xác nhận
+        const confirmation = confirm("Bạn có chắc chắn muốn đăng xuất không?");
+        if (!confirmation) {
+            // Ngăn hành động nếu người dùng nhấn "Hủy"
+            event.preventDefault();
+        }
+        return confirmation;
+    }
+</script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/674eac214304e3196aeba70d/1ie5l0pmk';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
 </script>
 </body>
 </html>

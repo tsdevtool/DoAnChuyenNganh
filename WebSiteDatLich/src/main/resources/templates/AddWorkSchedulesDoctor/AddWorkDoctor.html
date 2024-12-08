@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn bác sĩ</title>
+    <style>
+        /* Reset CSS */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+
+       body {
+           font-family: 'Roboto', Arial, sans-serif;
+           background-color: #f9f9fc;
+           color: #333;
+           padding: 20px;
+       }
+
+       h1 {
+           font-size: 2rem;
+           color: #007bff;
+           text-align: center;
+           margin-bottom: 30px;
+       }
+
+       .container {
+           display: flex;
+           justify-content: center;
+           gap: 30px;
+           align-items: flex-start;
+       }
+
+       .form-section, .preview-section {
+           background: #fff;
+           border-radius: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+           padding: 20px;
+           width: 45%;
+       }
+
+       .form-section h2, .preview-section h2 {
+           font-size: 1.5rem;
+           color: #007bff;
+           margin-bottom: 15px;
+       }
+
+       label {
+           font-weight: bold;
+           margin-bottom: 5px;
+           display: block;
+           color: #555;
+       }
+
+       select, input[type="date"], button {
+           width: 100%;
+           padding: 10px;
+           margin: 10px 0;
+           border: 1px solid #ddd;
+           border-radius: 5px;
+           font-size: 1rem;
+       }
+
+       button {
+           background-color: #007bff;
+           color: white;
+           font-weight: bold;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+
+       button:hover {
+           background-color: #0056b3;
+       }
+
+       .checkbox-group {
+           display: flex;
+           gap: 20px;
+           margin: 15px 0;
+       }
+
+       .checkbox-group label {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+       }
+
+       .date-group {
+           display: flex;
+           gap: 20px;
+       }
+
+       .date-group .date-input {
+           flex: 1;
+       }
+
+       #timeSlotsContainer {
+           margin-top: 20px;
+       }
+
+       .time-table {
+           display: grid;
+           grid-template-columns: repeat(4, 1fr);
+           gap: 10px;
+           margin-top: 20px;
+       }
+
+       .time-slot {
+           background: #e3f2fd;
+           padding: 10px;
+           text-align: center;
+           border-radius: 5px;
+           font-size: 0.9rem;
+           border: 1px solid #90caf9;
+           transition: background-color 0.3s;
+       }
+
+       .time-slot:hover {
+           background: #64b5f6;
+           color: white;
+       }
+
+       .form-footer {
+           display: flex;
+           justify-content: center;
+           margin-top: 20px;
+       }
+
+       @media (max-width: 768px) {
+           .container {
+               flex-direction: column;
+           }
+
+           .form-section, .preview-section {
+               width: 100%;
+           }
+
+           .time-table {
+               grid-template-columns: repeat(2, 1fr);
+           }
+
+    </style>
+</head>
+<body>
+<section layout:fragment="content" >
+    <h1>Thêm Lịch Làm Việc</h1>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Thông Tin Lịch Làm Việc</h2>
+            <form id="selectDoctorForm">
+                <label for="doctorSelect">Chọn Bác Sĩ:</label>
+                <select id="doctorSelect" name="doctor_id" required>
+                    <option value="">-- Chọn bác sĩ --</option>
+                    <th:block th:each="doctor : ${doctors}">
+                        <option th:value="${doctor.doctor_id}" th:text="${doctor.userName}"></option>
+                    </th:block>
+                </select>
+            </form>
+            <form id="addWorkScheduleForm">
+                <div class="date-group">
+                    <div class="date-input">
+                        <label for="startDate">Từ ngày:</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="date-input">
+                        <label for="endDate">Đến ngày:</label>
+                        <input type="date" id="endDate" name="endDate" required>
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="morningCheckbox" value="morning"> Buổi Sáng</label>
+                    <label><input type="checkbox" id="afternoonCheckbox" value="afternoon"> Buổi Chiều</label>
+                </div>
+                <div class="form-footer">
+                    <button type="submit">Thêm lịch làm việc</button>
+                </div>
+            </form>
+        </div>
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h2>Thời Gian Làm Việc</h2>
+            <div id="timeSlotsContainer">
+                <h3>Buổi sáng:</h3>
+                <div class="time-table" id="morningSlots"></div>
+                <h3>Buổi chiều:</h3>
+                <div class="time-table" id="afternoonSlots"></div>
+            </div>
+        </div>
+        <div id="successBox" style="display: none;">
+            <p id="successMessage"></p>
+            <button id="closeSuccessBox">Đóng</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function generateTimeSlots(startTime, endTime, intervalMinutes = 15) {
+         const slots = [];
+         let currentTime = new Date(startTime);
+
+         while (currentTime < endTime) {
+             const nextTime = new Date(currentTime.getTime() + intervalMinutes * 60000);
+             const timeSlot = `${currentTime.toTimeString().substring(0, 5)} - ${nextTime.toTimeString().substring(0, 5)}`;
+             slots.push(timeSlot);
+             currentTime = nextTime;
+         }
+
+         return slots;
+     }
+
+     function displayTimeSlots() {
+         const morningCheckbox = document.getElementById('morningCheckbox');
+         const afternoonCheckbox = document.getElementById('afternoonCheckbox');
+         const morningSlotsContainer = document.getElementById('morningSlots');
+         const afternoonSlotsContainer = document.getElementById('afternoonSlots');
+
+         morningSlotsContainer.innerHTML = '';
+         afternoonSlotsContainer.innerHTML = '';
+
+         if (morningCheckbox.checked) {
+             const morningStart = new Date();
+             morningStart.setHours(8, 0, 0, 0);
+             const morningEnd = new Date();
+             morningEnd.setHours(11, 30, 0, 0);
+
+             const morningSlots = generateTimeSlots(morningStart, morningEnd, 15);
+             morningSlotsContainer.innerHTML = morningSlots.map(slot => `<div class="time-slot">${slot}</div>`).join('');
+         }
+
+         if (afternoonCheckbox.checked) {
+             const afternoonStart = new Date();
+             afternoonStart.setHours(13, 0, 0, 0);
+             const afternoonEnd = new Date();
+             afternoonEnd.setHours(17, 0, 0, 0);
+
+             const afternoonSlots = generateTimeSlots(afternoonStart, afternoonEnd, 15);
+             afternoonSlotsContainer.innerHTML = afternoonSlots.map(slot => `<div class="time-slot">${slot}</div>`).join('');
+         }
+     }
+
+     document.getElementById('morningCheckbox').addEventListener('change', displayTimeSlots);
+     document.getElementById('afternoonCheckbox').addEventListener('change', displayTimeSlots);
+
+     document.getElementById('addWorkScheduleForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Lấy giá trị của bác sĩ từ dropdown
+    const doctorId = document.getElementById('doctorSelect').value;
+
+    if (!doctorId) {
+        alert('Vui lòng chọn bác sĩ trước!');
+        return;
+    }
+
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const morningCheckbox = document.getElementById('morningCheckbox');
+    const afternoonCheckbox = document.getElementById('afternoonCheckbox');
+
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Ngày bắt đầu không được lớn hơn ngày kết thúc!');
+        return;
+    }
+
+    if (!morningCheckbox.checked && !afternoonCheckbox.checked) {
+        alert('Vui lòng chọn ít nhất một buổi (sáng hoặc chiều)!');
+        return;
+    }
+
+    const selectedTimeSlots = [];
+    if (morningCheckbox.checked) {
+        const morningStart = new Date();
+        morningStart.setHours(8, 0, 0, 0);
+        const morningEnd = new Date();
+        morningEnd.setHours(11, 30, 0, 0);
+        selectedTimeSlots.push(...generateTimeSlots(morningStart, morningEnd, 15));
+    }
+    if (afternoonCheckbox.checked) {
+        const afternoonStart = new Date();
+        afternoonStart.setHours(13, 0, 0, 0);
+        const afternoonEnd = new Date();
+        afternoonEnd.setHours(17, 0, 0, 0);
+        selectedTimeSlots.push(...generateTimeSlots(afternoonStart, afternoonEnd, 15));
+    }
+
+    const workSchedules = [];
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= new Date(endDate)) {
+        workSchedules.push({
+            doctor_id: doctorId,
+            schedule: currentDate.toISOString().split('T')[0], // YYYY-MM-DD
+            timeSlots: selectedTimeSlots
+        });
+
+        currentDate.setDate(currentDate.getDate() + 1); // Tăng thêm 1 ngày
+    }
+
+    fetch('/api/work-schedules/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(workSchedules)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            throw new Error("Không thể lưu lịch làm việc");
+        }
+    })
+    .then(message => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: message,
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            document.getElementById('addWorkScheduleForm').reset();
+            displayTimeSlots();
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Lỗi khi thêm lịch làm việc: ' + error,
+        });
+    });
+});
+        </script>
+</section>
+</body>
+</html>
