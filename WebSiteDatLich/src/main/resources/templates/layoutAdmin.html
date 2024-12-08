@@ -183,8 +183,8 @@
 <!-- Header -->
 <header class="dashboard-header">
   <div class="logo-title">
-    <img th:src="@{/uploads/logobenvien.png}"  alt="Logo" class="logo">
-    <span class="dashboard-title">Dashboard</span>
+
+    <span class="dashboard-title">Quản Lý</span>
   </div>
   <nav class="menu">
     <!-- Quản lý người dùng -->
@@ -193,6 +193,7 @@
       <ul>
         <li><a th:href="@{/useradmin}" class="menu-link">Quản lý người dùng</a></li>
         <li><a th:href="@{/doctoradmin}" class="menu-link">Quản lý bác sĩ</a></li>
+        <li><a th:href="@{/api/work-schedules/add}" class="menu-link">Quản lý lịch làm việc bác sĩ</a></li>
       </ul>
     </div>
     <!-- Quản lý chuyên mục -->
@@ -221,7 +222,7 @@
 
 <!-- Footer -->
 <footer>
-  <p>Hệ thống quản lý bệnh viện &copy; 2024</p>
+  <p>Hệ thống quản lý bệnh viện VIETDUC</p>
 </footer>
 </body>
 </html>

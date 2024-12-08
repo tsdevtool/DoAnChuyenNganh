@@ -32,15 +32,18 @@ public class WorkScheduleController {
         return "AddWorkSchedulesDoctor/AddWorkDoctor"; // Return the view name
     }
     @PostMapping("/save")
-    public CompletableFuture<String> saveWorkSchedules(@RequestBody List<Work_schedule> workSchedules) {
-        return CompletableFuture.runAsync(() -> {
-                    for (Work_schedule schedule : workSchedules) {
-                        workScheduleService.saveWorkSchedule(schedule)
-                                .exceptionally(ex -> {
-                                    throw new RuntimeException("Lỗi khi lưu Work_schedule: " + ex.getMessage());
-                                }).join();
-                    }
-                }).thenApply(aVoid -> "Lưu thành công tất cả Work_schedule!")
-                .exceptionally(ex -> "Lỗi khi lưu Work_schedule: " + ex.getMessage());
+    public ResponseEntity<String> saveWorkSchedules(@RequestBody List<Work_schedule> workSchedules) {
+        try {
+            for (Work_schedule schedule : workSchedules) {
+                workScheduleService.saveWorkSchedule(schedule)
+                        .exceptionally(ex -> {
+                            throw new RuntimeException("Lỗi khi lưu lịch làm việc bác sĩ : " + ex.getMessage());
+                        }).join();
+            }
+            return ResponseEntity.ok("Lưu thành công tất cả lịch làm việc bác sĩ !");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi khi lưu lịch làm việc bác sĩ : " + e.getMessage());
+        }
+
     }
 }

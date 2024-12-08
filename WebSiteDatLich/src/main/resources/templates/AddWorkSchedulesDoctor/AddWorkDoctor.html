@@ -246,93 +246,94 @@
      document.getElementById('afternoonCheckbox').addEventListener('change', displayTimeSlots);
 
      document.getElementById('addWorkScheduleForm').addEventListener('submit', function (e) {
-         e.preventDefault();
+    e.preventDefault();
 
-         const doctorId = sessionStorage.getItem('selectedDoctorId');
-         const startDate = document.getElementById('startDate').value;
-         const endDate = document.getElementById('endDate').value;
-         const morningCheckbox = document.getElementById('morningCheckbox');
-         const afternoonCheckbox = document.getElementById('afternoonCheckbox');
+    // Lấy giá trị của bác sĩ từ dropdown
+    const doctorId = document.getElementById('doctorSelect').value;
 
-         if (!doctorId) {
-             alert('Vui lòng chọn bác sĩ trước!');
-             return;
-         }
+    if (!doctorId) {
+        alert('Vui lòng chọn bác sĩ trước!');
+        return;
+    }
 
-         if (new Date(startDate) > new Date(endDate)) {
-             alert('Ngày bắt đầu không được lớn hơn ngày kết thúc!');
-             return;
-         }
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const morningCheckbox = document.getElementById('morningCheckbox');
+    const afternoonCheckbox = document.getElementById('afternoonCheckbox');
 
-         if (!morningCheckbox.checked && !afternoonCheckbox.checked) {
-             alert('Vui lòng chọn ít nhất một buổi (sáng hoặc chiều)!');
-             return;
-         }
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Ngày bắt đầu không được lớn hơn ngày kết thúc!');
+        return;
+    }
 
-         const selectedTimeSlots = [];
-         if (morningCheckbox.checked) {
-             const morningStart = new Date();
-             morningStart.setHours(8, 0, 0, 0);
-             const morningEnd = new Date();
-             morningEnd.setHours(11, 30, 0, 0);
-             selectedTimeSlots.push(...generateTimeSlots(morningStart, morningEnd, 15));
-         }
-         if (afternoonCheckbox.checked) {
-             const afternoonStart = new Date();
-             afternoonStart.setHours(13, 0, 0, 0);
-             const afternoonEnd = new Date();
-             afternoonEnd.setHours(17, 0, 0, 0);
-             selectedTimeSlots.push(...generateTimeSlots(afternoonStart, afternoonEnd, 15));
-         }
+    if (!morningCheckbox.checked && !afternoonCheckbox.checked) {
+        alert('Vui lòng chọn ít nhất một buổi (sáng hoặc chiều)!');
+        return;
+    }
 
-         const workSchedules = [];
-         let currentDate = new Date(startDate);
+    const selectedTimeSlots = [];
+    if (morningCheckbox.checked) {
+        const morningStart = new Date();
+        morningStart.setHours(8, 0, 0, 0);
+        const morningEnd = new Date();
+        morningEnd.setHours(11, 30, 0, 0);
+        selectedTimeSlots.push(...generateTimeSlots(morningStart, morningEnd, 15));
+    }
+    if (afternoonCheckbox.checked) {
+        const afternoonStart = new Date();
+        afternoonStart.setHours(13, 0, 0, 0);
+        const afternoonEnd = new Date();
+        afternoonEnd.setHours(17, 0, 0, 0);
+        selectedTimeSlots.push(...generateTimeSlots(afternoonStart, afternoonEnd, 15));
+    }
 
-         while (currentDate <= new Date(endDate)) {
-             workSchedules.push({
-                 doctor_id: doctorId,
-                 schedule: currentDate.toISOString().split('T')[0], // YYYY-MM-DD
-                 timeSlots: selectedTimeSlots
-             });
+    const workSchedules = [];
+    let currentDate = new Date(startDate);
 
-             currentDate.setDate(currentDate.getDate() + 1); // Tăng thêm 1 ngày
-         }
+    while (currentDate <= new Date(endDate)) {
+        workSchedules.push({
+            doctor_id: doctorId,
+            schedule: currentDate.toISOString().split('T')[0], // YYYY-MM-DD
+            timeSlots: selectedTimeSlots
+        });
 
-         fetch('/api/work-schedules/save', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(workSchedules)
-         })
-         .then(response => {
-             if (response.ok) {
-                 return response.text();
-             } else {
-                 throw new Error("Không thể lưu lịch làm việc");
-             }
-         })
-         .then(message => {
-             // Sử dụng SweetAlert2 để hiển thị thông báo thành công
-             Swal.fire({
-                 icon: 'success',
-                 title: 'Thành công',
-                 text: message,
-                 timer: 2000,
-                 showConfirmButton: false
-             }).then(() => {
-                 document.getElementById('addWorkScheduleForm').reset();
-                 displayTimeSlots();
-             });
-         })
-         .catch(error => {
-             Swal.fire({
-                 icon: 'error',
-                 title: 'Lỗi',
-                 text: 'Lỗi khi thêm lịch làm việc: ' + error.message,
-             });
-         });
-     });
+        currentDate.setDate(currentDate.getDate() + 1); // Tăng thêm 1 ngày
+    }
+
+    fetch('/api/work-schedules/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(workSchedules)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            throw new Error("Không thể lưu lịch làm việc");
+        }
+    })
+    .then(message => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: message,
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            document.getElementById('addWorkScheduleForm').reset();
+            displayTimeSlots();
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Lỗi khi thêm lịch làm việc: ' + error,
+        });
+    });
+});
         </script>
 </section>
 </body>
