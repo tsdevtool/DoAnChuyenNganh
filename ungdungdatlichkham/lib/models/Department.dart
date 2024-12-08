@@ -1,16 +1,15 @@
 class Department {
   String? departmentId;
   String? name;
-  int? diagnoseId;
   String? image;
 
-  Department({this.departmentId, this.name, this.diagnoseId, this.image});
+  Department({this.departmentId, this.name, this.image});
 
   factory Department.fromMap(Map<String, dynamic> map) {
     return Department(
       departmentId: map['department_id'],
       name: map['name'],
-      diagnoseId: map['diagnose_id'],
+
       image: map['image'],
     );
   }
@@ -19,7 +18,7 @@ class Department {
     return {
       'department_id': departmentId,
       'name': name,
-      'diagnose_id': diagnoseId,
+
       'image': image,
     };
   }
