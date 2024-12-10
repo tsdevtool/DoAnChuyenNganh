@@ -9,33 +9,40 @@ import 'package:ungdungdatlichkham/Screen/profile_screen.dart';
 import 'package:ungdungdatlichkham/providers/chat_provider.dart';
 
 class Home_Screen extends StatefulWidget {
-  const Home_Screen({super.key});
+  final int selectedIndex;
+  const Home_Screen({super.key, this.selectedIndex=0});// mặc định tab đầu tiên bằng 0
 
   @override
   State<Home_Screen> createState() => _Home_ScreenState();
 }
 
 class _Home_ScreenState extends State<Home_Screen> {
+  int _selectionIndex = 0;
   // List of screens
   final List<Widget> _screens = [
     const HomeScreen(),
     const ChatHistoryscreen(),
     const chatScreen(),
-    const profilescreen(),
+    const ProfileScreen(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectionIndex= widget.selectedIndex; // Thiết lập tab từ giá trị truyền vào
+  }
+  void _navigateToSelectedTab(int index){
+    if(_selectionIndex != index){
+      setState(() {
+        _selectionIndex=index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatProvider>(
-      builder: (context, chatProvider, child) {
         return Scaffold(
-          body: PageView(
-            controller: chatProvider.pageController,
-            children: _screens,
-            onPageChanged: (index) {
-              chatProvider.setCurrentIndex(newIndex: index);
-            },
-          ),
+          body: _screens[_selectionIndex],//Hiển thị màn hình dựa trên các tab được chọn
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 47, 100, 253), // Background color
@@ -72,16 +79,13 @@ class _Home_ScreenState extends State<Home_Screen> {
                     textSize: 20,
                   ),
                 ],
-                selectedIndex: chatProvider.currentIndex,
-                onTabChange: (index) {
-                  chatProvider.setCurrentIndex(newIndex: index);
-                  chatProvider.pageController.jumpToPage(index);
+                selectedIndex: _selectionIndex,
+                onTabChange: (index){
+                  _navigateToSelectedTab(index);
                 },
               ),
             ),
           ),
         );
-      },
-    );
   }
 }

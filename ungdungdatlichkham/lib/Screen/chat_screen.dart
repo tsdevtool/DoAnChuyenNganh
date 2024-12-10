@@ -54,16 +54,8 @@ Widget build(BuildContext context) {
 
       return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.menu, color: Color.fromARGB(255, 47, 100, 253),),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ChatHistoryscreen(),
-              ),
-            )
-          ),
           centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          backgroundColor:Colors.white,
           title: const Text('Hỏi đáp cùng Viet Duc AI',
           style: TextStyle(fontFamily: 'Roboto')), // Đảm bảo font hỗ trợ tiếng Việt),
           actions: [
