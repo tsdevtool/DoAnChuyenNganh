@@ -1,13 +1,13 @@
 package com.example.WebSiteDatLich.model;
 
 public class Detail_Appointment {
-    private Integer detail_appointment_id;
+    private String detail_appointment_id;
 
-    public Integer getDoctor_id() {
+    public String getDoctor_id() {
         return doctor_id;
     }
 
-    public void setDoctor_id(Integer doctor_id) {
+    public void setDoctor_id(String doctor_id) {
         this.doctor_id = doctor_id;
     }
 
@@ -19,19 +19,19 @@ public class Detail_Appointment {
         this.diagnose_name = diagnose_name;
     }
 
-    public Integer getAppointment_id() {
+    public String getAppointment_id() {
         return appointment_id;
     }
 
-    public void setAppointment_id(Integer appointment_id) {
+    public void setAppointment_id(String appointment_id) {
         this.appointment_id = appointment_id;
     }
 
-    public Integer getDetail_appointment_id() {
+    public String getDetail_appointment_id() {
         return detail_appointment_id;
     }
 
-    public void setDetail_appointment_id(Integer detail_appointment_id) {
+    public void setDetail_appointment_id(String detail_appointment_id) {
         this.detail_appointment_id = detail_appointment_id;
     }
 
@@ -43,8 +43,8 @@ public class Detail_Appointment {
         this.treatment_name = treatment_name;
     }
 
-    private Integer doctor_id;  // Foreign key to Doctor
-    private Integer appointment_id;  // Foreign key to Appointment
+    private String doctor_id;  // Foreign key to Doctor
+    private String appointment_id;  // Foreign key to Appointment
     private String diagnose_name;
     private String treatment_name;
 }

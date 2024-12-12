@@ -1,5 +1,7 @@
 package com.example.WebSiteDatLich.model;
 
+import groovy.lang.GString;
+
 public class Appointment {
     private String appointment_id;
     private String user_id;  // Foreign key to User
@@ -12,9 +14,15 @@ public class Appointment {
 
     // Additional fields for displaying details
     private String patientName;  // Name of the patient from the User table
+    private String patientAddress;
     private String phoneNumber;  // Phone number of the patient from the User table
     private String appointmentDate;  // Appointment date from Work_schedule table
     private String appointmentTime;  // Appointment time from Work_schedule table
+    private String patineSex;
+    private String DoctorName;
+    private String diagnoseName;
+    private String treatmentName;
+    private String patientEmail;
 
 
 
@@ -108,6 +116,58 @@ public class Appointment {
     public void setTimeSlot(String timeSlot) {
         this.timeSlot = timeSlot;
     }
+
+
+    //gán tạm thời để lấy thông tin
+    public String getDoctorName() {
+        return DoctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.DoctorName = doctorName;
+    }
+
+    public String getPatientSex() {
+        return patineSex;
+    }
+
+    public void setPatientSex(String patientSex) {
+        this.patineSex = patientSex;
+    }
+
+    public String getPatientAddress() {
+        return patientAddress;
+    }
+
+    public void setPatientAddress(String patientAddress) {
+        this.patientAddress = patientAddress;
+    }
+
+    public String getDiagnoseName() {
+        return diagnoseName;
+    }
+
+    public void setDiagnoseName(String diagnoseName) {
+        this.diagnoseName = diagnoseName;
+    }
+
+    public String getTreatmentName() {
+        return treatmentName;
+    }
+
+    public void setTreatmentName(String treatmentName) {
+        this.treatmentName = treatmentName;
+    }
+
+
+    public String getPatientEmail() {
+        return patientEmail;
+    }
+
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
+    }
+
 
 
 }

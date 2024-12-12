@@ -16,8 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+
+import java.time.LocalDate;
+
 
 @Service
 public class AdminService {
@@ -1047,6 +1052,213 @@ public class AdminService {
             }
         });
         return future;
+    }
+
+    /////////////////////////////////////////THỐNG KÊ///////////////////////////////////////////////
+//    public CompletableFuture<Map<String, Object>> getStatistics() {
+//        CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
+//        Map<String, Object> statistics = new HashMap<>();
+//
+//        // Tham chiếu đến các nút Firebase
+//        DatabaseReference doctorsRef = firebaseDatabase.getReference("doctors");
+//        DatabaseReference usersRef = firebaseDatabase.getReference("user");
+//        DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments");
+//
+//        // Lấy tổng số bác sĩ
+//        CompletableFuture<Void> doctorsFuture = new CompletableFuture<>();
+//        doctorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                statistics.put("totalDoctors", snapshot.getChildrenCount());
+//                doctorsFuture.complete(null);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                doctorsFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy tổng số bác sĩ: " + error.getMessage()));
+//            }
+//        });
+//
+//        // Lấy tổng số bệnh nhân
+//        CompletableFuture<Void> usersFuture = new CompletableFuture<>();
+//        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                statistics.put("totalPatients", snapshot.getChildrenCount());
+//                usersFuture.complete(null);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                usersFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy tổng số bệnh nhân: " + error.getMessage()));
+//            }
+//        });
+//
+//        // Lấy tổng số lịch đặt khám và lịch hoàn thành
+//        CompletableFuture<Void> appointmentsFuture = new CompletableFuture<>();
+//        appointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                long totalAppointments = 0;
+//                long completedAppointments = 0;
+//
+//                for (DataSnapshot child : snapshot.getChildren()) {
+//                    totalAppointments++;
+//                    Integer status = child.child("status").getValue(Integer.class);
+//                    if (status != null && status == 3) {
+//                        completedAppointments++;
+//                    }
+//                }
+//
+//                statistics.put("totalAppointments", totalAppointments);
+//                statistics.put("completedAppointments", completedAppointments);
+//                appointmentsFuture.complete(null);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                appointmentsFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy thông tin lịch hẹn: " + error.getMessage()));
+//            }
+//        });
+//
+//        // Chờ tất cả dữ liệu được hoàn thành
+//        CompletableFuture.allOf(doctorsFuture, usersFuture, appointmentsFuture).thenRun(() -> future.complete(statistics))
+//                .exceptionally(ex -> {
+//                    future.completeExceptionally(ex);
+//                    return null;
+//                });
+//
+//        return future;
+//    }
+    public CompletableFuture<Map<String, Object>> getStatistics(String startDate, String endDate) {
+        CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
+        Map<String, Object> statistics = new HashMap<>();
+
+        // Tham chiếu đến Firebase
+        DatabaseReference doctorsRef = firebaseDatabase.getReference("doctors");
+        DatabaseReference usersRef = firebaseDatabase.getReference("user");
+        DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments");
+
+        // Các CompletableFuture để đồng bộ
+        CompletableFuture<Void> doctorsFuture = new CompletableFuture<>();
+        CompletableFuture<Void> usersFuture = new CompletableFuture<>();
+        CompletableFuture<Void> appointmentsFuture = new CompletableFuture<>();
+        CompletableFuture<Void> chartDataFuture = new CompletableFuture<>();
+
+        // Tổng số bác sĩ
+        doctorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                statistics.put("totalDoctors", snapshot.getChildrenCount());
+                doctorsFuture.complete(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                doctorsFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy tổng số bác sĩ: " + error.getMessage()));
+            }
+        });
+
+        // Tổng số bệnh nhân
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                statistics.put("totalPatients", snapshot.getChildrenCount());
+                usersFuture.complete(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                usersFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy tổng số bệnh nhân: " + error.getMessage()));
+            }
+        });
+
+        // Tổng số lịch đặt khám và hoàn thành
+        appointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                long totalAppointments = 0;
+                long completedAppointments = 0;
+
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    totalAppointments++;
+                    Integer status = child.child("status").getValue(Integer.class);
+                    if (status != null && status == 3) {
+                        completedAppointments++;
+                    }
+                }
+
+                statistics.put("totalAppointments", totalAppointments);
+                statistics.put("completedAppointments", completedAppointments);
+                appointmentsFuture.complete(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                appointmentsFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy thông tin lịch hẹn: " + error.getMessage()));
+            }
+        });
+
+        // Dữ liệu biểu đồ
+        appointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<String> labels = new ArrayList<>();
+                List<Long> counts = new ArrayList<>();
+
+                // Tính số lượng bệnh nhân theo ngày trong khoảng thời gian
+                Map<String, Long> dataByDate = new TreeMap<>(); // TreeMap để giữ thứ tự ngày
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    Integer status = child.child("status").getValue(Integer.class);
+                    String date = child.child("appointmentDate").getValue(String.class);
+
+                    if (status != null && status == 3 && date != null && isWithinRange(date, startDate, endDate)) {
+                        dataByDate.put(date, dataByDate.getOrDefault(date, 0L) + 1);
+                    }
+                }
+
+                // Chuyển dữ liệu sang danh sách labels và counts
+                dataByDate.forEach((date, count) -> {
+                    labels.add(date);
+                    counts.add(count);
+                });
+
+                statistics.put("chartLabels", labels);
+                statistics.put("chartData", counts);
+                chartDataFuture.complete(null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                chartDataFuture.completeExceptionally(new RuntimeException("Lỗi khi lấy dữ liệu biểu đồ: " + error.getMessage()));
+            }
+        });
+
+        // Chờ tất cả hoàn thành
+        CompletableFuture.allOf(doctorsFuture, usersFuture, appointmentsFuture, chartDataFuture)
+                .thenRun(() -> future.complete(statistics)) // Hoàn thành khi tất cả các Future đều hoàn thành
+                .exceptionally(ex -> {
+                    future.completeExceptionally(ex); // Xử lý lỗi nếu có
+                    return null;
+                });
+
+        return future;
+    }
+
+    // Kiểm tra ngày trong khoảng
+    private boolean isWithinRange(String date, String startDate, String endDate) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate appointmentDate = LocalDate.parse(date, formatter);
+            LocalDate start = LocalDate.parse(startDate, formatter);
+            LocalDate end = LocalDate.parse(endDate, formatter);
+
+            return (appointmentDate.isEqual(start) || appointmentDate.isAfter(start)) &&
+                    (appointmentDate.isEqual(end) || appointmentDate.isBefore(end));
+        } catch (DateTimeParseException e) {
+            // Log lỗi nếu cần
+            return false; // Nếu không parse được, coi như không hợp lệ
+        }
     }
 
 }

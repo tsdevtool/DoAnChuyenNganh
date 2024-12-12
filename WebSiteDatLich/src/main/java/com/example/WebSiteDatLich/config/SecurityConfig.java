@@ -34,8 +34,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))// Vô hiệu hóa CSRF nếu không cần
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors").permitAll()
-                        .requestMatchers("/importDoctorWithScheduleAndDepartment","/admin",
+                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors", "/appointments").permitAll()
+                        .requestMatchers("/importDoctorWithScheduleAndDepartment","/admin/**",
                                 "/api/work-schedules/**","/doctors/details/**","/user/{userId}",
                                 "/doctors/confirm","/doctoradmin/**","/departmentadmin/**",
                                 "/departmentadmin/delete", "/import-data", "/useradmin/**",
