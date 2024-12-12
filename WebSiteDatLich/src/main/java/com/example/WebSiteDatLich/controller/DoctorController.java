@@ -1,6 +1,7 @@
 package com.example.WebSiteDatLich.controller;
 
 import com.example.WebSiteDatLich.model.Appointment;
+import com.example.WebSiteDatLich.model.Department;
 import com.example.WebSiteDatLich.model.Doctor;
 import com.example.WebSiteDatLich.model.User;
 import com.example.WebSiteDatLich.service.DoctorService;
@@ -28,7 +29,18 @@ public class DoctorController {
     @GetMapping
     public String getAllDoctors(Model model) {
         CompletableFuture<List<Doctor>> doctorsFuture = doctorService.getAllDoctors();
-        doctorsFuture.thenAccept(doctors -> model.addAttribute("doctors", doctors)).join(); // Chờ dữ liệu được tải
+        // Lấy danh sách các khoa
+        CompletableFuture<List<Department>> departmentsFuture = doctorService.getAllDepartmentsWithImages();
+
+        CompletableFuture.allOf(departmentsFuture, doctorsFuture).thenRun(() -> {
+            try {
+                model.addAttribute("departments", departmentsFuture.get());
+                model.addAttribute("doctors", doctorsFuture.get());
+            } catch (Exception e) {
+                model.addAttribute("error", "Không thể tải dữ liệu: " + e.getMessage());
+            }
+        }).join(); // Chờ dữ liệu được tải
+
         return "Doctor/doctor-list"; // Trả về view doctor-list.html
     }
 

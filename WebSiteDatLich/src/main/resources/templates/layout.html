@@ -99,6 +99,7 @@
        .custom-header .header-icons a:hover {
            color: rgba(255, 255, 255, 0.8);
        }
+
     </style>
 </head>
 <body>
@@ -123,13 +124,10 @@
             <input type="text" placeholder="Tìm bác sĩ">
         </div>
         <div class="header-icons">
-            <a href="#">
-                <i class="fas fa-handshake"></i>
-                <span>Hợp tác</span>
-            </a>
-            <a href="#">
+
+            <a id="profile-link">
                 <i class="fas fa-history"></i>
-                <span>Lịch hẹn</span>
+                <span>Thông tin cá nhân</span>
             </a>
         </div>
     </div>
@@ -144,7 +142,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
     $(document).ready(function(){
@@ -176,6 +177,23 @@ $('.banner-carousel').owlCarousel({
     autoplayHoverPause: true,
     items: 1
 });
+   const swiper = new Swiper('.swiper-container', {
+        slidesPerView: 3,
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: true,
+        autoplay: {
+            delay: 3000,
+        },
+    });
+
  function confirmLogout(event) {
         // Hiển thị hộp thoại xác nhận
         const confirmation = confirm("Bạn có chắc chắn muốn đăng xuất không?");
@@ -185,6 +203,17 @@ $('.banner-carousel').owlCarousel({
         }
         return confirmation;
     }
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+    // Đặt URL với userId vào thẻ `a` thông qua ID "profile-link"
+    const profileLink = document.getElementById('profile-link');
+    profileLink.setAttribute('href', `/api/auth/profile?userId=${encodeURIComponent(userId)}`);
+} else {
+    // Nếu userId không tồn tại, điều hướng đến trang đăng nhập
+    alert("Bạn chưa đăng nhập. Vui lòng đăng nhập.");
+    window.location.href = "/login";
+}
+
 </script>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">

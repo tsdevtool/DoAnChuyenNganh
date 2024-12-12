@@ -1,9 +1,6 @@
 
 package com.example.WebSiteDatLich.service;
-import com.example.WebSiteDatLich.model.Appointment;
-import com.example.WebSiteDatLich.model.Doctor;
-import com.example.WebSiteDatLich.model.User;
-import com.example.WebSiteDatLich.model.Work_schedule;
+import com.example.WebSiteDatLich.model.*;
 import com.google.cloud.storage.*;
 import com.google.firebase.cloud.StorageClient;
 import com.google.firebase.database.DataSnapshot;
@@ -272,6 +269,31 @@ public class DoctorService {
                 }
             });
         }
+
+        return future;
+    }
+    public CompletableFuture<List<Department>> getAllDepartmentsWithImages() {
+        CompletableFuture<List<Department>> future = new CompletableFuture<>();
+        DatabaseReference departmentRef = firebaseDatabase.getReference("departments");
+
+        departmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Department> departments = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Department department = snapshot.getValue(Department.class);
+                    if (department != null) {
+                        departments.add(department);
+                    }
+                }
+                future.complete(departments);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                future.completeExceptionally(new RuntimeException("Lỗi khi tải danh sách các khoa: " + databaseError.getMessage()));
+            }
+        });
 
         return future;
     }
