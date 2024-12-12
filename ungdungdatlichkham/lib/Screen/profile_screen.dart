@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart';
+import 'package:ungdungdatlichkham/Screen/UpdateProfileSreen.dart';
 
 import '../models/User.dart';
 
@@ -134,10 +135,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(
-                            Icons.edit_outlined, // Icon chỉnh sửa
+                          child: IconButton(
+                            icon: Icon(Icons.edit_outlined),
+                            iconSize: 25,// Icon chỉnh sửa
                             color: Color.fromARGB(255, 139, 44, 255), // Màu xanh dương
-                            size: 25, // Kích thước icon vừa phải
+                            onPressed: (){
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const UpdateProfileScreen(),)
+                              );
+                            },// Kích thước icon vừa phải
                           ),
                         ),
                       ),
