@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ungdungdatlichkham/Screen/HistoryApointmentScreen.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart';
 import 'package:ungdungdatlichkham/Screen/DetailsDoctorScreen.dart';
 import 'package:ungdungdatlichkham/service/DoctorService.dart';
@@ -302,69 +303,106 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  Widget _buildFeatureCard(IconData icon, String text, Color bgColor) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8), // Bo góc nhẹ hơn
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.16),
-            blurRadius: 4,
-            spreadRadius: 1,
-            offset: const Offset(0, 2), // Đổ bóng nhỏ hơn
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8), // Giảm padding // Giảm padding
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8), // Giảm padding icon
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(6),
+  Widget _buildFeatureCard(IconData icon, String text, Color bgColor, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.16),
+              blurRadius: 4,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
             ),
-            child: Icon(icon, color: Colors.white, size: 24), // Icon nhỏ hơn
-          ),
-          const SizedBox(width: 12), // Khoảng cách nhỏ giữa icon và text
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 14, // Giảm font size
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(icon, color: Colors.white, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildFeatureGrid() {
     return Padding(
-
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), // Thu nhỏ padding ngoài
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: GridView.count(
-        crossAxisCount: 2, // 2 cột
-        crossAxisSpacing: 8, // Khoảng cách ngang giữa các mục
-        mainAxisSpacing: 8, // Khoảng cách dọc giữa các mục
-        childAspectRatio: 3.12, // Tỷ lệ chiều rộng / chiều cao, tăng lên để giảm chiều cao mục
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 3.12,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          _buildFeatureCard(Icons.calendar_today_outlined, 'Đặt lịch khám bệnh', Colors.blue),
-          _buildFeatureCard(Icons.assignment_outlined, 'Xem kết quả', Colors.pink),
-          _buildFeatureCard(Icons.chat_outlined, 'Chat với AI', Colors.orange),
-          _buildFeatureCard(Icons.history_outlined, 'Lịch sử khám bệnh', Colors.teal),
+          _buildFeatureCard(Icons.calendar_today_outlined, 'Đặt lịch khám bệnh', Colors.blue, () {
+            // Xử lý cho Đặt lịch khám bệnh
+          }),
+          _buildFeatureCard(Icons.assignment_outlined, 'Xem kết quả', Colors.pink, () {
+            // Xử lý cho Xem kết quả
+          }),
+          _buildFeatureCard(Icons.chat_outlined, 'Chat với AI', Colors.orange, () {
+            // Xử lý cho Chat với AI
+          }),
+          _buildFeatureCard(Icons.history_outlined, 'Lịch sử khám bệnh', Colors.teal, () {
+            _navigateToHistoryScreen(); // Mở màn hình lịch sử khám bệnh
+          }),
         ],
       ),
     );
   }
+  void _navigateToHistoryScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
 
+    if (userId != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HistoryApointmentScreen(userId: userId),
+        ),
+      );
+    } else {
+      // Hiển thị thông báo yêu cầu đăng nhập
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Thông báo"),
+          content: const Text("Vui lòng đăng nhập để xem lịch sử khám bệnh."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   Widget _buildDoctorCard(BuildContext context, Doctor doctor) {
     return FutureBuilder<String>(
@@ -494,22 +532,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-
-  /*Widget _buildHospitalCard(String name, String address, String imageUrl) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 3,
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Image.asset(imageUrl, width: 50, height: 50, fit: BoxFit.cover),
-        ),
-        title: Text(name),
-        subtitle: Text(address),
-      ),
-    );
-  }*/
   Widget _buildHospitalCard(String name, String address, String imageUrl) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0), // Khoảng cách giữa các thẻ
