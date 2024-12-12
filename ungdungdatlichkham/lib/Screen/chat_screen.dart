@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ungdungdatlichkham/Screen/chat_historyscreen.dart';
 import 'package:ungdungdatlichkham/providers/chat_provider.dart';
 import 'package:ungdungdatlichkham/utility/utilites.dart';
 import 'package:ungdungdatlichkham/widgets/bottom_chat_field.dart';
@@ -54,8 +55,9 @@ Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: const Text('Hỏi đáp cùng Viet Duc AI'),
+          backgroundColor:Colors.white,
+          title: const Text('Hỏi đáp cùng Viet Duc AI',
+          style: TextStyle(fontFamily: 'Roboto')), // Đảm bảo font hỗ trợ tiếng Việt),
           actions: [
             if(chatProvider.inChatMessages.isNotEmpty)
               Padding(
@@ -68,8 +70,10 @@ Widget build(BuildContext context) {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Bắt đầu đoạn chat mới'),
-                            content: const Text('Bạn có chắc muốn bắt đầu đoạn chat mới?'),
+                            title: const Text('Bắt đầu đoạn chat mới',
+                              style: TextStyle(fontFamily: 'Roboto'),),
+                            content: const Text('Bạn có chắc muốn bắt đầu đoạn chat mới?',
+                              style: TextStyle(fontFamily: 'Roboto'),),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
@@ -90,6 +94,7 @@ Widget build(BuildContext context) {
                                   'Đồng ý',
                                   style: TextStyle(
                                     color: Colors.blue, // Đặt màu chữ để dễ nhìn thấy
+                                    fontFamily: 'Roboto',
                                   ),
                                 ),
                               ),
@@ -112,7 +117,7 @@ Widget build(BuildContext context) {
                   child:
                   chatProvider.inChatMessages.isEmpty
                       ? const Center(
-                    child: Text('No messages yet'),
+                    child: Text('Chưa có tin nhắn nào!'),
                   )
                       :ChatMessages(
                     scrollController: _scrollController,

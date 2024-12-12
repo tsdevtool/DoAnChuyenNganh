@@ -5,6 +5,8 @@ import 'package:ungdungdatlichkham/hive/chat_history.dart';
 import 'package:ungdungdatlichkham/widgets/chat_history_widget.dart';
 import 'package:ungdungdatlichkham/widgets/empty_history_widget.dart';
 
+import 'chat_screen.dart';
+
 class ChatHistoryscreen extends StatefulWidget {
 const ChatHistoryscreen({super.key});
 

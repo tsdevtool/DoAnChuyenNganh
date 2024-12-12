@@ -1,15 +1,15 @@
 class Diagnose {
   String? diagnoseId;
   String? name;
-  int? treatmentId;
+  String? departmentId;
 
-  Diagnose({this.diagnoseId, this.name, this.treatmentId});
+  Diagnose({this.diagnoseId, this.name, this.departmentId});
 
   factory Diagnose.fromMap(Map<String, dynamic> map) {
     return Diagnose(
       diagnoseId: map['diagnose_id'],
       name: map['name'],
-      treatmentId: map['treatment_id'],
+      departmentId: map['department_id'],
     );
   }
 
@@ -17,7 +17,7 @@ class Diagnose {
     return {
       'diagnose_id': diagnoseId,
       'name': name,
-      'treatment_id': treatmentId,
+      'department_id': departmentId,
     };
   }
 }
