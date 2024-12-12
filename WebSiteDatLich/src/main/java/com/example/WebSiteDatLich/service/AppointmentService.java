@@ -2,12 +2,17 @@ package com.example.WebSiteDatLich.service;
 
 import com.example.WebSiteDatLich.model.Appointment;
 import com.example.WebSiteDatLich.model.User;
+import com.example.WebSiteDatLich.model.Doctor;
+import com.example.WebSiteDatLich.model.Detail_Appointment;
 import com.example.WebSiteDatLich.model.Work_schedule;
 import com.google.firebase.database.*;
 import org.springframework.stereotype.Service;
+import java.util.concurrent.CompletableFuture;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import com.example.WebSiteDatLich.service.EmailService;
@@ -64,9 +69,13 @@ public CompletableFuture<List<Appointment>> getUnconfirmedAppointmentsWithDetail
                     public void onDataChange(DataSnapshot snapshot) {
                         List<Appointment> confirmedAppointments = new ArrayList<>();
                         for (DataSnapshot appointmentSnapshot : snapshot.getChildren()) {
+                            System.out.println("Key from Firebase: " + appointmentSnapshot.getKey()); // Debug
                             Appointment appointment = appointmentSnapshot.getValue(Appointment.class);
                             if (appointment != null) {
+                                appointment.setAppointment_id(appointmentSnapshot.getKey()); // Gán key
                                 confirmedAppointments.add(appointment);
+                            } else {
+                                System.out.println("Null data at key: " + appointmentSnapshot.getKey());
                             }
                         }
                         future.complete(confirmedAppointments);
@@ -154,7 +163,7 @@ public CompletableFuture<Void> confirmAppointment(String appointmentId) {
                                 // Cập nhật trạng thái của cuộc hẹn và gửi email
                                 appointmentRef.child("status").setValue(1, (databaseError, databaseReference) -> {
                                     if (databaseError == null) {
-                                        emailService.sendConfirmationEmail(toEmail, subject, body);
+                                        emailService.sendEmail(toEmail, subject, body);
                                         future.complete(null);
                                     } else {
                                         System.out.println("Failed to update status of appointment: " + appointmentId);
@@ -231,31 +240,232 @@ public CompletableFuture<Void> cancelAppointment(String appointmentId) {
 }
 
 ///////////////////////////////////HÀM HỦY LỊCH ĐẶT KHÁM/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////
 public CompletableFuture<Appointment> getAppointmentById(String appointmentId) {
     CompletableFuture<Appointment> future = new CompletableFuture<>();
-    DatabaseReference appointmentRef = firebaseDatabase.getReference("appointments").child(appointmentId);
+    DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments").child(appointmentId);
 
-    appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    // Lấy thông tin cuộc hẹn
+    appointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            Appointment appointment = snapshot.getValue(Appointment.class);
-            if (appointment != null) {
-                appointment.setAppointment_id(snapshot.getKey());
-                future.complete(appointment);
+            if (snapshot.exists()) {
+                Appointment appointment = snapshot.getValue(Appointment.class);
+                if (appointment != null) {
+                    // Gán appointment_id từ key của snapshot
+                    appointment.setAppointment_id(snapshot.getKey());
+
+                    // Lấy thông tin chi tiết từ Firebase
+                    CompletableFuture<User> userFuture = getUserDetails(appointment.getUser_id());
+                    CompletableFuture<String> doctorNameFuture = getDoctorName(appointment.getWork_schedule_id());
+                    CompletableFuture<Work_schedule> workScheduleFuture = getWorkScheduleDetails(appointment.getWork_schedule_id());
+                    CompletableFuture<Detail_Appointment> detailAppointmentFuture = getDetailAppointment(appointment.getAppointment_id());
+
+                    // Đợi tất cả dữ liệu được tải xong
+                    CompletableFuture.allOf(userFuture, doctorNameFuture, workScheduleFuture, detailAppointmentFuture)
+                            .thenAccept(v -> {
+                                try {
+                                    // Lấy kết quả từ các CompletableFuture
+                                    User user = userFuture.get();
+                                    String doctorName = doctorNameFuture.get();
+                                    Work_schedule workSchedule = workScheduleFuture.get();
+                                    Detail_Appointment detailAppointment = detailAppointmentFuture.get();
+
+                                    // Thiết lập thông tin vào đối tượng Appointment
+                                    appointment.setPatientName(user.getName());
+                                    appointment.setPhoneNumber(user.getPhone());
+                                    appointment.setPatientEmail(user.getEmail());
+                                    appointment.setPatientAddress(user.getAddress());
+                                    Boolean sexBoolean = user.getSex();
+                                    String sex = (sexBoolean != null && sexBoolean) ? "Nam" : "Nữ";
+                                    appointment.setPatientSex(sex);
+                                    appointment.setDoctorName(doctorName);
+                                    appointment.setAppointmentDate(workSchedule.getSchedule());
+//                                    appointment.setAppointmentTime(workSchedule.getTimeSlots());
+                                    appointment.setDiagnoseName(detailAppointment.getDiagnose_name());
+                                    appointment.setTreatmentName(detailAppointment.getTreatment_name());
+
+                                    future.complete(appointment);
+                                } catch (Exception e) {
+                                    future.completeExceptionally(new RuntimeException("Lỗi khi lấy dữ liệu chi tiết: " + e.getMessage()));
+                                }
+                            });
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không thể đọc dữ liệu cuộc hẹn"));
+                }
             } else {
-                future.complete(null);
+                future.completeExceptionally(new RuntimeException("Không tìm thấy cuộc hẹn với ID: " + appointmentId));
             }
         }
 
         @Override
         public void onCancelled(DatabaseError error) {
-            future.completeExceptionally(new RuntimeException("Failed to load appointment with ID: " + appointmentId));
+            future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
         }
     });
 
     return future;
 }
 
+    private CompletableFuture<User> getUserDetails(String userId) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        DatabaseReference usersRef = firebaseDatabase.getReference("users").child(userId);
+
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        user.setUser_id(snapshot.getKey()); // Gán key từ snapshot
+                        future.complete(user);
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Dữ liệu người dùng không hợp lệ"));
+                    }
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy người dùng với ID: " + userId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
+    private CompletableFuture<String> getDoctorName(String workScheduleId) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        DatabaseReference workSchedulesRef = firebaseDatabase.getReference("work_schedules").child(workScheduleId);
+
+        workSchedulesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Work_schedule workSchedule = snapshot.getValue(Work_schedule.class);
+                    if (workSchedule != null) {
+                        workSchedule.setWork_schedule_id(snapshot.getKey()); // Gán key từ snapshot
+                        String doctorId = workSchedule.getDoctor_id();
+
+                        // Lấy thông tin bác sĩ
+                        DatabaseReference doctorsRef = firebaseDatabase.getReference("doctors").child(doctorId);
+                        doctorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot doctorSnapshot) {
+                                if (doctorSnapshot.exists()) {
+                                    Doctor doctor = doctorSnapshot.getValue(Doctor.class);
+                                    if (doctor != null) {
+                                        doctor.setDoctor_id(doctorSnapshot.getKey()); // Gán key từ snapshot
+                                        future.complete(doctor.getUserName());
+                                    } else {
+                                        future.completeExceptionally(new RuntimeException("Dữ liệu bác sĩ không hợp lệ"));
+                                    }
+                                } else {
+                                    future.completeExceptionally(new RuntimeException("Không tìm thấy bác sĩ với ID: " + doctorId));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+                            }
+                        });
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Dữ liệu lịch làm việc không hợp lệ"));
+                    }
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy lịch làm việc với ID: " + workScheduleId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
+    private CompletableFuture<Detail_Appointment> getDetailAppointment(String appointmentId) {
+        CompletableFuture<Detail_Appointment> future = new CompletableFuture<>();
+        DatabaseReference detailAppointmentRef = firebaseDatabase.getReference("detail_appointments").child(appointmentId);
+
+        detailAppointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Detail_Appointment detailAppointment = snapshot.getValue(Detail_Appointment.class);
+                    if (detailAppointment != null) {
+                        detailAppointment.setDetail_appointment_id(snapshot.getKey()); // Gán key từ snapshot
+                        future.complete(detailAppointment);
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Dữ liệu chi tiết cuộc hẹn không hợp lệ"));
+                    }
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy chi tiết cuộc hẹn với ID: " + appointmentId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
+
+    private CompletableFuture<Work_schedule> getWorkScheduleDetails(String workScheduleId) {
+        CompletableFuture<Work_schedule> future = new CompletableFuture<>();
+        DatabaseReference workSchedulesRef = firebaseDatabase.getReference("work_schedules").child(workScheduleId);
+
+        workSchedulesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Work_schedule workSchedule = snapshot.getValue(Work_schedule.class);
+                    if (workSchedule != null) {
+                        workSchedule.setWork_schedule_id(snapshot.getKey()); // Gán key từ snapshot
+                        future.complete(workSchedule);
+                    } else {
+                        future.completeExceptionally(new RuntimeException("Dữ liệu lịch làm việc không hợp lệ"));
+                    }
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy lịch làm việc với ID: " + workScheduleId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
+    public CompletableFuture<Void> updateDetailAppointment(String appointmentId, String diagnoseName, String treatmentName) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        DatabaseReference detailAppointmentRef = firebaseDatabase.getReference("detail_appointments").child(appointmentId);
+
+        Detail_Appointment detailAppointment = new Detail_Appointment();
+        detailAppointment.setDiagnose_name(diagnoseName);
+        detailAppointment.setTreatment_name(treatmentName);
+
+        detailAppointmentRef.setValue(detailAppointment, (error, ref) -> {
+            if (error == null) {
+                future.complete(null);
+            } else {
+                future.completeExceptionally(new RuntimeException("Lỗi khi cập nhật chi tiết cuộc hẹn: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
 
 }
+

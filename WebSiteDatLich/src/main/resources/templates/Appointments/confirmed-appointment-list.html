@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách cuộc hẹn đang chờ khám</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -14,13 +15,11 @@
             margin: 0;
             padding: 20px;
         }
-
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
         }
-
         table {
             width: 100%;
             margin: 20px 0;
@@ -30,27 +29,22 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         th, td {
             padding: 16px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-
         th {
             background-color: #4CAF50;
             color: white;
             text-transform: uppercase;
         }
-
         tr:hover {
             background-color: #f2f2f2;
         }
-
         td {
             color: #555;
         }
-
         .action-buttons button {
             padding: 10px 20px;
             margin: 5px;
@@ -60,24 +54,22 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .confirm-button {
-            background-color: #4CAF50;
+        .btn-primary {
+            background-color: #007bff;
             color: white;
         }
-
-        .confirm-button:hover {
-            background-color: #3e8e41;
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-
 <h1>Danh sách cuộc hẹn đang chờ khám</h1>
 
 <table>
     <thead>
     <tr>
+        <th>ID</th>
         <th>Tên bệnh nhân</th>
         <th>Số điện thoại</th>
         <th>Ngày hẹn</th>
@@ -88,6 +80,7 @@
     </thead>
     <tbody>
     <tr th:each="appointment : ${confirmedAppointments}">
+        <td th:text="${appointment.appointment_id}">ID</td>
         <td th:text="${appointment.patientName}">Không có dữ liệu</td>
         <td th:text="${appointment.phoneNumber}">Không có dữ liệu</td>
         <td th:text="${appointment.appointmentDate}">Không có dữ liệu</td>
@@ -101,88 +94,23 @@
                 <span th:case="*">Không xác định</span>
             </span>
         </td>
-        <td class="action-buttons">
-            <!-- Nút để xem chi tiết -->
-            <button type="button" class="confirm-button"
-                    onclick="openDetailModal('${appointment.appointment_id}')">Xem Chi Tiết</button>
+        <td>
+            <a class="btn btn-info"
+               th:href="@{/appointments/confirmed/{id}(id=${appointment.appointment_id})}">
+                Xem chi tiết
+            </a>
 
         </td>
+
+
+
+
     </tr>
     </tbody>
 </table>
 
-<!-- Modal Chi tiết Lịch Khám -->
-<div class="modal fade" id="appointmentDetailModal" tabindex="-1" role="dialog" aria-labelledby="appointmentDetailLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="appointmentDetailLabel">Cập Nhật Chi Tiết Đặt Lịch Khám</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="updateAppointmentForm">
-                    <input type="hidden" name="appointmentId" id="appointmentId" value="">
-                    <div class="form-group">
-                        <label for="patientName">Tên bệnh nhân:</label>
-                        <input type="text" class="form-control" id="patientName" name="patientName" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="phoneNumber">Số điện thoại:</label>
-                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="appointmentDate">Ngày hẹn:</label>
-                        <input type="text" class="form-control" id="appointmentDate" name="appointmentDate" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="appointmentTime">Giờ hẹn:</label>
-                        <input type="text" class="form-control" id="appointmentTime" name="appointmentTime" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Địa chỉ:</label>
-                        <input type="text" class="form-control" id="address" name="address" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="notes">Ghi chú:</label>
-                        <textarea class="form-control" id="notes" name="notes" rows="3" readonly></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    function openDetailModal(appointmentId) {
-        // Gọi API để lấy thông tin chi tiết cuộc hẹn
-        $.ajax({
-            url: '/api/appointments/' + appointmentId,
-            type: 'GET',
-            success: function (appointment) {
-                // Điền thông tin vào các trường của modal
-                document.getElementById('patientName').value = appointment.patientName;
-                document.getElementById('phoneNumber').value = appointment.phoneNumber;
-                document.getElementById('appointmentDate').value = appointment.appointmentDate;
-                document.getElementById('appointmentTime').value = appointment.appointmentTime;
-                document.getElementById('address').value = appointment.address;
-                document.getElementById('notes').value = appointment.notes;
 
-                // Mở modal
-                $('#appointmentDetailModal').modal('show');
-            },
-            error: function () {
-                alert('Không thể tải thông tin chi tiết cuộc hẹn.');
-            }
-        });
-    }
-</script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

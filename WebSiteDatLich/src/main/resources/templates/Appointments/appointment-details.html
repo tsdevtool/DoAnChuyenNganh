@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết cuộc hẹn</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Chi tiết cuộc hẹn</h1>
+    <form th:action="@{/appointments/update-details}" method="post">
+        <input type="hidden" name="appointmentId" th:value="${appointment.appointment_id}">
+        <div class="form-group">
+            <label for="patientName">Tên bệnh nhân</label>
+            <input type="text" class="form-control" id="patientName" name="patientName"
+                   th:value="${appointment.patientName}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Số điện thoại</label>
+            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+                   th:value="${appointment.phoneNumber}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="patientEmail">Email</label>
+            <input type="email" class="form-control" id="patientEmail" name="patientEmail"
+                   th:value="${appointment.patientEmail}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="patientAddress">Địa chỉ</label>
+            <input type="text" class="form-control" id="patientAddress" name="patientAddress"
+                   th:value="${appointment.patientAddress}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="patientSex">Giới tính</label>
+            <input type="text" class="form-control" id="patientSex" name="patientSex"
+                   th:value="${appointment.patientSex}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="doctorName">Bác sĩ</label>
+            <input type="text" class="form-control" id="doctorName" name="doctorName"
+                   th:value="${appointment.doctorName}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="appointmentDate">Ngày hẹn</label>
+            <input type="text" class="form-control" id="appointmentDate" name="appointmentDate"
+                   th:value="${appointment.appointmentDate}" readonly>
+        </div>
+<!--        <div class="form-group">-->
+<!--            <label for="appointmentTime">Giờ hẹn</label>-->
+<!--            <input type="text" class="form-control" id="appointmentTime" name="appointmentTime"-->
+<!--                   th:value="${appointment.appointmentTime}" readonly>-->
+<!--        </div>-->
+        <div class="form-group">
+            <label for="diagnoseName">Chuẩn đoán</label>
+            <input type="text" class="form-control" id="diagnoseName" name="diagnoseName"
+                   th:value="${appointment.diagnoseName}" placeholder="Nhập chuẩn đoán">
+        </div>
+        <div class="form-group">
+            <label for="treatmentName">Phương pháp điều trị</label>
+            <input type="text" class="form-control" id="treatmentName" name="treatmentName"
+                   th:value="${appointment.treatmentName}" placeholder="Nhập phương pháp điều trị">
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a href="/appointments/confirmed" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

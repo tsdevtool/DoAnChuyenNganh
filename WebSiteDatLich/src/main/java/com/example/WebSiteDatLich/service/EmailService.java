@@ -1,9 +1,13 @@
 package com.example.WebSiteDatLich.service;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class EmailService {
@@ -13,34 +17,30 @@ public class EmailService {
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
-//public void sendConfirmationEmail(String toEmail, String subject, String body) {
-//    SimpleMailMessage message = new SimpleMailMessage();
-//    message.setTo(toEmail);
-//    message.setSubject(subject);
-//    message.setText(body);
-//    try {
-//        mailSender.send(message);
-//        System.out.println("Confirmation email sent to: " + toEmail);
-//    } catch (Exception e) {
-//        e.printStackTrace();
-//        System.out.println("Failed to send email.");
-//    }
-//}
-public void sendConfirmationEmail(String toEmail, String subject, String body) {
-    MimeMessage message = mailSender.createMimeMessage();
 
-    try {
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(toEmail);
-        helper.setSubject(subject);
-        helper.setText(body, true); // `true` để gửi email HTML
-        mailSender.send(message);
+    /**
+     * Gửi email thông thường
+     * @param toEmail Địa chỉ email người nhận
+     * @param subject Chủ đề email
+     * @param body Nội dung email (HTML hoặc văn bản)
+     */
+    public CompletableFuture<Void> sendEmail(String toEmail, String subject, String body) {
+        return CompletableFuture.runAsync(() -> {
+            MimeMessage message = mailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+                helper.setTo(toEmail);
+                helper.setSubject(subject);
+                helper.setText(body, true); // `true` để gửi email dạng HTML
+                mailSender.send(message);
 
-        System.out.println("Confirmation email sent to: " + toEmail);
-    } catch (MessagingException e) {
-        e.printStackTrace();
-        System.out.println("Failed to send email.");
+                System.out.println("Email sent successfully to: " + toEmail);
+            } catch (MessagingException e) {
+                System.err.println("Failed to send email to: " + toEmail);
+                throw new RuntimeException("Failed to send email", e);
+            }
+        });
     }
-}
+
 
 }

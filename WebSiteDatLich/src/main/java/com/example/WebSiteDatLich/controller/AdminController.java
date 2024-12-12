@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.DayOfWeek;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import java.time.LocalDate;
+
 
 @Controller
 public class AdminController {
@@ -512,5 +516,38 @@ public class AdminController {
         adminService.deleteDiagnose(id).get();
         return "redirect:/diagnoseadmin";
     }
+
+    ////////////////////////////////////////////////////
+    @GetMapping("/admin/statistics")
+    public String showStatistics(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            Model model) {
+
+        // Nếu không có tham số, mặc định lấy tuần hiện tại
+        if (startDate == null || endDate == null) {
+            LocalDate now = LocalDate.now();
+            startDate = now.with(DayOfWeek.MONDAY).toString();
+            endDate = now.with(DayOfWeek.SUNDAY).toString();
+        }
+
+        // Lấy dữ liệu từ service
+        Map<String, Object> statistics = adminService.getStatistics(startDate, endDate).join();
+        model.addAttribute("statistics", statistics);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
+        return "Statistics/statistics"; // Tên file giao diện HTML
+    }
+    @GetMapping("/admin/statistics/update")
+    @ResponseBody
+    public Map<String, Object> updateStatistics(
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+
+        // Lấy dữ liệu thống kê từ service
+        return adminService.getStatistics(startDate, endDate).join();
+    }
+
 
 }
