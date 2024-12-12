@@ -77,6 +77,80 @@
     background-color: #e64a19;
 
 }
+       .custom-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.custom-heading {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.swiper-container {
+    padding: 20px 0;
+}
+
+.swiper-slide {
+    flex: 0 0 auto;
+    width: 200px; /* Kích thước mỗi slide */
+    text-align: center;
+}
+
+.custom-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: white;
+}
+
+.custom-card-img-top {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.custom-card-body {
+    padding: 10px;
+}
+
+.custom-card-title {
+    font-size: 1rem;
+    color: #333;
+}
+.custom-department-icon {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.custom-department-icon:hover {
+    transform: scale(1.1);
+}
+
+.custom-heading {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #007bff;
+}
+
+.btn-outline-primary {
+    border: 2px solid #007bff;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -123,14 +197,14 @@
                     <!-- Tên bác sĩ -->
                     <h3 th:text="${doctor.userName}">Tên bác sĩ</h3>
 
-                    <!-- Khoa -->
-                    <p th:text="${doctor.departmentName}">Khoa</p>
+<!--                    &lt;!&ndash; Khoa &ndash;&gt;-->
+<!--                    <p th:text="${doctor.departmentName}">Khoa</p>-->
 
-                    <!-- Chức vụ -->
-                    <p th:text="${doctor.positionName}">Chức vụ</p>
+<!--                    &lt;!&ndash; Chức vụ &ndash;&gt;-->
+<!--                    <p th:text="${doctor.positionName}">Chức vụ</p>-->
 
-                    <!-- Thông tin thêm -->
-                    <p th:text="${doctor.information}">Thông tin</p>
+<!--                    &lt;!&ndash; Thông tin thêm &ndash;&gt;-->
+<!--                    <p th:text="${doctor.information}">Thông tin</p>-->
 
                     <!-- Nút Đặt lịch -->
                     <a class="btn btn-primary"
@@ -139,6 +213,18 @@
                         Đặt lịch khám
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="custom-container mt-4">
+        <h2 class="custom-heading">Danh sách các khoa</h2>
+        <div class="row text-center">
+            <div th:each="department : ${departments}" class="col-md-3 mb-4">
+                <div class="custom-department-icon">
+                    <img th:src="${department.image}" class="custom-card-img-top" alt="Hình ảnh khoa">
+                </div>
+                <h5 class="mt-3" th:text="${department.name}">Tên khoa</h5>
+
             </div>
         </div>
     </div>

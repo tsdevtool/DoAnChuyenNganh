@@ -1,6 +1,7 @@
 package com.example.WebSiteDatLich.service;
 
 
+import com.example.WebSiteDatLich.model.Appointment;
 import com.example.WebSiteDatLich.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -25,9 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -117,10 +116,8 @@ public class UserService {
 
         // Mã hóa mật khẩu trước khi lưu trữ
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         // Gán vai trò mặc định
-
-        user.setRole_id(1);
+        user.setRole_id(3);
 
         // Xử lý upload ảnh lên Firebase Storage (nếu có)
         if (avatarFile != null && !avatarFile.isEmpty()) {
@@ -177,7 +174,84 @@ public class UserService {
             throw new RuntimeException("Error retrieving user from Firebase", e);
         }
     }
+    public CompletableFuture<User> getCurrentUserProfile(String userId) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        databaseReference.orderByChild("user_id").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        User user = child.getValue(User.class);
+                        future.complete(user);
+                        return;
+                    }
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy người dùng với user_id: " + userId));
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                future.completeExceptionally(new RuntimeException("Lỗi khi truy vấn Firebase: " + databaseError.getMessage()));
+            }
+        });
+        return future;
+    }
+    public CompletableFuture<List<Appointment>> getUserAppointments(String userId) {
+        CompletableFuture<List<Appointment>> future = new CompletableFuture<>();
+        DatabaseReference appointmentsRef = FirebaseDatabase.getInstance().getReference("appointments");
+
+        appointmentsRef.orderByChild("user_id").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Appointment> appointments = new ArrayList<>();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    Appointment appointment = childSnapshot.getValue(Appointment.class);
+                    appointments.add(appointment);
+                }
+                future.complete(appointments);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                future.completeExceptionally(new RuntimeException("Lỗi khi lấy danh sách cuộc hẹn: " + databaseError.getMessage()));
+            }
+        });
+
+        return future;
+    }
+    public void updateUserProfile(User user, String newPassword) {
+        try {
+            if (user.getUser_id() == null || user.getUser_id().isEmpty()) {
+                throw new IllegalArgumentException("user_id không hợp lệ!");
+            }
+
+            Map<String, Object> updates = new HashMap<>();
+            if (user.getName() != null) updates.put("name", user.getName());
+            if (user.getEmail() != null) updates.put("email", user.getEmail());
+            if (user.getAddress() != null) updates.put("address", user.getAddress());
+            if (user.getPhone() != null) updates.put("phone", user.getPhone());
+            if (user.getAvatar() != null) updates.put("avatar", user.getAvatar());
+            if (user.getSex() != null) updates.put("sex", user.getSex());
+            if (user.getDate_of_birth() != null) updates.put("date_of_birth", user.getDate_of_birth());
+
+            // Mã hóa mật khẩu mới nếu có
+            if (newPassword != null && !newPassword.isEmpty()) {
+                String encodedPassword = passwordEncoder.encode(newPassword);
+                updates.put("password", encodedPassword);
+                System.out.println("Mật khẩu mới đã mã hóa: " + encodedPassword);
+            }
+
+            System.out.println("Dữ liệu cập nhật: " + updates);
+            ApiFuture<Void> future = databaseReference.child(user.getUser_id()).updateChildrenAsync(updates);
+            future.get();
+
+            System.out.println("Cập nhật thành công: " + user.getUser_id());
+        } catch (Exception e) {
+            System.err.println("Lỗi khi cập nhật thông tin người dùng: " + e.getMessage());
+            throw new RuntimeException("Lỗi khi cập nhật thông tin người dùng", e);
+        }
+    }
     public interface LoginCallback {
         void onSuccess(String message);
         void onFailure(String message);
