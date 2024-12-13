@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
@@ -34,14 +36,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))// Vô hiệu hóa CSRF nếu không cần
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors", "/appointments").permitAll()
+                        .requestMatchers("/login", "/register", "/api/auth/register", "/api/auth/login","/doctors", "/appointments","/doctors/details/**","/doctors/confirm").permitAll()
                         .requestMatchers("/importDoctorWithScheduleAndDepartment","/admin/**",
-                                "/api/work-schedules/**","/doctors/details/**","/user/{userId}",
-                                "/doctors/confirm","/doctoradmin/**","/departmentadmin/**",
+                                "/api/work-schedules/**","/user/{userId}",
+                                "/doctoradmin/**","/departmentadmin/**",
                                 "/departmentadmin/delete", "/import-data", "/useradmin/**",
                                 "/positionadmin/**","/saffadmin/**", "/diagnoseadmin/**",
                                 "/appointments","/appointments/confirmed",
-                                "/api/appointments/confirm/**","/api/appointments/cancel/**").hasRole("ADMIN")  // Chỉ ADMIN có thể import bác sĩ// Cho phép truy cập công khai vào view đăng ký và đăng nhập
+                                "/api/appointments/confirm/**","/api/appointments/cancel/**","/appointments/**").hasRole("ADMIN")  // Chỉ ADMIN có thể import bác sĩ// Cho phép truy cập công khai vào view đăng ký và đăng nhập
                         .anyRequest().authenticated()  // Các yêu cầu khác phải xác thực
                 )
                 .formLogin(form -> form
@@ -65,5 +67,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean
+    public HttpFirewall allowUrlEncodedDoubleSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true); // Cho phép dấu "//"
+        return firewall;
     }
 }

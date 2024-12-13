@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +18,10 @@
             padding: 20px;
         }
         h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+             text-align: center;
+             color: #333;
+             margin-bottom: 20px;
+
         }
         table {
             width: 100%;
@@ -27,7 +30,7 @@
             background-color: #fff;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
         th, td {
             padding: 16px;
@@ -45,72 +48,245 @@
         td {
             color: #555;
         }
-        .action-buttons button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-primary {
+        .btn-info {
             background-color: #007bff;
             color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .btn-primary:hover {
+        .btn-info:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
+         .modal-body .form-row {
+    margin-bottom: 20px;
+}
+
+.modal-body .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body .form-group label {
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-body .form-group input,
+.modal-body .form-group textarea {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+}
+
+.modal-body .form-group textarea {
+    resize: none;
+}
+
+.form-group .form-control[readonly] {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+.modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.modal-footer .btn-primary {
+    background-color: #28a745;
+    border: none;
+}
+
+.modal-footer . btn-primary:hover {
+    background-color: #218838;
+}
+        .modal-body .form-group textarea {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    height: 100px; /* Điều chỉnh chiều cao nếu cần */
+}
     </style>
 </head>
 <body>
-<h1>Danh sách cuộc hẹn đang chờ khám</h1>
+<section layout:fragment="content" class="container mtop">
+    <h1>Danh sách cuộc hẹn đang chờ khám</h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Tên bệnh nhân</th>
-        <th>Số điện thoại</th>
-        <th>Ngày hẹn</th>
-        <th>Giờ hẹn</th>
-        <th>Trạng thái</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="appointment : ${confirmedAppointments}">
-        <td th:text="${appointment.appointment_id}">ID</td>
-        <td th:text="${appointment.patientName}">Không có dữ liệu</td>
-        <td th:text="${appointment.phoneNumber}">Không có dữ liệu</td>
-        <td th:text="${appointment.appointmentDate}">Không có dữ liệu</td>
-        <td th:text="${appointment.appointmentTime}">Không có dữ liệu</td>
-        <td>
-            <span th:switch="${appointment.status}">
-                <span th:case="1">Đã xác nhận</span>
-                <span th:case="2">Đang chờ xác nhận</span>
-                <span th:case="3">Đã khám</span>
-                <span th:case="4">Đã hủy</span>
-                <span th:case="*">Không xác định</span>
-            </span>
-        </td>
-        <td>
-            <a class="btn btn-info"
-               th:href="@{/appointments/confirmed/{id}(id=${appointment.appointment_id})}">
-                Xem chi tiết
-            </a>
+    <table>
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên bệnh nhân</th>
+            <th>Số điện thoại</th>
+            <th>Ngày hẹn</th>
+            <th>Giờ hẹn</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment, stat : ${confirmedAppointments}">
+            <td th:text="${stat.count}">1</td>
+            <td th:text="${appointment.patientName}">Không có dữ liệu</td>
+            <td th:text="${appointment.phoneNumber}">Không có dữ liệu</td>
+            <td th:text="${appointment.appointmentDate}">Không có dữ liệu</td>
+            <td th:text="${appointment.appointmentTime}">Không có dữ liệu</td>
+            <td>
+                <span th:switch="${appointment.status}">
+                    <span th:case="1" style="color: #4CAF50; font-weight: bold;">Đã xác nhận</span>
+                    <span th:case="2" style="color: #FFA500; font-weight: bold;">Đang chờ xác nhận</span>
+                    <span th:case="3" style="color: #007BFF; font-weight: bold;">Đã khám</span>
+                    <span th:case="4" style="color: #FF0000; font-weight: bold;">Đã hủy</span>
+                    <span th:case="*" style="color: #808080; font-weight: bold;">Không xác định</span>
+                </span>
+            </td>
+            <td>
+                <a href="javascript:void(0)" class="btn btn-info" th:attr="data-id=${appointment.appointment_id}" onclick="showDetailModal(this)">
+                    Xem chi tiết
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        </td>
+    <!-- Modal -->
+    <div class="modal fade" id="detailAppointmentModal" tabindex="-1" role="dialog" aria-labelledby="detailAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailAppointmentModalLabel">Thông tin chi tiết cuộc hẹn</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="detailAppointmentForm">
+                        <input type="hidden" id="appointmentId" name="appointmentId" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="patientName"><i class="fas fa-user"></i> Tên bệnh nhân</label>
+                                <input type="text" class="form-control" id="patientName" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="appointmentDate"><i class="fas fa-calendar-alt"></i> Ngày hẹn</label>
+                                <input type="text" class="form-control" id="appointmentDate" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="appointmentTime"><i class="fas fa-clock"></i> Giờ hẹn</label>
+                                <input type="text" class="form-control" id="appointmentTime" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="phoneNumber"><i class="fas fa-phone"></i> Số điện thoại</label>
+                                <input type="text" class="form-control" id="phoneNumber" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalCondition"><i class="fas fa-notes-medical"></i> Tình trạng y tế</label>
+                            <textarea class="form-control" id="medicalCondition" readonly></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="diagnosisName"><i class="fas fa-stethoscope"></i> Chẩn đoán</label>
+                                <textarea class="form-control" id="diagnosisName" rows="4"></textarea>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="treatmentName"><i class="fas fa-prescription"></i> Điều trị</label>
+                                <textarea class="form-control" id="treatmentName" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDiagnosis()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        function showDetailModal(element) {
+            const appointmentId = element.getAttribute('data-id');
+            if (!appointmentId) {
+                alert("Không tìm thấy ID cuộc hẹn!");
+                return;
+            }
+            console.log("Appointment ID:", appointmentId);
 
+            fetch(`/appointments/detail/${appointmentId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Không thể kết nối tới server");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("appointmentId").value = data.appointment.appointment_id || "";
+                        document.getElementById("patientName").value = data.appointment.patientName || "Không có thông tin";
+                        document.getElementById("appointmentDate").value = data.appointment.appointmentDate || "Không có thông tin";
+                        document.getElementById("appointmentTime").value = data.appointment.appointmentTime || "Không có thông tin";
+                        document.getElementById("phoneNumber").value = data.appointment.phoneNumber || "Không có thông tin";
+                        document.getElementById("medicalCondition").value = data.appointment.medical_condition || "Không có thông tin";
+                        $('#detailAppointmentModal').modal('show');
+                    } else {
+                        alert("Không thể tải chi tiết cuộc hẹn: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy chi tiết cuộc hẹn:", error);
+                    alert("Đã xảy ra lỗi khi lấy chi tiết cuộc hẹn!");
+                });
+        }
 
+        function saveDiagnosis() {
+            const appointmentId = document.getElementById("appointmentId").value;
+            const diagnoseName = document.getElementById("diagnosisName").value;
+            const treatmentName = document.getElementById("treatmentName").value;
 
-    </tr>
-    </tbody>
-</table>
-
-
-
-
+            fetch('/appointments/diagnosis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    appointmentId: appointmentId,
+                    diagnoseName: diagnoseName,
+                    treatmentName: treatmentName
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        $('#detailAppointmentModal').modal('hide');
+                    } else {
+                        alert("Lỗi: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error saving diagnosis:", error);
+                    alert("Đã xảy ra lỗi khi lưu thông tin chẩn đoán!");
+                });
+        }
+    </script>
+</section>
 </body>
 </html>

@@ -189,29 +189,11 @@
         </div>
         <!-- Doctor Carousel -->
         <div class="owl-carousel owl-theme doctor-carousel-nav">
-            <div th:each="doctor : ${doctors}" class="item">
+            <div th:each="doctor : ${doctors}" class="item" th:attr="data-name=${doctor.userName}">
                 <div class="doctor-card-custom">
-                    <!-- Avatar bác sĩ -->
                     <img th:src="${doctor.avatarUrl}" alt="Avatar" />
-
-                    <!-- Tên bác sĩ -->
                     <h3 th:text="${doctor.userName}">Tên bác sĩ</h3>
-
-<!--                    &lt;!&ndash; Khoa &ndash;&gt;-->
-<!--                    <p th:text="${doctor.departmentName}">Khoa</p>-->
-
-<!--                    &lt;!&ndash; Chức vụ &ndash;&gt;-->
-<!--                    <p th:text="${doctor.positionName}">Chức vụ</p>-->
-
-<!--                    &lt;!&ndash; Thông tin thêm &ndash;&gt;-->
-<!--                    <p th:text="${doctor.information}">Thông tin</p>-->
-
-                    <!-- Nút Đặt lịch -->
-                    <a class="btn btn-primary"
-                       th:if="${doctor.doctor_id != null}"
-                       th:href="@{/doctors/details/{id}(id=${doctor.doctor_id})}">
-                        Đặt lịch khám
-                    </a>
+                    <a class="btn btn-primary" th:href="@{/doctors/details/{id}(id=${doctor.doctor_id})}">Đặt lịch khám</a>
                 </div>
             </div>
         </div>

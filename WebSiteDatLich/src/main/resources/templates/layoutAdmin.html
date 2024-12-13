@@ -183,8 +183,7 @@
 <!-- Header -->
 <header class="dashboard-header">
   <div class="logo-title">
-
-    <span class="dashboard-title">Quản Lý</span>
+    <a th:href="@{/admin/statistics}" class="dashboard-title">Quản Lý</a>
   </div>
   <nav class="menu">
     <!-- Quản lý người dùng -->
@@ -209,7 +208,9 @@
     <div class="menu-section">
       <span class="menu-title">Quản lý đặt lịch khám bệnh</span>
       <ul>
-        <li><a th:href="@{/appointments}" class="menu-link">Quản lý lịch hẹn</a></li>
+        <li><a th:href="@{/appointments/all}" class="menu-link">Quản lí lịch hẹn </a></li>
+        <li><a th:href="@{/appointments/appointments}" class="menu-link">Quản lý lịch hẹn đang chờ</a></li>
+        <li><a th:href="@{/appointments/confirmed}" class="menu-link">Quản lí lịch đã xác nhận </a></li>
       </ul>
     </div>
   </nav>
