@@ -5,101 +5,111 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        .custom-header {
-           display: flex;
-           align-items: center;
-           justify-content: space-between;
-           background-color: #63acfa;
-           padding: 15px 30px;
-           width: 100%;
-           position: fixed;
-           top: 0;
-           left: 0;
-           z-index: 1000;
-           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-       }
+        /* Reset margin and padding for responsive design */
+   * {
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+   }
 
-       .custom-header .header-logo img {
-           height: 40px;
-           max-width: 100px;
-           margin-right: 10px;
-       }
+   body {
+       margin: 0;
+       font-family: Arial, sans-serif;
+   }
 
-       .custom-header .header-logo span {
-           font-size: 20px;
-           font-weight: bold;
-           color: white;
-       }
+    .custom-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #63acfa;
+        padding: 10px 20px;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  .custom-header .header-logo {
+        display: flex;
+        align-items: center;
+    }
 
-       .custom-header .header-nav-links {
+    .custom-header .header-logo span {
+        font-size: 30px;
+        font-weight: bold;
+        color: white;
+        margin-right: 10px;
+    }
+    .custom-header .header-nav-links {
+        display: flex;
+        justify-content: flex-end; /* Căn các mục qua bên phải */
+        flex-grow: 1;
+        margin-left: 20px;
+        align-items: center; /* Đảm bảo các liên kết căn đều theo chiều dọc */
+    }
 
-           justify-content: space-around;
-           flex-grow: 1;
-           margin-left: 550px;
-       }
+    .custom-header .header-nav-links a {
+        margin: 0 10px; /* Khoảng cách giữa các liên kết */
+        text-decoration: none;
+        color: white;
+        font-size: 18px;
+        padding: 5px 8px; /* Kích thước padding đồng nhất */
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-       .custom-header .header-nav-links a {
-           margin: 0 10px;
-           text-decoration: none;
-           color: white;
-           font-size: 16px;
-           padding: 5px 10px;
-           border-radius: 5px;
-           transition: background-color 0.3s ease;
-       }
+    .custom-header .header-nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 
-       .custom-header .header-nav-links a:hover {
-           background-color: rgba(255, 255, 255, 0.2);
-       }
+    .custom-header .header-nav-links span {
+        display: flex;
+        align-items: center; /* Đảm bảo nội dung trong span căn đều */
+    }
 
-       .custom-header .header-search-bar {
-           display: flex;
-           align-items: center;
-           background-color: white;
-           padding: 5px 10px;
-           border-radius: 20px;
-           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-           width: 250px;
-           position: relative;
-       }
+    .custom-header .header-search-bar {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        padding: 3px 8px;
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        position: relative;
+        margin-left: 10px;
+    }
 
-       .custom-header .header-search-bar i {
-           color: #888;
-           position: absolute;
-           left: 10px;
-           font-size: 16px;
-       }
+    .custom-header .header-search-bar input {
+        border: none;
+        outline: none;
+        margin-left: 20px; /* Giảm khoảng cách giữa icon và input */
+        width: 100%;
+        font-size: 14px;
+    }
 
-       .custom-header .header-search-bar input {
-           border: none;
-           outline: none;
-           margin-left: 25px;
-           width: 100%;
-       }
+    .custom-header .header-icons {
+        display: flex;
+        align-items: center;
+        margin-left: 10px; /* Giảm khoảng cách giữa thanh tìm kiếm và icon */
+    }
 
-       .custom-header .header-icons {
-           display: flex;
-           align-items: center;
-       }
+    .custom-header .header-icons a {
+        margin: 0 5px; /* Giảm khoảng cách giữa các icon */
+        color: white;
+        font-size: 14px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
 
-       .custom-header .header-icons a {
-           margin: 0 10px;
-           color: white;
-           font-size: 16px;
-           text-decoration: none;
-           display: flex;
-           align-items: center;
-       }
-
-       .custom-header .header-icons i {
-           margin-right: 5px;
-           font-size: 20px;
-       }
-
-       .custom-header .header-icons a:hover {
-           color: rgba(255, 255, 255, 0.8);
-       }
-
+    .custom-header .header-icons i {
+        margin-right: 5px;
+        font-size: 18px; /* Giảm kích thước icon */
+    }
+        .hidden {
+    display: none !important;
+}
     </style>
 </head>
 <body>
@@ -117,16 +127,20 @@
     </span>
             <span th:if="${#authentication != null}">
          <a href="/logout" onclick="return confirmLogout(event);">Đăng xuất</a>
+
+                <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <a href="/admin/statistics">Quản Lý</a>
+                </span>
     </span>
         </div>
         <div class="header-search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Tìm bác sĩ">
+            <input type="text" id="search-bar" placeholder="Tìm bác sĩ">
         </div>
         <div class="header-icons">
 
             <a id="profile-link">
-                <i class="fas fa-history"></i>
+                <i class="fas fa-user"></i>
                 <span>Thông tin cá nhân</span>
             </a>
         </div>
@@ -165,6 +179,7 @@
                     items: 3
                 }
             }
+
         });
     });
 $('.banner-carousel').owlCarousel({
@@ -213,7 +228,47 @@ $('.banner-carousel').owlCarousel({
     alert("Bạn chưa đăng nhập. Vui lòng đăng nhập.");
     window.location.href = "/login";
 }
+$(document).ready(function () {
+    // Khởi tạo Owl Carousel
+    const doctorCarousel = $(".doctor-carousel-nav").owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        responsive: {
+            0: { items: 1 },
+            600: { items: 2 },
+            1000: { items: 3 },
+        },
+    });
 
+    // Lắng nghe sự kiện nhập liệu từ thanh tìm kiếm
+    $("#search-bar").on("keyup", function () {
+        const searchText = $(this).val().toLowerCase();
+        let firstMatch = null;
+
+        // Lọc các mục trong carousel
+        $(".doctor-carousel-nav .item").each(function (index) {
+            const doctorName = $(this).attr("data-name").toLowerCase();
+
+            if (doctorName.includes(searchText)) {
+                $(this).removeClass("hidden"); // Hiển thị mục phù hợp
+                if (firstMatch === null) {
+                    firstMatch = index; // Ghi lại vị trí mục đầu tiên phù hợp
+                }
+            } else {
+                $(this).addClass("hidden"); // Ẩn mục không phù hợp
+            }
+        });
+
+        // Làm mới carousel sau khi cập nhật hiển thị
+        doctorCarousel.trigger("refresh.owl.carousel");
+
+        // Di chuyển đến mục đầu tiên phù hợp
+        if (firstMatch !== null) {
+            doctorCarousel.trigger("to.owl.carousel", [firstMatch, 300]);
+        }
+    });
+});
 </script>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">

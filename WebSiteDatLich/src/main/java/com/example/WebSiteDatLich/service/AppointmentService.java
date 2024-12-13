@@ -29,7 +29,33 @@ public class AppointmentService {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
         this.emailService = emailService;
     }
-///////////////////////////////////HÀM TRUY XUẤT DATA TỪ FIREBASE/////////////////////////////////////////////////////
+    public CompletableFuture<List<Appointment>> getAllAppointments() {
+        CompletableFuture<List<Appointment>> future = new CompletableFuture<>();
+        DatabaseReference appointmentsRef = firebaseDatabase.getReference("appointments");
+
+        appointmentsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Appointment> allAppointments = new ArrayList<>();
+                for (DataSnapshot appointmentSnapshot : snapshot.getChildren()) {
+                    Appointment appointment = appointmentSnapshot.getValue(Appointment.class);
+                    if (appointment != null) {
+                        appointment.setAppointment_id(appointmentSnapshot.getKey()); // Gán key từ snapshot
+                        allAppointments.add(appointment);
+                    }
+                }
+                future.complete(allAppointments);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi khi lấy danh sách cuộc hẹn: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
+    ///////////////////////////////////HÀM TRUY XUẤT DATA TỪ FIREBASE/////////////////////////////////////////////////////
 public CompletableFuture<List<Appointment>> getUnconfirmedAppointmentsWithDetails() {
     CompletableFuture<List<Appointment>> future = new CompletableFuture<>();
     DatabaseReference appointmentRef = firebaseDatabase.getReference("appointments");
@@ -90,9 +116,6 @@ public CompletableFuture<List<Appointment>> getUnconfirmedAppointmentsWithDetail
         return future;
     }
 
-    ///////////////////////////////////HÀM TRUY XUẤT DATA TỪ FIREBASE////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////NEW/////////////////////////////////////////////////////////////////////////////////
 public CompletableFuture<Void> confirmAppointment(String appointmentId) {
     CompletableFuture<Void> future = new CompletableFuture<>();
     DatabaseReference appointmentRef = firebaseDatabase.getReference("appointments").child(appointmentId);
