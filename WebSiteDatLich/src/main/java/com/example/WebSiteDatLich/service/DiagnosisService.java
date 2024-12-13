@@ -112,4 +112,27 @@ public class DiagnosisService {
 
         return future;
     }
+    public CompletableFuture<String> getMedicalRecordImageUrl(String appointmentId) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        DatabaseReference appointmentRef = firebaseDatabase.getReference("appointments").child(appointmentId).child("image_medical_records");
+
+        appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String imageUrl = snapshot.getValue(String.class);
+                    future.complete(imageUrl);
+                } else {
+                    future.completeExceptionally(new RuntimeException("Không tìm thấy bệnh án cho cuộc hẹn với ID: " + appointmentId));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(new RuntimeException("Lỗi Firebase: " + error.getMessage()));
+            }
+        });
+
+        return future;
+    }
 }

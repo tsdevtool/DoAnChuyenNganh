@@ -152,4 +152,19 @@ public class AppointmentController {
             return "error";
         }
     }
+    @GetMapping("/medicalRecord/{id}")
+    @ResponseBody
+    public Map<String, Object> getMedicalRecord(@PathVariable("id") String appointmentId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String imageUrl = diagnosisService.getMedicalRecordImageUrl(appointmentId).join();
+            response.put("success", true);
+            response.put("imageUrl", imageUrl);
+        } catch (Exception e) {
+            System.err.println("Error retrieving medical record: " + e.getMessage());
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
+    }
 }

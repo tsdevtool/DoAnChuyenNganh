@@ -38,7 +38,7 @@
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #00aaff;
             color: white;
             text-transform: uppercase;
         }
@@ -121,6 +121,11 @@
     background-color: #f9f9f9;
     height: 100px; /* Điều chỉnh chiều cao nếu cần */
 }
+        .btn-secondary {
+    color: #fff;
+    background-color: #4eac6d;
+    border-color: #6c757d;
+}
     </style>
 </head>
 <body>
@@ -157,7 +162,10 @@
             </td>
             <td>
                 <a href="javascript:void(0)" class="btn btn-info" th:attr="data-id=${appointment.appointment_id}" onclick="showDetailModal(this)">
-                    Xem chi tiết
+                    Điều trị
+                </a>
+                <a href="javascript:void(0)" class="btn btn-secondary" th:attr="data-id=${appointment.appointment_id}" onclick="viewMedicalRecord(this)">
+                    Xem bệnh án
                 </a>
             </td>
         </tr>
@@ -220,7 +228,25 @@
             </div>
         </div>
     </div>
-
+    <!-- Modal Xem Bệnh Án -->
+    <div class="modal fade" id="medicalRecordModal" tabindex="-1" role="dialog" aria-labelledby="medicalRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicalRecordModalLabel">Bệnh án</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="medicalRecordImage" src="" alt="Bệnh án" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         function showDetailModal(element) {
             const appointmentId = element.getAttribute('data-id');
@@ -286,6 +312,34 @@
                     alert("Đã xảy ra lỗi khi lưu thông tin chẩn đoán!");
                 });
         }
+        function viewMedicalRecord(element) {
+    const appointmentId = element.getAttribute('data-id');
+    if (!appointmentId) {
+        alert("Không tìm thấy ID cuộc hẹn!");
+        return;
+    }
+
+    fetch(`/appointments/medicalRecord/${appointmentId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Không thể kết nối tới server");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const medicalRecordImage = document.getElementById("medicalRecordImage");
+                medicalRecordImage.src = data.imageUrl || "https://via.placeholder.com/300?text=Không+có+ảnh";
+                $('#medicalRecordModal').modal('show');
+            } else {
+                alert("Không thể tải ảnh bệnh án: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi tải bệnh án:", error);
+            alert("Đã xảy ra lỗi khi tải bệnh án!");
+        });
+}
     </script>
 </section>
 </body>
