@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ungdungdatlichkham/Screen/DoctorListScreen.dart';
 import 'package:ungdungdatlichkham/Screen/HistoryApointmentScreen.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart';
 import 'package:ungdungdatlichkham/Screen/DetailsDoctorScreen.dart';
@@ -106,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         TextButton(onPressed: (){
                           //chuyển hướng đến danh sách tất cả các bác sĩ
-
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DoctorListScreen()));
                         },
                             child: Text(
                               'Xem thêm',
@@ -361,8 +362,9 @@ class _HomeScreenState extends State<HomeScreen> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          _buildFeatureCard(Icons.assignment_outlined, 'Danh sách bác sĩ', Colors.blue, () {
+          _buildFeatureCard(Icons.assignment_outlined, 'Đặt khám bác sĩ', Colors.blue, () {
             // Xử lý cho Đặt lịch khám bệnh
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DoctorListScreen()));
           }),
           _buildFeatureCard(Icons.key_outlined, 'Đổi mật khẩu', Colors.pink, () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UpdatePasswordScreen()));

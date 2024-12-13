@@ -156,21 +156,23 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       appBar: AppBar(
         title: const Text("Xác nhận đặt lịch",
         style: TextStyle(
-          fontSize: 23, fontWeight: FontWeight.bold, fontFamily: 'Rotobo'
+          color: Colors.white,
+          fontSize: 23, fontWeight: FontWeight.w500, fontFamily: 'Rotobo'
         ),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new,
           size: 25,
-          color: Color.fromARGB(255, 47, 100, 253),),
+          color: Colors.white,),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 47, 100, 253),
 
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 211, 221, 250),
+
       body: Stack(
         children: [
           Column(
