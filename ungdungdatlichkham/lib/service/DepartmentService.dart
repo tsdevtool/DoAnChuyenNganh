@@ -22,4 +22,17 @@ class DepartmentService {
       return [];
     }
   }
+  Future<Map<String, String>> fetchDepartmentMap() async {
+    final snapshot = await _databaseReference.get();
+
+    if (snapshot.exists) {
+      final data = Map<String, dynamic>.from(snapshot.value as Map);
+      return data.map((key, value) {
+        final department = Map<String, dynamic>.from(value);
+        return MapEntry(key, department['name'] ?? 'Không rõ');
+      });
+    } else {
+      return {};
+    }
+  }
 }

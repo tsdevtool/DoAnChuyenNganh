@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:ungdungdatlichkham/Screen/HistoriesScreen.dart';
 import 'package:ungdungdatlichkham/Screen/HomeScreen.dart';
 import 'package:ungdungdatlichkham/Screen/chat_historyscreen.dart';
 import 'package:ungdungdatlichkham/Screen/chat_screen.dart';
@@ -22,7 +21,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const ChatHistoryscreen(),
-    const chatScreen(),
+    chatScreen(isInDashboard: true),
     const ProfileScreen(),
   ];
   @override

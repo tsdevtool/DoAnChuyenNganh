@@ -152,44 +152,52 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                 widget.doctor.avatarUrl ?? ""),
                           ),
                           const SizedBox(width: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                  Text(
-                                    widget.doctor.userName ?? "Không rõ",
-                                    style: const TextStyle(
-                                        fontSize: 25,
-                                      fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                    Text(
+                                      widget.doctor.userName ?? "Không rõ",
+                                      style: const TextStyle(
+                                          fontSize: 25,
+                                        fontWeight: FontWeight.w600,
 
 
-                                        //fontWeight: FontWeight.bold
+                                          //fontWeight: FontWeight.bold
+                                      ),
+                                      overflow: TextOverflow.visible, // Cho phép hiển thị nội dung vượt quá mà không bị cắt
+                                      softWrap: true, // Hỗ trợ xuống dòng nếu nội dung quá dài
+
                                     ),
-                                  ),
-                              SizedBox(height: 5,),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.verified,
-                                    size: 20,
-                                    color: Color.fromARGB(255, 47, 100, 253),
-                                  ),
-                                  SizedBox(width: 5,),
-                                  Text('Bác sĩ',
-                                  style:TextStyle(
-                                    color: Color.fromARGB(255, 47, 100, 253),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),)
-                                ],
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                getDepartmentName(widget.doctor.departmentId),
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600,),
-                              ),
-                              const SizedBox(height: 4),
+                                SizedBox(height: 5,),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.verified,
+                                      size: 20,
+                                      color: Color.fromARGB(255, 47, 100, 253),
+                                    ),
+                                    SizedBox(width: 5,),
+                                    Text('Bác sĩ',
+                                    style:TextStyle(
+                                      color: Color.fromARGB(255, 47, 100, 253),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),)
+                                  ],
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  getDepartmentName(widget.doctor.departmentId),
+                                  style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600,),
+                                  overflow: TextOverflow.visible, // Cho phép nội dung hiển thị đầy đủ
+                                  softWrap: true,
+                                ),
 
-                            ],
+                                const SizedBox(height: 4),
+
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -389,10 +397,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                         duration: const Duration(milliseconds: 300), // Hiệu ứng chuyển đổi
                                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                         decoration: BoxDecoration(
-                                          color: isSelected ? Colors.blue : Colors.white,
+                                          color: isSelected ? Color.fromARGB(255, 47, 100, 253) : Colors.white,
                                           borderRadius: BorderRadius.circular(30),
                                           border: Border.all(
-                                            color: isSelected ? Colors.blue : Colors.grey,
+                                            color: isSelected ? Color.fromARGB(255, 47, 100, 253) : Colors.grey,
                                             width: 1.5,
                                           ),
                                           boxShadow: isSelected

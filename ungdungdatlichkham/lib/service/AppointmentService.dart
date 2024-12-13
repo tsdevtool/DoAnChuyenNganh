@@ -11,22 +11,30 @@ class Appointmentservice {
       print("Error adding appointment: $e");
     }
   }
-  Future<List<Appointment>> getAppointmentsByUserId(String userId) async {
+  Stream<List<Appointment>> getAppointmentsByUserId(String userId) {
     try {
-      final snapshot = await _db.child('appointments').orderByChild('user_id').equalTo(userId).get();
-      if (snapshot.exists) {
-        final List<Appointment> appointments = [];
-        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-        data.forEach((key, value) {
-          appointments.add(Appointment.fromMap(Map<String, dynamic>.from(value)));
-        });
-        return appointments;
-      } else {
-        return [];
-      }
+      final Stream<DatabaseEvent> stream = _db
+          .child('appointments')
+          .orderByChild('user_id')
+          .equalTo(userId)
+          .onValue;
+
+      return stream.map((event) {
+        if (event.snapshot.exists) {
+          final List<Appointment> appointments = [];
+          final Map<dynamic, dynamic> data =
+          event.snapshot.value as Map<dynamic, dynamic>;
+          data.forEach((key, value) {
+            appointments.add(Appointment.fromMap(Map<String, dynamic>.from(value)));
+          });
+          return appointments;
+        } else {
+          return [];
+        }
+      });
     } catch (e) {
       print("Error fetching appointments: $e");
-      return [];
+      return const Stream.empty();
     }
   }
 

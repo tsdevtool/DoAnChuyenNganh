@@ -7,6 +7,7 @@ class DoctorService {
   final DatabaseReference _userRef = FirebaseDatabase.instance.ref("user");
   late StreamSubscription<DatabaseEvent> _doctorSubscription;
 
+
   final StreamController<List<Doctor>> _doctorsStreamController = StreamController<List<Doctor>>.broadcast();
 
   DoctorService() {

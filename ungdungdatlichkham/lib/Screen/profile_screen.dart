@@ -1,7 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ungdungdatlichkham/Screen/HistoryApointmentScreen.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart';
+import 'package:ungdungdatlichkham/Screen/UpdatePasswordScreen.dart';
 import 'package:ungdungdatlichkham/Screen/UpdateProfileSreen.dart';
 
 import '../models/User.dart';
@@ -140,9 +142,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             iconSize: 25,// Icon chỉnh sửa
                             color: Color.fromARGB(255, 139, 44, 255), // Màu xanh dương
                             onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const UpdateProfileScreen(),)
-                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const UpdateProfileScreen()),
+                              ).then((isUpdated) {
+                                if (isUpdated == true) {
+                                  // Thực hiện hành động nếu thông tin đã được cập nhật
+                                  _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
+                                }
+                              });
                             },// Kích thước icon vừa phải
                           ),
                         ),
@@ -305,15 +313,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
                           ),
                           onPressed: () {
-                            // Logic chỉnh sửa thông tin cá nhân
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()),).then((isUpdated) {
+                                    if (isUpdated == true) {
+                                            // Thực hiện hành động nếu thông tin đã được cập nhật
+                                        _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
+                                    }
+                            });// Kích thư
                           },
                           icon: const Icon(Icons.edit_outlined, size: 25, color: Colors.white),
                           label: const Text(
-                            'Chỉnh sửa thông tin cá nhân',
+                            'Cập nhập thông tin cá nhân',
                             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 47, 100, 253),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 17),
+                            minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
+                          ),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdatePasswordScreen()),).then((isUpdated) {
+                              if (isUpdated == true) {
+                                // Thực hiện hành động nếu thông tin đã được cập nhật
+                                _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
+                              }
+                            });// Kích thư
+                          },
+                          icon: const Icon(Icons.key_outlined, size: 25, color: Colors.white),
+                          label: const Text(
+                            'Cập nhập mật khẩu',
+                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(255, 47, 100, 253),
@@ -325,6 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           onPressed: () {
                             // Logic xem lịch sử đặt lịch
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> HistoryApointmentScreen(userId:  _currentUser?.userId ?? "")));
                           },
                           icon: const Icon(Icons.history_outlined, size: 25, color: Colors.white),
                           label: const Text(

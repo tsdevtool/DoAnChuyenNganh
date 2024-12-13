@@ -16,20 +16,28 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
   late Future<List<Appointment>> _appointments;
 
   @override
-  void initState() {
-    super.initState();
-    _appointments = _appointmentService.getAppointmentsByUserId(widget.userId);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lịch sử đặt lịch'),
+        title: const Text('Lịch sử đặt lịch',
+        style: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w500,
+          color: Colors.white
+        ),),
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 47, 100, 253),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          iconSize: 25,
+          color: Colors.white,
+          onPressed: ()=> Navigator.pop(context),
+
+        ),
       ),
-      body: FutureBuilder<List<Appointment>>(
-        future: _appointments,
+      backgroundColor: Colors.white,
+      body:StreamBuilder<List<Appointment>>(
+        stream: _appointmentService.getAppointmentsByUserId(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -74,7 +82,7 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
               children: [
                 Icon(
                   Icons.person_outline,
-                  color: Colors.blueAccent,
+                  color: Color.fromARGB(255, 47, 100, 253),
                   size: 30,
                 ),
                 const SizedBox(width: 10),
@@ -82,7 +90,7 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
                   child: Text(
                     appointment.patientName ?? 'Không rõ',
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -91,13 +99,25 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: appointment.status == 1 ? Colors.green : Colors.orange,
+                    color: appointment.status == 2
+                        ? Colors.amberAccent
+                        : appointment.status == 1
+                        ? Colors.green
+                        : appointment.status == 3
+                        ? Colors.blue
+                        : Colors.red,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    appointment.status == 1 ? 'Xác nhận' : 'Chưa xác nhận',
+                    appointment.status == 1
+                        ? 'Đã xác nhận'
+                        : appointment.status == 2
+                        ? 'Đang chờ xác nhận'
+                        : appointment.status == 3
+                        ? 'Đã khám'
+                        : 'Đã hủy',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -105,18 +125,19 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
                 ),
               ],
             ),
+            Divider(color: Colors.grey, thickness: 0.5,),
             const SizedBox(height: 12),
             Row(
               children: [
                 Icon(
                   Icons.calendar_today,
-                  color: Colors.blue,
-                  size: 20,
+                  color: Color.fromARGB(255, 47, 100, 253),
+                  size: 25,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   appointment.appointmentDate ?? 'N/A',
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 17, color: Colors.black),
                 ),
               ],
             ),
@@ -126,12 +147,12 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
                 Icon(
                   Icons.access_time,
                   color: Colors.orange,
-                  size: 20,
+                  size: 25,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   appointment.appointmentTime ?? 'N/A',
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 17, color: Colors.black),
                 ),
               ],
             ),
@@ -141,13 +162,13 @@ class _HistoryApointmentScreen extends State<HistoryApointmentScreen> {
                 Icon(
                   Icons.local_hospital_outlined,
                   color: Colors.red,
-                  size: 20,
+                  size: 25,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     appointment.medicalCondition ?? 'Không rõ bệnh lý',
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 17, color: Colors.black),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
