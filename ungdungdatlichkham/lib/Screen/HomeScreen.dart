@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ungdungdatlichkham/Screen/HistoryApointmentScreen.dart';
 import 'package:ungdungdatlichkham/Screen/LoginScreen.dart';
 import 'package:ungdungdatlichkham/Screen/DetailsDoctorScreen.dart';
+import 'package:ungdungdatlichkham/Screen/UpdatePasswordScreen.dart';
 import 'package:ungdungdatlichkham/service/DoctorService.dart';
 import 'package:ungdungdatlichkham/service/WorkScheduleService.dart';
 import 'package:ungdungdatlichkham/models/Doctor.dart';
@@ -12,6 +13,7 @@ import 'package:ungdungdatlichkham/models/WorkSchedule.dart';
 
 import '../models/Department.dart';
 import '../service/DepartmentService.dart';
+import 'chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -359,14 +361,18 @@ class _HomeScreenState extends State<HomeScreen> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          _buildFeatureCard(Icons.calendar_today_outlined, 'Đặt lịch khám bệnh', Colors.blue, () {
+          _buildFeatureCard(Icons.assignment_outlined, 'Danh sách bác sĩ', Colors.blue, () {
             // Xử lý cho Đặt lịch khám bệnh
           }),
-          _buildFeatureCard(Icons.assignment_outlined, 'Xem kết quả', Colors.pink, () {
+          _buildFeatureCard(Icons.key_outlined, 'Đổi mật khẩu', Colors.pink, () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UpdatePasswordScreen()));
             // Xử lý cho Xem kết quả
           }),
           _buildFeatureCard(Icons.chat_outlined, 'Chat với AI', Colors.orange, () {
             // Xử lý cho Chat với AI
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>  chatScreen(isInDashboard: true),
+            ));
           }),
           _buildFeatureCard(Icons.history_outlined, 'Lịch sử khám bệnh', Colors.teal, () {
             _navigateToHistoryScreen(); // Mở màn hình lịch sử khám bệnh

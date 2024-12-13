@@ -5,10 +5,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ungdungdatlichkham/models/User.dart';
+import '../models/User.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+  const UpdateProfileScreen({Key? key}) : super(key: key);
 
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
@@ -19,11 +19,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController(); // Controller để hiển thị ngày sinh
+  final TextEditingController _dateController = TextEditingController();
   String _selectedGender = "Nam";
   File? _image;
   String? _avatarUrl;
-  String? _userId;
   User? _currentUser;
 
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref().child('user');
@@ -32,12 +31,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserIdAndProfile();
+    _loadUserData();
   }
 
-  Future<void> _loadUserIdAndProfile() async {
+  Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('user_id');
+    final userId = prefs.getString('userId');
 
     if (userId != null) {
       final snapshot = await _databaseRef.child(userId).get();
@@ -46,22 +45,22 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         setState(() {
           _currentUser = User.fromMap(userData);
 
-          // Hiển thị thông tin lên TextField
+          // Gán thông tin vào các `TextField`
           _nameController.text = _currentUser?.name ?? '';
           _phoneController.text = _currentUser?.phone ?? '';
           _addressController.text = _currentUser?.address ?? '';
           _selectedGender = (_currentUser?.sex ?? true) ? "Nam" : "Nữ";
+
           if (_currentUser?.dateOfBirth != null) {
             final dateOfBirth = DateTime.parse(_currentUser!.dateOfBirth!);
             _dateController.text = DateFormat('dd/MM/yyyy').format(dateOfBirth);
           }
 
-          // Hiển thị ảnh đại diện
+          // Gán avatar URL nếu có
           if (_currentUser?.avatar != null && _currentUser!.avatar!.isNotEmpty) {
             _avatarUrl = _currentUser!.avatar!;
           }
         });
-        print("Thông tin người dùng đã được tải thành công: ${_currentUser!.toMap()}");
       }
     }
   }
@@ -80,7 +79,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     try {
-      // Chỉ cập nhật các trường đã thay đổi
       final updatedData = <String, dynamic>{};
 
       if (_nameController.text.trim() != _currentUser?.name) {
@@ -103,18 +101,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         updatedData['sex'] = _selectedGender == "Nam" ? true : false;
       }
 
-      // Xử lý avatar nếu người dùng chọn ảnh mới
       if (_image != null) {
         final storageRef = _storage.ref().child('users/${_currentUser?.userId}/avatar.jpg');
         final uploadTask = await storageRef.putFile(_image!);
         final newAvatarUrl = await uploadTask.ref.getDownloadURL();
-
-        if (newAvatarUrl != _currentUser?.avatar) {
-          updatedData['avatar'] = newAvatarUrl;
-        }
+        updatedData['avatar'] = newAvatarUrl;
       }
 
-      // Nếu không có gì thay đổi, thoát
       if (updatedData.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Không có thông tin nào thay đổi')),
@@ -122,15 +115,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         return;
       }
 
-      // Thực hiện cập nhật
       await _databaseRef.child(_currentUser!.userId!).update(updatedData);
-
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cập nhật thông tin thành công!')));
+        const SnackBar(content: Text('Cập nhật thông tin thành công!')),
+      );
 
-      // Cập nhật thông tin hiện tại trong bộ nhớ
-      _currentUser = User.fromMap({..._currentUser!.toMap(), ...updatedData});
-      print("Thông tin người dùng đã được cập nhật thành công: ${_currentUser!.toMap()}");
+      setState(() {
+        _currentUser = User.fromMap({..._currentUser!.toMap(), ...updatedData});
+      });
+      // Trở về màn hình trước đó
+      Navigator.pop(context, true); // Truyền giá trị `true` để báo hiệu cập nhật thành công
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi: $e')),
@@ -178,15 +172,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text(
-                        "Hủy",
-                        style: TextStyle(fontSize: 17, color: Colors.red),
-                      ),
+                      child: const Text("Hủy", style: TextStyle(fontSize: 17, color: Colors.red)),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                      ),
                       onPressed: () {
                         if (pickedDate != null) {
                           setState(() {
@@ -195,10 +183,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         }
                         Navigator.pop(context);
                       },
-                      child: const Text(
-                        "Xác nhận",
-                        style: TextStyle(fontSize: 17, color: Colors.white),
-                      ),
+                      child: const Text("Xác nhận", style: TextStyle(fontSize: 17, color: Colors.white)),
                     ),
                   ],
                 ),
@@ -214,8 +199,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cập nhật thông tin cá nhân"),
+        title: const Text("Cập nhật thông tin cá nhân"
+        , style:  TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Rotobo'
+          ),),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new,
+          color:Color.fromARGB(255, 47, 100, 253),
+          size: 25,),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -236,17 +236,57 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       : null,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Họ tên'),
+                decoration: InputDecoration(
+                  labelText: 'Họ tên',
+                  labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  prefixIcon: Icon(Icons.person, color: Color.fromARGB(255, 47, 100, 253)),
+                ),
+                style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập họ tên' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(labelText: 'Số điện thoại'),
+                decoration: InputDecoration(
+                  labelText: 'Số điện thoại',
+                  labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  prefixIcon: Icon(Icons.phone, color: Color.fromARGB(255, 47, 100, 253)),
+                ),
+                style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập số điện thoại' : null,
               ),
               const SizedBox(height: 16),
@@ -255,7 +295,27 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 child: AbsorbPointer(
                   child: TextFormField(
                     controller: _dateController,
-                    decoration: const InputDecoration(labelText: 'Ngày sinh'),
+                    decoration: InputDecoration(
+                      labelText: 'Ngày sinh',
+                      labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                      floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      prefixIcon: Icon(Icons.cake, color: Color.fromARGB(255, 47, 100, 253)),
+                    ),
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
               ),
@@ -263,26 +323,72 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               DropdownButtonFormField<String>(
                 value: _selectedGender,
                 items: const [
-                  DropdownMenuItem(value: "Nam", child: Text("Nam")),
-                  DropdownMenuItem(value: "Nữ", child: Text("Nữ")),
+                  DropdownMenuItem(value: "Nam", child: Text("Nam", style: TextStyle(color: Colors.black))),
+                  DropdownMenuItem(value: "Nữ", child: Text("Nữ",style: TextStyle(color: Colors.black))),
                 ],
                 onChanged: (value) {
                   setState(() {
                     _selectedGender = value!;
                   });
                 },
-                decoration: const InputDecoration(labelText: 'Giới tính'),
+                decoration: InputDecoration(
+                  labelText: 'Giới tính',
+                  labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  prefixIcon: Icon(Icons.person_outline, color: Color.fromARGB(255, 47, 100, 253)),
+                ),
+                style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _addressController,
-                decoration: const InputDecoration(labelText: 'Địa chỉ'),
+                decoration: InputDecoration(
+                  labelText: 'Địa chỉ',
+                  labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  prefixIcon: Icon(Icons.home, color: Color.fromARGB(255, 47, 100, 253)),
+                ),
+                style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập địa chỉ' : null,
               ),
-              const SizedBox(height: 16),
+
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _updateProfile,
-                child: const Text("Cập nhật thông tin"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 47, 100, 253),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: const Text("Cập nhật thông tin",
+                  style: TextStyle(fontSize: 19, color: Colors.white),),
               ),
             ],
           ),

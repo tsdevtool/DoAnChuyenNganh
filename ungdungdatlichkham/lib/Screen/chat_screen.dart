@@ -9,7 +9,8 @@ import 'package:ungdungdatlichkham/widgets/bottom_chat_field.dart';
 import '../widgets/chat_messages.dart';
 
 class chatScreen extends StatefulWidget {
-const chatScreen({super.key});
+  final bool isInDashboard;
+  const chatScreen({Key? key, this.isInDashboard=false}) : super(key:key);
 
 @override
 State<chatScreen> createState() => _chatScreenState();
@@ -57,7 +58,15 @@ Widget build(BuildContext context) {
           centerTitle: true,
           backgroundColor:Colors.white,
           title: const Text('Hỏi đáp cùng Viet Duc AI',
-          style: TextStyle(fontFamily: 'Roboto')), // Đảm bảo font hỗ trợ tiếng Việt),
+          style: TextStyle(fontFamily: 'Roboto')),
+          leading: widget.isInDashboard
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+          ), // Đảm bảo font hỗ trợ tiếng Việt),
           actions: [
             if(chatProvider.inChatMessages.isNotEmpty)
               Padding(

@@ -82,7 +82,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       await _uploadImageToFirebase();
       Appointmentservice dbService = Appointmentservice();
       await dbService.addAppointment(widget.appointment);
-      _showSuccessDialog("Đặt lịch thành công!");
+
+      // Hiển thị Snackbar khi thành công
+      _showSuccessSnackbar("Đặt lịch thành công!");
     } catch (e) {
       _showErrorDialog("Có lỗi xảy ra: $e");
     } finally {
@@ -107,6 +109,30 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
       ),
     );
   }
+  void _showSuccessSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+
+    // Quay lại ngay lập tức sau khi hiển thị Snackbar
+    Navigator.popUntil(context, (route) => route.isFirst);
+  }
 
   void _showSuccessDialog(String message) {
     showDialog(
@@ -128,9 +154,23 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Xác nhận đặt lịch"),
-        backgroundColor: Colors.lightBlue,
+        title: const Text("Xác nhận đặt lịch",
+        style: TextStyle(
+          fontSize: 23, fontWeight: FontWeight.bold, fontFamily: 'Rotobo'
+        ),),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new,
+          size: 25,
+          color: Color.fromARGB(255, 47, 100, 253),),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+
       ),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
@@ -161,6 +201,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget _buildDoctorInfoCard() {
     return Card(
       elevation: 5,
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 20),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -170,7 +211,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
             _buildSectionTitleWithIcon("Thông tin bác sĩ", Icons.person),
             const SizedBox(height: 10),
             Text("Tên bác sĩ: ${widget.doctorName}", style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 5),
             Text("Ngày khám: ${widget.appointment.appointmentDate}", style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 5),
             Text("Giờ khám: ${widget.appointment.appointmentTime}", style: const TextStyle(fontSize: 18)),
           ],
         ),
@@ -181,6 +224,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget _buildPatientInfoCard() {
     return Card(
       elevation: 5,
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 20),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -193,6 +237,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               controller: _patientNameController,
               decoration: const InputDecoration(
                 labelText: "Tên bệnh nhân",
+                labelStyle: TextStyle(
+                  fontSize: 18
+                ),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -202,6 +249,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                 labelText: "Số điện thoại",
+                labelStyle: TextStyle(
+                  fontSize: 18
+                ),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -214,6 +264,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget _buildMedicalConditionCard() {
     return Card(
       elevation: 5,
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 20),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -226,6 +277,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               controller: _medicalConditionController,
               decoration: const InputDecoration(
                 labelText: "Tình trạng sức khỏe",
+                labelStyle: TextStyle(
+                  fontSize: 18
+                ),
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -239,6 +293,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget _buildMedicalImageCard() {
     return Card(
       elevation: 5,
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 20),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -247,9 +302,21 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           children: [
             _buildSectionTitleWithIcon("Hình ảnh hồ sơ y tế", Icons.image),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: const Text("Chọn hình ảnh"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _pickImage,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 47, 100, 253),
+
+                  ),
+                  child: const Text("Chọn hình ảnh",
+                  style: TextStyle(
+                    color: Colors.white
+                  ),),
+                ),
+              ],
             ),
             if (_image != null)
               Padding(
@@ -287,11 +354,11 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           onPressed: _confirmAppointment,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.lightBlue,
+            backgroundColor: Color.fromARGB(255, 47, 100, 253),
           ),
           child: const Text(
             "Xác nhận đặt lịch",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Roboto'),
           ),
         ),
       ),
@@ -301,7 +368,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   Widget _buildSectionTitleWithIcon(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, color: Colors.lightBlue, size: 24),
+        Icon(icon, color: Color.fromARGB(255, 47, 100, 253), size: 30),
         const SizedBox(width: 8),
         Text(
           title,
