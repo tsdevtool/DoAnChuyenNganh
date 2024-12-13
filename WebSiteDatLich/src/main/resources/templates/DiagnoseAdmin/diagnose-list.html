@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutAdmin}">
 <head>
   <title>Danh sách Chẩn Đoán</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+<section layout:fragment="content" class="container mtop">
 <div class="container mt-5">
   <h1 class="text-center">Danh sách Chẩn Đoán</h1>
   <a href="/diagnoseadmin/add" class="btn btn-success mb-3">Thêm Chẩn Đoán</a>
@@ -32,5 +35,6 @@
     </tbody>
   </table>
 </div>
+</section>
 </body>
 </html>
