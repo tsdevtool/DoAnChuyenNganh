@@ -20,6 +20,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _emailController= TextEditingController();
   String _selectedGender = "Nam";
   File? _image;
   String? _avatarUrl;
@@ -49,6 +50,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           _nameController.text = _currentUser?.name ?? '';
           _phoneController.text = _currentUser?.phone ?? '';
           _addressController.text = _currentUser?.address ?? '';
+          _emailController.text= _currentUser?.email??'';
           _selectedGender = (_currentUser?.sex ?? true) ? "Nam" : "Nữ";
 
           if (_currentUser?.dateOfBirth != null) {
@@ -89,6 +91,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       }
       if (_addressController.text.trim() != _currentUser?.address) {
         updatedData['address'] = _addressController.text.trim();
+      }
+      if (_emailController.text.trim() != _currentUser?.email) {
+        updatedData['email'] = _emailController.text.trim();
       }
       if (_dateController.text.isNotEmpty &&
           DateFormat('dd/MM/yyyy').parse(_dateController.text.trim()).toString() != _currentUser?.dateOfBirth) {
@@ -257,7 +262,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  prefixIcon: Icon(Icons.person, color: Color.fromARGB(255, 47, 100, 253)),
+                  prefixIcon: Icon(Icons.person_outline, color: Color.fromARGB(255, 47, 100, 253)),
                 ),
                 style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập họ tên' : null,
@@ -284,7 +289,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  prefixIcon: Icon(Icons.phone, color: Color.fromARGB(255, 47, 100, 253)),
+                  prefixIcon: Icon(Icons.phone_outlined, color: Color.fromARGB(255, 47, 100, 253)),
                 ),
                 style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập số điện thoại' : null,
@@ -313,7 +318,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       ),
                       filled: true,
                       fillColor: Colors.grey.shade100,
-                      prefixIcon: Icon(Icons.cake, color: Color.fromARGB(255, 47, 100, 253)),
+                      prefixIcon: Icon(Icons.cake_outlined, color: Color.fromARGB(255, 47, 100, 253)),
                     ),
                     style: TextStyle(fontSize: 20),
                   ),
@@ -345,9 +350,35 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  prefixIcon: Icon(Icons.person_outline, color: Color.fromARGB(255, 47, 100, 253)),
+                  prefixIcon: Icon(Icons.transgender, color: Color.fromARGB(255, 47, 100, 253)),
                 ),
                 style: TextStyle(fontSize: 20, color: Colors.black),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 17),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 47, 100, 253), fontSize: 18),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color.fromARGB(255, 47, 100, 253)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  prefixIcon: Icon(Icons.email_outlined, color: Color.fromARGB(255, 47, 100, 253)),
+                ),
+                style: TextStyle(fontSize: 20),
+                validator: (value) => value!.isEmpty ? 'Vui lòng nhập họ tên' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -370,7 +401,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  prefixIcon: Icon(Icons.home, color: Color.fromARGB(255, 47, 100, 253)),
+                  prefixIcon: Icon(Icons.location_on_outlined, color: Color.fromARGB(255, 47, 100, 253)),
                 ),
                 style: TextStyle(fontSize: 20),
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập địa chỉ' : null,

@@ -223,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(width: 20),
                             Text(
                                 _currentUser?.dateOfBirth ?? "Lỗi dữ liệu",
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                           ],
                         ),
                         const Divider(height: 20, thickness: 0.5, color: Colors.grey),
@@ -232,7 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const Icon(Icons.phone_outlined, color: Color(0xFF6C63FF), size: 30),
                             const SizedBox(width: 20),
                             Text( _currentUser?.phone ??"Lỗi dữ liệu",
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                           ],
                         ),
                         const Divider(height: 20, thickness: 0.5, color: Colors.grey),
@@ -240,8 +240,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             const Icon(Icons.email_outlined, color: Color(0xFF6C63FF), size: 30),
                             const SizedBox(width: 20),
-                            Text( _currentUser?.email ??"Lỗi dữ liệu",
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500)),
+                            Expanded( // Đảm bảo phần Text có thể co giãn và không vượt quá màn hình
+                              child: Text(
+                                _currentUser?.email ?? "Lỗi dữ liệu",
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis, // Hiển thị dấu "..." nếu quá dài
+                                maxLines: 1, // Hiển thị tối đa 1 dòng
+                              ),
+                            ),
                           ],
                         ),
                         const Divider(height: 20, thickness: 0.5, color: Colors.grey),
@@ -253,7 +259,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Expanded(
                               child: Text(
                                 _currentUser?.address ??"Lỗi dữ liệu",
-                                style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis, // Hiển thị dấu "..." nếu quá dài
+                                maxLines: 1, // Hiển thị tối đa 1 dòng
                               ),
                             ),
                           ],
@@ -295,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Nút Chức năng
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -303,96 +311,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 47, 100, 253),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                        SizedBox(
+                          width: 300, // Đặt chiều rộng cố định cho nút
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 47, 100, 253),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50), // Giữ độ bo tròn như cũ
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 17), // Padding bên trong nút
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 17),
-                            minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
-                          ),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()),).then((isUpdated) {
-                                    if (isUpdated == true) {
-                                            // Thực hiện hành động nếu thông tin đã được cập nhật
-                                        _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
-                                    }
-                            });// Kích thư
-                          },
-                          icon: const Icon(Icons.edit_outlined, size: 25, color: Colors.white),
-                          label: const Text(
-                            'Cập nhập thông tin cá nhân',
-                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const UpdateProfileScreen()),
+                              ).then((isUpdated) {
+                                if (isUpdated == true) {
+                                  _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
+                                }
+                              });
+                            },
+                            icon: const Icon(Icons.edit_outlined, size: 25, color: Colors.white),
+                            label: const Text(
+                              'Cập nhập thông tin cá nhân',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                              textAlign: TextAlign.center, // Căn giữa text
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 47, 100, 253),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                        SizedBox(
+                          width: 300, // Đặt chiều rộng cố định
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 47, 100, 253),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 17),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 17),
-                            minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
-                          ),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdatePasswordScreen()),).then((isUpdated) {
-                              if (isUpdated == true) {
-                                // Thực hiện hành động nếu thông tin đã được cập nhật
-                                _loadUserData(); // Gọi lại hàm để tải lại dữ liệu
-                              }
-                            });// Kích thư
-                          },
-                          icon: const Icon(Icons.key_outlined, size: 25, color: Colors.white),
-                          label: const Text(
-                            'Cập nhập mật khẩu',
-                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const UpdatePasswordScreen()),
+                              ).then((isUpdated) {
+                                if (isUpdated == true) {
+                                  _loadUserData();
+                                }
+                              });
+                            },
+                            icon: const Icon(Icons.key_outlined, size: 25, color: Colors.white),
+                            label: const Text(
+                              'Cập nhập mật khẩu',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 47, 100, 253),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                        SizedBox(
+                          width: 300, // Đặt chiều rộng cố định
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 47, 100, 253),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 17),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 17),
-                            minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
-                          ),
-                          onPressed: () {
-                            // Logic xem lịch sử đặt lịch
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> HistoryApointmentScreen(userId:  _currentUser?.userId ?? "")));
-                          },
-                          icon: const Icon(Icons.history_outlined, size: 25, color: Colors.white),
-                          label: const Text(
-                            'Xem lịch sử đặt lịch khám bệnh',
-                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryApointmentScreen(userId: _currentUser?.userId ?? ""),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.history_outlined, size: 25, color: Colors.white),
+                            label: const Text(
+                              'Xem lịch sử đặt lịch khám bệnh',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                        // const SizedBox(height: 20),
-                        /*ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 47, 100, 253),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 17),
-                            minimumSize: const Size(double.infinity, 50), // Đặt chiều dài tối đa
-                          ),
-                          onPressed: () {
-                            // Logic xem kết quả khám
-                          },
-                          icon: const Icon(Icons.receipt_outlined, size: 25, color: Colors.white),
-                          label: const Text(
-                            'Kết quả khám',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-                          ),
-                        ),*/
                         const SizedBox(height: 10),
                       ],
                     ),
-                  ),
+                  )
+
 
                 ],
               ),
@@ -409,10 +415,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: _logout,
 
-                icon: const Icon(Icons.login_rounded, size: 25, color: Colors.white, ),
+                icon: const Icon(Icons.login_rounded, size: 20, color: Colors.white, ),
                 label: const Text(
                   'Đăng xuất tài khoản',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.white),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
                 ),
 
               ),

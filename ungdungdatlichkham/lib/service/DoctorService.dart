@@ -53,6 +53,7 @@ class DoctorService {
     });
   }
 
+
   // Hàm để truy cập Stream
   Stream<List<Doctor>> get doctorsStream => _doctorsStreamController.stream;
 
@@ -62,3 +63,5 @@ class DoctorService {
     _doctorsStreamController.close();
   }
 }
+
+
